@@ -25,9 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-*zrdhah9=4_vpxqr5+&ei47f2n2&keb&uh90@+q0kz19(773j9'
 
-# GUTHUB API TOKEN
-GITHUB_API = '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'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -35,7 +32,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-sys.modules['fontawesome_free'] = __import__('fontawesome-free')
 INSTALLED_APPS = [
     'LandingPage.apps.LandingpageConfig',
     'django.contrib.admin',
@@ -43,9 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'livereload',
     'django.contrib.staticfiles',
-    'fontawesome_free',
 ]
 
 
@@ -57,7 +51,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'livereload.middleware.LiveReloadScript',
 ]
 
 ROOT_URLCONF = 'my-website.urls'
