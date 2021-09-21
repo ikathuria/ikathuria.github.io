@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
 
 # Application definition
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'LandingPage.apps.LandingpageConfig',
     'django.contrib.admin',
     'django.contrib.auth',
