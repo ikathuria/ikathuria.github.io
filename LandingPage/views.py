@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.contrib.staticfiles.storage import staticfiles_storage
 import datetime
 import json
 import requests
@@ -43,7 +43,7 @@ def index(request):
     context = {}
 
     time = datetime.datetime.now().strftime("%H:%M:%S")
-    user_info_json = 'LandingPage\\static\\data\\user_info.json'
+    user_info_json = staticfiles_storage.path('data/user_info.json')
 
     if time == '00:00:00':
         new_user_data = pd.DataFrame.from_dict(get_user_info(), orient='index')
