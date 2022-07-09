@@ -2,413 +2,161 @@
 
 <!DOCTYPE html>
 <html style="font-size: 16px">
-  <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta charset="utf-8" />
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta charset="utf-8" />
 
-	<!-- meta tags -->
-	<meta name="author" content="Ishani Kathuria" />
-	<meta name="theme-color" content="#478ac9" />
-	<meta property="og:title" content="Ishani Kathuria" />
-	<meta property="og:type" content="website" />
-	<meta
-	  property="og:description"
-	  content="​Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications."
-	/>
-	<meta
-	  name="keywords"
-	  content="Ishani, Ishani Kathuria, Artificial Intelligence, Machine Learning, Deep Learning, Portfolio"
-	/>
-	<meta
-	  name="description"
-	  content="​Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications."
-	/>
+		<!-- meta tags -->
+		<meta name="author" content="Ishani Kathuria" />
+		<meta name="theme-color" content="#478ac9" />
+		<meta
+			name="keywords"
+			content="Ishani, Ishani Kathuria, Artificial Intelligence, Machine Learning,
+			Deep Learning, Portfolio"
+			/>
+		<meta
+			name="description"
+			content="​Artificial Intelligence programmer with experience in Machine
+			Learning, Deep Neural Networks, Data Analytics, and Web Scraping
+			applications."
+			/>
 
-	<!-- css + js -->
-	<link rel="stylesheet" href="{% static 'css/styles.css' %}" media="screen" />
-	<script
-	  class="u-script"
-	  type="text/javascript"
-	  src="{% static 'js/jquery-3.6.0.min.js' %}"
-	  defer=""
-	></script>
-	<script
-	  class="u-script"
-	  type="text/javascript"
-	  src="{% static 'js/nicepage.js' %}"
-	  defer=""
-	></script>
+		<meta property="og:title" content="Ishani Kathuria" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="http://ishani.kathuria.net/" />
+		<meta property="og:image" content="https://media-exp2.licdn.com/dms/image/C4D03AQFp-gO_EfYmmg/profile-displayphoto-shrink_200_200/0/1653822480555?e=1662595200&v=beta&t=zMTbzJI1crDgEurZNACW9017tOkVyudF75jXlu7UhXo" />
+		<meta property="og:description" content="​Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications."/>
 
-	<!-- Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+		<meta property="twitter:title" content="Ishani Kathuria" />
+		<meta property="twitter:image" content="https://media-exp2.licdn.com/dms/image/C4D03AQFp-gO_EfYmmg/profile-displayphoto-shrink_200_200/0/1653822480555?e=1662595200&v=beta&t=zMTbzJI1crDgEurZNACW9017tOkVyudF75jXlu7UhXo" />
+		<meta property="twitter:description" content="​Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications."/>
 
-	<!-- Fonts -->
-	<link
-	  id="u-theme-google-font"
-	  rel="stylesheet"
-	  href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
-	/>
-	<link
-	  id="u-page-google-font"
-	  rel="stylesheet"
-	  href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i"
-	/>
+		<!-- title, favicon -->
+		<title>Ishani Kathuria</title>
 
-	<script type="application/ld+json">
-	  {
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "",
-		"url": "/"
-	  }
-	</script>
+		<link rel="icon" href="{% static 'favicon/favicon.ico' %}" type="image/gif" sizes="16x16">
 
-	<!-- title, favicon -->
-	<title>Ishani Kathuria</title>
+		<!-- css + js -->
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}" media="screen" />
+		<script
+			type="text/javascript"
+			src="{% static 'js/jquery-3.6.0.min.js' %}"
+			defer=""></script>
+		<script
+			type="text/javascript"
+			src="{% static 'js/nicepage.js' %}"
+			defer=""></script>
 
-	<link rel="icon" href="{% static 'favicon/favicon.ico' %}" type="image/gif" sizes="16x16">
+		<!-- Bootstrap -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+			crossorigin="anonymous">
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+			crossorigin="anonymous"></script>
 
-  </head>
-  <body class="u-body">
-	<section class="u-clearfix u-section-2" id="carousel_cf3d">
-	  <div
-		class="
-		  u-clearfix u-expanded-width u-gutter-30 u-layout-wrap u-layout-wrap-1
-		"
-	  >
-		<div class="u-gutter-0 u-layout">
-		  <div class="u-layout-row">
-			<div class="u-size-21">
-			  <div class="u-layout-row">
-				<div
-				  class="
-					main-grid
-					u-align-left
-					u-container-style
-					u-layout-cell
-					u-right-cell
-					u-size-60
-					u-layout-cell-1
-				  "
-				>
-				  <div
-					class="
-					  u-border-6
-					  u-border-grey-10
-					  u-container-layout
-					  u-valign-middle
-					  u-container-layout-1
-					"
-				  >
-					<h1
-					  class="
-						u-align-left
-						u-custom-font
-						u-font-merriweather
-						u-text
-						u-text-1
-					  "
-					  spellcheck="false"
-					>
-					  Ishani Kathuria
-					</h1>
+		<!-- Fonts -->
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
+			/>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i"
+			/>
 
-					<p
-					  class="u-custom-font u-font-courier-new u-text u-text-2"
-					  spellcheck="false"
-					>
-					  Artificial Intelligence programmer with experience in
-					  Machine Learning, Deep Neural Networks, Data Analytics,
-					  and Web Scraping applications.<br />
-					  <br />I am currently pursuing my bachelor's of technology
-					  in Artificial Intelligence at Amity University, Noida,
-					  Uttar Pradesh, India. In my spare time, I read, draw, and
-					  take pictures of beautiful things.
+		<!-- Fontawesome -->
+		<script src="https://kit.fontawesome.com/6cd21b588d.js" crossorigin="anonymous"></script>
+	</head>
+
+	<body>
+
+		<section class="container-fluid row">
+			<div id="detailsParent" class="col-4">
+				<div id="details" class="text-center">
+					<h1 class="name">Ishani Kathuria</h1>
+
+					<p class="desc">
+						Artificial Intelligence programmer with experience in
+						Machine Learning, Deep Neural Networks, Data Analytics,
+						and Web Scraping applications.<br />
+						<br />I am currently pursuing my bachelor's of technology
+						in Artificial Intelligence at Amity University, Noida,
+						Uttar Pradesh, India. In my spare time, I read, draw, and
+						take pictures of beautiful things.
 					</p>
 
-					<a
-					  href="https://www.canva.com/design/DAEUaARst6Y/w4Z9FIOR3A1N8P9L9o1zIg/view?utm_content=DAEUaARst6Y&amp;utm_campaign=designshare&amp;utm_medium=link&amp;utm_source=sharebutton"
-					  class="
-						u-align-center
-						u-btn-1
-					  "
-					  target="_blank"
-					  >
-						Check out my resume
-					</a>
-
-					<div
-					  class="
-						u-align-center
-						u-social-icons
-						u-spacing-10
-						u-social-icons-1
-					  "
-					>
-					  <a
-						class="u-social-url"
-						target="_blank"
-						title="LinkedIn"
-						href="https://www.linkedin.com/in/ishani-kathuria/"
-						><span
-						  class="
-							u-icon
-							u-social-icon
-							u-social-linkedin
-							u-text-black
-							u-icon-1
-						  "
-						  ><svg
-							class="u-svg-link"
-							preserveAspectRatio="xMidYMin slice"
-							viewBox="0 0 112 112"
-						  >
-							<use xlink:href="#svg-f9b8"></use></svg
-						  ><svg
-							class="u-svg-content"
-							viewBox="0 0 112 112"
-							x="0"
-							y="0"
-							id="svg-f9b8"
-						  >
-							<circle
-							  fill="currentColor"
-							  cx="56.1"
-							  cy="56.1"
-							  r="55"
-							></circle>
-							<path
-							  fill="#FFFFFF"
-							  d="M41.3,83.7H27.9V43.4h13.4V83.7z M34.6,37.9L34.6,37.9c-4.6,0-7.5-3.1-7.5-7c0-4,3-7,7.6-7s7.4,3,7.5,7
-			C42.2,34.8,39.2,37.9,34.6,37.9z M89.6,83.7H76.2V62.2c0-5.4-1.9-9.1-6.8-9.1c-3.7,0-5.9,2.5-6.9,4.9c-0.4,0.9-0.4,2.1-0.4,3.3v22.5
-			H48.7c0,0,0.2-36.5,0-40.3h13.4v5.7c1.8-2.7,5-6.7,12.1-6.7c8.8,0,15.4,5.8,15.4,18.1V83.7z"
-							></path></svg>
-						</span>
-					  </a>
-					  <a
-						class="u-social-url"
-						target="_blank"
-						title="Github"
-						href="https://github.com/ikathuria"
-						><span
-						  class="
-							u-icon
-							u-social-github
-							u-social-icon
-							u-text-black
-							u-icon-2
-						  "
-						  ><svg
-							class="u-svg-link"
-							preserveAspectRatio="xMidYMin slice"
-							viewBox="0 0 112 112"
-						  >
-							<use xlink:href="#svg-4c87"></use></svg
-						  ><svg
-							class="u-svg-content"
-							viewBox="0 0 112 112"
-							x="0"
-							y="0"
-							id="svg-4c87"
-						  >
-							<circle
-							  fill="currentColor"
-							  cx="56.1"
-							  cy="56.1"
-							  r="55"
-							></circle>
-							<path
-							  fill="#FFFFFF"
-							  d="M88,51.3c0-5.5-1.9-10.2-5.3-13.7c0.6-1.3,2.3-6.5-0.5-13.5c0,0-4.2-1.4-14,5.3c-4.1-1.1-8.4-1.7-12.7-1.8
-	c-4.3,0-8.7,0.6-12.7,1.8c-9.7-6.6-14-5.3-14-5.3c-2.8,7-1,12.2-0.5,13.5C25,41.2,23,45.7,23,51.3c0,19.6,11.9,23.9,23.3,25.2
-	c-1.5,1.3-2.8,3.5-3.2,6.8c-3,1.3-10.2,3.6-14.9-4.3c0,0-2.7-4.9-7.8-5.3c0,0-5-0.1-0.4,3.1c0,0,3.3,1.6,5.6,7.5c0,0,3,9.1,17.2,6
-	c0,4.3,0.1,8.3,0.1,9.5h25.2c0-1.7,0.1-7.2,0.1-14c0-4.7-1.7-7.9-3.4-9.4C76,75.2,88,70.9,88,51.3z"
-							></path></svg
-						></span>
-					  </a>
-					  <a
-						class="u-social-url"
-						target="_blank"
-						title="Medium"
-						href="https://medium.com/@ishani-kathuria"
-						><span
-						  class="
-							u-icon
-							u-social-icon
-							u-social-medium
-							u-text-black
-							u-icon-3
-						  "
-						  ><svg
-							class="u-svg-link"
-							preserveAspectRatio="xMidYMin slice"
-							viewBox="0 0 112 112"
-						  >
-							<use xlink:href="#svg-ce74"></use></svg
-						  ><svg
-							class="u-svg-content"
-							viewBox="0 0 112 112"
-							x="0"
-							y="0"
-							id="svg-ce74"
-						  >
-							<circle
-							  fill="currentColor"
-							  cx="56.1"
-							  cy="56.1"
-							  r="55"
-							></circle>
-							<path
-							  fill="#FFFFFF"
-							  d="M90.9,25.7L90.9,25.7L91,25H73.5L57.2,63.1L40.9,25H22v0.7h0.1c3.2,0.7,4.8,1.8,4.8,5.7v45.2
-	c0,3.9-1.6,4.9-4.8,5.7H22V83h12.8v-0.7h-0.1c-3.2-0.7-4.8-1.8-4.8-5.7V34l20.9,48.9H52l21.5-50.3v45.1c-0.3,3.1-1.9,4-4.8,4.6h-0.1
-	V83H91v-0.7h-0.1c-2.9-0.7-4.6-1.6-4.8-4.6V31.4l0,0C86.1,27.5,87.7,26.4,90.9,25.7"
-							></path></svg
-						></span>
-					  </a>
-					  <a
-						class="u-social-url"
-						target="_blank"
-						title="Instagram"
-						href="https://www.instagram.com/ishani_creates/"
-						><span
-						  class="
-							u-icon
-							u-social-icon
-							u-social-instagram
-							u-text-black
-							u-icon-4
-						  "
-						  ><svg
-							class="u-svg-link"
-							preserveAspectRatio="xMidYMin slice"
-							viewBox="0 0 112 112"
-						  >
-							<use xlink:href="#svg-f9cd"></use></svg
-						  ><svg
-							class="u-svg-content"
-							viewBox="0 0 112 112"
-							x="0"
-							y="0"
-							id="svg-f9cd"
-						  >
-							<circle
-							  fill="currentColor"
-							  cx="56.1"
-							  cy="56.1"
-							  r="55"
-							></circle>
-							<path
-							  fill="#FFFFFF"
-							  d="M55.9,38.2c-9.9,0-17.9,8-17.9,17.9C38,66,46,74,55.9,74c9.9,0,17.9-8,17.9-17.9C73.8,46.2,65.8,38.2,55.9,38.2
-			z M55.9,66.4c-5.7,0-10.3-4.6-10.3-10.3c-0.1-5.7,4.6-10.3,10.3-10.3c5.7,0,10.3,4.6,10.3,10.3C66.2,61.8,61.6,66.4,55.9,66.4z"
-							></path>
-							<path
-							  fill="#FFFFFF"
-							  d="M74.3,33.5c-2.3,0-4.2,1.9-4.2,4.2s1.9,4.2,4.2,4.2s4.2-1.9,4.2-4.2S76.6,33.5,74.3,33.5z"
-							></path>
-							<path
-							  fill="#FFFFFF"
-							  d="M73.1,21.3H38.6c-9.7,0-17.5,7.9-17.5,17.5v34.5c0,9.7,7.9,17.6,17.5,17.6h34.5c9.7,0,17.5-7.9,17.5-17.5V38.8
-			C90.6,29.1,82.7,21.3,73.1,21.3z M83,73.3c0,5.5-4.5,9.9-9.9,9.9H38.6c-5.5,0-9.9-4.5-9.9-9.9V38.8c0-5.5,4.5-9.9,9.9-9.9h34.5
-			c5.5,0,9.9,4.5,9.9,9.9V73.3z"
-							></path></svg
-						></span>
-					  </a>
+					<div class="text-center">
+						<a
+						href="https://www.canva.com/design/DAEUaARst6Y/w4Z9FIOR3A1N8P9L9o1zIg/view?utm_content=DAEUaARst6Y&amp;utm_campaign=designshare&amp;utm_medium=link&amp;utm_source=sharebutton"
+						class="resume-btn"
+						target="_blank">
+							Check out my resume
+						</a>
 					</div>
-				  </div>
+
+					<div id="socialIcons" class="text-center">
+						<a target="_blank" href="https://www.linkedin.com/in/ishani-kathuria/">
+							<i class="fa-brands fa-2x fa-linkedin-in"></i>
+						</a>
+						<a target="_blank" href="https://github.com/ikathuria">
+							<i class="fa-brands fa-2x fa-github"></i>
+						</a>
+						<a target="_blank" href="https://medium.com/@ishani-kathuria">
+							<i class="fa-brands fa-2x fa-medium"></i>
+						</a>
+						<a target="_blank" href="https://www.instagram.com/ishani_creates/">
+							<i class="fa-brands fa-2x fa-instagram"></i>
+						</a>
+					</div>
 				</div>
-			  </div>
 			</div>
-			<div class="u-size-39">
-			  <div class="u-layout-col">
-				<div class="u-size-30">
-				  <div class="u-layout-row">
+			<div class="col-8">
+				<div id="projects" class="row">
 					{% for repo in repos %}
+					<div class="col-4">
 						<div
-						class="
-							u-align-center
-							u-container-style
-							u-image
-							u-layout-cell
-							u-shading
-							u-size-20
-							u-image-1
-						"
-						style="
-						background-image: 
-						linear-gradient(rgba(10, 10, 10, .6), rgba(0, 0, 0, .9)),
-						repeating-linear-gradient(0, transparent, transparent 2px, black 3px, black 3px),
-						url('{{ repo.image }}')
-						"
-						data-image-width="765"
-						data-image-height="1080"
+							class="card"
+							style="width: 100%; height: 25rem;
+								   background-image: linear-gradient(rgba(10, 10, 10, .6), rgba(0, 0, 0, .9)), repeating-linear-gradient(0, transparent, transparent 2px, black 3px, black 3px), url('{{ repo.image }}');"
 						>
-						<div
-							class="
-							u-container-layout
-							u-valign-middle
-							u-container-layout-2
-							"
-						>
-							<h2 class="u-text u-text-7">
-								{{ repo.repo }}
-							</h2>
-
-							<p class="u-text u-text-8">
-								{{ repo.description }}
-							</p>
-
-							<a
-							href="{{ repo.link }}"
-							class="
-								btn
-								btn-light
-								btn-outline-dark
-								u-btn-2
-							"
-							target="_blank"
-							link-text="On GitHub!"
-							>
-								<span>
-									See the code!
-								</span>
-							</a>
-
-							{% if repo.website %}
+							<div class="card-body text-center">
+								<h5 class="card-title">{{ repo.repo }}</h5>
+								<p class="card-text">{{ repo.description }}</p>
 								<a
-								href="{{ repo.website }}"
-								class="
-									btn
-									btn-light
-									btn-outline-dark
-									u-btn-2
-								"
-								target="_blank"
-								link-text="Let's go!"
-								>
+									href="{{ repo.link }}"
+									class="btn project-btn"
+									target="_blank"
+									link-text="On GitHub!">
+									<span>
+										See the code!
+									</span>
+								</a>
+
+								{% if repo.website %}
+								<a
+									href="{{ repo.website }}"
+									class="btn project-btn"
+									target="_blank"
+									link-text="Let's go!">
 									<span>
 										See live project
 									</span>
 								</a>
-							{% endif %}
+								{% endif %}
+							</div>
 						</div>
-						</div>
+					</div>
 					{% endfor %}
-				  </div>
 				</div>
-			  </div>
 			</div>
-		  </div>
-		</div>
-	  </div>
-	</section>
+		</section>
 
-	<section class="u-backlink u-clearfix u-grey-80">
-	  <p class="u-text">
-		<span>Ishani Kathuria</span>
-	  </p>
-	</section>
-  </body>
+		<footer class="lead text-center">
+			Ishani Kathuria 2022
+		</footer>
+	</body>
 </html>

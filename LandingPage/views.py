@@ -14,10 +14,17 @@ def camel_case_split(str):
 
 
 def get_repos():
-    link = 'https://gh-pinned-repos.egoist.sh/?username=ikathuria'
+    link = 'https://ikathuria-web-scraping.herokuapp.com/github/ikathuria'
     content = requests.get(link).json()
     for i in content:
-        i['repo'] = " ".join(camel_case_split(i['repo']))
+        if '-' in i['repo']:
+            i['repo'] = " ".join(i['repo'].split('-'))
+
+        elif '_' in i['repo']:
+            i['repo'] = " ".join(i['repo'].split('_'))
+
+        else:
+            i['repo'] = " ".join(camel_case_split(i['repo']))
     return content
 
 
