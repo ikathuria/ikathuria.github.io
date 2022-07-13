@@ -1,12 +1,14 @@
+import os
+import re
+import json
+import random
+import requests
+import datetime
+import pandas as pd
+from bs4 import BeautifulSoup
+
 from django.shortcuts import render
 from django.contrib.staticfiles.storage import staticfiles_storage
-import datetime
-import json
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
-import re
-import random
 
 
 def camel_case_split(str):
@@ -17,7 +19,10 @@ def get_repos():
     link = 'https://ikathuria-web-scraping.herokuapp.com/github/ikathuria'
     content = requests.get(link).json()
     for i in content:
-        if '-' in i['repo']:
+        if '.' in i['repo']:
+            i['repo'] = " ".join(i['repo'].split('.'))
+
+        elif '-' in i['repo']:
             i['repo'] = " ".join(i['repo'].split('-'))
 
         elif '_' in i['repo']:
@@ -60,6 +65,14 @@ def index(request):
         user_data = json.load(f)
 
     context['repos'] = get_repos()
+
+    context['college_certs'] = os.listdir(
+        staticfiles_storage.path('data/certificates/college')
+    )
+
+    context['course_certs'] = os.listdir(
+        staticfiles_storage.path('data/certificates/courses')
+    )
 
     context['user'] = user_data
 
