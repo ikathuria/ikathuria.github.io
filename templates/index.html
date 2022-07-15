@@ -1,7 +1,7 @@
 {% load static %}
-{% static "data/certificates/college" as collegeCertsPath %}
-{% static "data/certificates/courses" as courseCertsPath %}
-{% static "data/certificates/internships" as internCertsPath %}
+{% static "data/certificates/college/" as collegeCertsPath %}
+{% static "data/certificates/courses/" as courseCertsPath %}
+{% static "data/certificates/internships/" as internCertsPath %}
 
 <!DOCTYPE html>
 <html style="font-size: 16px">
@@ -171,7 +171,7 @@
 
 						<div class="modal-body">
 							{% for cert in intern_certs %}
-							<img src="{{internCertsPath}}/{{cert}}" class="img-fluid mb-2">
+							<img src="{{internCertsPath}}{{cert}}" class="img-fluid mb-2">
 							{% endfor %}
 						</div>
 					</div>
@@ -191,7 +191,7 @@
 
 						<div class="modal-body">
 							{% for cert in course_certs %}
-							<img src="{{courseCertsPath}}/{{cert}}" class="img-fluid mb-2">
+							<img src="{{courseCertsPath}}{{cert}}" class="img-fluid mb-2">
 							{% endfor %}
 						</div>
 					</div>
@@ -211,7 +211,7 @@
 
 						<div class="modal-body">
 							{% for cert in college_certs %}
-							<img src="{{collegeCertsPath}}/{{cert}}" class="img-fluid mb-2">
+							<img src="{{collegeCertsPath}}{{cert}}" class="img-fluid mb-2">
 							{% endfor %}
 						</div>
 					</div>
