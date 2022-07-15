@@ -1,4 +1,7 @@
 {% load static %}
+{% static "data/certificates/college/" as collegeCertsPath %}
+{% static "data/certificates/courses/" as courseCertsPath %}
+{% static "data/certificates/internships/" as internCertsPath %}
 
 <!DOCTYPE html>
 <html style="font-size: 16px">
@@ -41,11 +44,11 @@
 		<script
 			type="text/javascript"
 			src="{% static 'js/jquery-3.6.0.min.js' %}"
-			defer=""></script>
-		<script
-			type="text/javascript"
-			src="{% static 'js/nicepage.js' %}"
-			defer=""></script>
+			defer="">
+		</script>
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
 		<!-- Bootstrap -->
 		<link
@@ -73,7 +76,6 @@
 	</head>
 
 	<body>
-
 		<section class="container-fluid row">
 			<div id="detailsParent" class="col-4">
 				<div id="details" class="text-center">
@@ -151,6 +153,68 @@
 						</div>
 					</div>
 					{% endfor %}
+				</div>
+			</div>
+		</section>
+
+		<section class="container-fluid row">
+			<h2 class="display-2">Certificates</h2>
+
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".intern-certs-modal">
+				Internship certificates
+			</button>
+
+			<div class="modal intern-certs-modal" tabindex="-1" role="dialog" aria-labelledby="internCertificates" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content text-center">
+						<h3 class="modal-title">Internship certificates</h3>
+
+						<div class="modal-body">
+							{% for cert in intern_certs %}
+							<img src="{{internCertsPath}}/{{cert}}" class="img-fluid mb-2">
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<hr />
+
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".course-certs-modal">
+				Courses certificates
+			</button>
+
+			<div class="modal course-certs-modal" tabindex="-1" role="dialog" aria-labelledby="courseCertificates" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content text-center">
+						<h3 class="modal-title">Courses certificates</h3>
+
+						<div class="modal-body">
+							{% for cert in course_certs %}
+							<img src="{{courseCertsPath}}/{{cert}}" class="img-fluid mb-2">
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<hr />
+
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".college-certs-modal">
+				College certificates
+			</button>
+
+			<div class="modal college-certs-modal" tabindex="-1" role="dialog" aria-labelledby="collegeCertificates" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content text-center">
+						<h3 class="modal-title">College certificates</h3>
+
+						<div class="modal-body">
+							{% for cert in college_certs %}
+							<img src="{{collegeCertsPath}}/{{cert}}" class="img-fluid mb-2">
+							{% endfor %}
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>

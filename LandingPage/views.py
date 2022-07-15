@@ -51,6 +51,12 @@ def get_stats():
     return [commits, contribute]
 
 
+def sort_files(lis):
+    lis_nums = {}
+    lis.sort(key=lambda x: x.split('.')[0])
+    return lis
+
+
 def index(request):
     context = {}
 
@@ -64,18 +70,39 @@ def index(request):
     with open(user_info_json) as f:
         user_data = json.load(f)
 
-    context['repos'] = get_repos()
-
-    context['college_certs'] = os.listdir(
-        staticfiles_storage.path('data/certificates/college')
-    )
-
-    context['course_certs'] = os.listdir(
-        staticfiles_storage.path('data/certificates/courses')
-    )
-
     context['user'] = user_data
 
+    context['repos'] = get_repos()
+
+    context['intern_certs'] = [i for i in os.listdir(
+        staticfiles_storage.path('data/certificates/internships')
+    ) if i.count('.') == 1]
+
+    context['intern_certs'].sort(
+        key=lambda var: [int(x) if x.isdigit()
+                         else x for x in re.findall(r'[^0-9]|[0-9]+', var)],
+        reverse=True
+    )
+
+    context['course_certs'] = [i for i in os.listdir(
+        staticfiles_storage.path('data/certificates/courses')
+    ) if i.count('.') == 1]
+
+    context['course_certs'].sort(
+        key=lambda var: [int(x) if x.isdigit()
+                         else x for x in re.findall(r'[^0-9]|[0-9]+', var)],
+        reverse=True
+    )
+
+    context['college_certs'] = [i for i in os.listdir(
+        staticfiles_storage.path('data/certificates/college')
+    ) if i.count('.') == 1]
+
+    context['college_certs'].sort(
+        key=lambda var: [int(x) if x.isdigit()
+                         else x for x in re.findall(r'[^0-9]|[0-9]+', var)],
+        reverse=True
+    )
     context['stats'] = get_stats()
 
     context['typewriter'] = random.choice([
