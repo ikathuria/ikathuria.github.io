@@ -1,16 +1,31 @@
-html {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  font-family: sans-serif;
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
-body {
-  padding-top: 2rem;
+html, body {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    font-family: 'Lato', sans-serif;
 }
+
+/* body {
+  padding-top: 2rem;
+} */
 
 a {
   text-decoration: none !important;
+}
+
+section {
+  min-height: 98vh;
+  border: rgb(110, 110, 110) 1vh solid;
+}
+
+.row {
+  --bs-gutter-x: 0 !important;
 }
 
 #detailsParent {
@@ -20,7 +35,7 @@ a {
 #details {
   display: table-cell;
   vertical-align: middle;
-  border: rgb(105, 105, 105) 4px solid;
+  /* border: rgb(105, 105, 105) 4px solid; */
 }
 
 #details .name {
@@ -75,14 +90,24 @@ a {
   color: rgba(0, 0, 0, 0.8);
 }
 
-#projects .card {
+#projects {
   display: table;
-  margin: 5px auto;
+}
+
+#projects-card-parent {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#projects .card {
+  display: table-cell;
+  vertical-align: middle;
+  margin: 5px 5px;
   color: white;
   background-position: center;
 }
 
-#projects .card-body {
+#projects .card .card-body {
   display: table-cell;
   vertical-align: middle;
 }
