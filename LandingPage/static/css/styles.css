@@ -20,13 +20,38 @@ a {
 }
 
 section {
-  min-height: 98vh;
-  border: rgb(110, 110, 110) 1vh solid;
+  min-height: 100vh;
 }
 
 .row {
   --bs-gutter-x: 0 !important;
 }
+
+/* BASE ------------------------------------------------------------- */
+
+.jumbotron {
+  min-height: 30vh;
+  vertical-align: middle;
+  background-image: url("https://images.unsplash.com/photo-1605145536839-7344525b0b3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1161&q=80");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+}
+
+#jumboDetails {
+  position: relative;
+}
+
+.navbar {
+  margin-bottom: 1rem;
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+  color: #495057 !important;
+}
+
+/* HOME ------------------------------------------------------------- */
+
 
 #detailsParent {
   display: table;
@@ -35,7 +60,6 @@ section {
 #details {
   display: table-cell;
   vertical-align: middle;
-  /* border: rgb(105, 105, 105) 4px solid; */
 }
 
 #details .name {
@@ -49,67 +73,12 @@ section {
   font-family: "Courier New", Courier, monospace;
 }
 
-.resume-btn {
-	text-align: center;
-  position: relative;
-  padding: 2% 5%;
-  margin: 23px auto 0;
-  text-transform: uppercase;
-  color: rgb(0, 0, 0);
-  border: 2px solid rgb(0, 0, 0);
-  border-radius: 50px;
-  box-shadow: 0 8px 0 #0b3954;
-  text-decoration: none;
-}
-
-.resume-btn:hover {
-  text-decoration: none;
-  color: rgb(255, 255, 255);
-  background: rgb(0, 0, 0);
-}
-
-.resume-btn:focus,
-.resume-btn:active {
-  color: rgb(255, 255, 255);
-  background: rgb(0, 0, 0);
-  box-shadow: none;
-  top: 8px;
-}
-
-#socialIcons {
-	margin-top: 30px;
-}
-
-#socialIcons .fa-brands{
-	margin-left: 10px;
-	margin-right: 10px;
-  color: #000;
-}
-
-#socialIcons .fa-brands:hover{
-  color: rgba(0, 0, 0, 0.8);
-}
-
-#projects {
-  display: table;
-}
-
-#projects-card-parent {
-  display: table-cell;
-  vertical-align: middle;
-}
+/* PROJECTS ------------------------------------------------------------- */
 
 #projects .card {
-  display: table-cell;
-  vertical-align: middle;
   margin: 5px 5px;
   color: white;
   background-position: center;
-}
-
-#projects .card .card-body {
-  display: table-cell;
-  vertical-align: middle;
 }
 
 #projects .card-title {
@@ -172,4 +141,104 @@ section {
   letter-spacing: 0.05em;
   -webkit-transform: translateY(0) scale(1, 1);
   transform: translateY(0) scale(1, 1);
+}
+
+/* RESEARCH ------------------------------------------------------------- */
+
+#research .research-btn {
+  margin: 5px auto 0;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-decoration: none;
+  background-color: white;
+  color: #000;
+  border: #000 0.5px solid;
+  --uismLinkDisplay: var(--smLinkDisplay, inline-flex);
+  display: var(--uismLinkDisplay);
+  position: relative;
+  transition-duration: 0.4s;
+  overflow: hidden;
+}
+
+#research .research-btn:hover {
+  text-decoration: none;
+}
+
+#research .research-btn::before,
+#research .research-btn span {
+  margin: 0 auto;
+  transition-timing-function: cubic-bezier(0.86, 0, 0.07, 1);
+  transition-duration: 0.4s;
+}
+
+#research .research-btn:hover {
+  background-color: #000;
+}
+
+#research .research-btn:hover span {
+  color: transparent;
+  -webkit-transform: translateY(-400%) scale(-0.1, 20);
+  transform: translateY(-400%) scale(-0.1, 20);
+}
+
+#research .research-btn::before {
+  content: attr(link-text);
+  color: #fff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  -webkit-transform: translateY(500%) scale(-0.1, 20);
+  transform: translateY(500%) scale(-0.1, 20);
+}
+
+#research .research-btn:hover::before {
+  letter-spacing: 0.05em;
+  -webkit-transform: translateY(0) scale(1, 1);
+  transform: translateY(0) scale(1, 1);
+}
+
+/* #research .research-btn {
+	text-align: center;
+  position: relative;
+  padding: 0.5% 1%;
+  margin: 3px auto 0;
+  text-transform: uppercase;
+  color: #001011;
+  background: #6CCFF6;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 50px;
+  box-shadow: 0 8px 0 #757780;
+  text-decoration: none;
+}
+
+#research .research-btn:hover {
+  text-decoration: none;
+  color: #6CCFF6;
+  background: #001011;
+}
+
+#research .research-btn:focus,
+#research .research-btn:active {
+  color: #6CCFF6;
+  background: #001011;
+  box-shadow: none;
+  top: 8px;
+} */
+
+/* SOCIAL ------------------------------------------------------------- */
+
+#socialIcons {
+	margin-top: 30px;
+}
+
+#socialIcons .fa-brands{
+	margin-left: 10px;
+	margin-right: 10px;
+  color: #000;
+}
+
+#socialIcons .fa-brands:hover{
+  color: rgba(0, 0, 0, 0.8);
 }

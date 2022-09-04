@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block mainContent %}
+<section id="research" class="container" style="position: relative;">
+    <a href="https://orcid.org/0000-0001-7345-7405" target="_blank">
+        ORCID: 0000-0001-7345-7405 
+    </a>
+
+    <h2>Research Papers</h2>
+    <div class="card card-block d-table-cell align-middle">
+        <div class="card-header">
+            DOI: <a href="https://doi.org/10.1109/COM-IT-CON54601.2022.9850494">10.1109/COM-IT-CON54601.2022.9850494</a>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Predicting daily PM2.5 using Classic Azure ML Studio</h5>
+            <p class="card-text">
+                <b>Abstract—</b>
+                <em>
+                    With the development of various industries, air pollution is also increasing day by day, and hence the air is getting harmful for living beings whether it be humans or animals. Some of the major factors in determining air pollution are Aerosol Optical Thickness/Depth (AOT/AOD), Ml, and M2. This paper proposes determining the most important factors in determining the PM2.5 level using feature selection methods and developing a model to predict the PM2.5 level using neural network regression on the Azure ML studio platform.
+                </em>
+            </p>
+            <a
+                class="btn research-btn"
+                link-text="Bibtex"
+                data-toggle="collapse"
+                href="#citationCollapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="citationCollapse"
+            >
+                Citation
+            </a>
+            <div class="collapse" id="citationCollapse">
+                @misc{Saxena_Kathuria_Bhatia_Garg_2022, title={Predicting daily PM2.5 using Classic Azure ML Studio}, url={http://dx.doi.org/10.1109/COM-IT-CON54601.2022.9850494}, DOI={10.1109/com-it-con54601.2022.9850494}, journal={2022 International Conference on Machine Learning, Big Data, Cloud and Parallel Computing (COM-IT-CON)}, publisher={IEEE}, author={Saxena, Kamad and Kathuria, Ishani and Bhatia, Madhulika and Garg, Anchal}, year={2022}, month={May} }
+            </div>
+            <br />
+            <a
+                href="https://doi.org/10.1109/COM-IT-CON54601.2022.9850494"
+                class="btn research-btn"
+                target="_blank"
+                link-text="On IEEE Xplore">
+                <span>
+                    See the published paper!
+                </span>
+            </a>
+        </div>
+        <div class="card-footer">
+            Published in: <a href="https://ieeexplore.ieee.org/xpl/conhome/9850394/proceeding">
+                2022 International Conference on Machine Learning, Big Data, Cloud and Parallel Computing (COM-IT-CON)
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

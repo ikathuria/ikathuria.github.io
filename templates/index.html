@@ -1,226 +1,113 @@
+{% extends 'base.html' %}
 {% load static %}
 {% static "data/certificates/college/" as collegeCertsPath %}
 {% static "data/certificates/courses/" as courseCertsPath %}
 {% static "data/certificates/internships/" as internCertsPath %}
 
-<!DOCTYPE html>
-<html style="font-size: 16px">
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta charset="utf-8" />
+{% block mainContent %}
+<section id="homeContainer" class="container">
+	<div class="row">
+		<div class="col-9">
+			<h2>Biography</h2>
+			<p class="desc">
+				Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications.
+				<br />
+				I am currently pursuing my bachelor's of technology in Artificial Intelligence at Amity University, Noida, Uttar Pradesh, India. In my spare time, I read, draw, and take pictures of beautiful things.
+			</p>
 
-		<!-- meta tags -->
-		<meta name="author" content="Ishani Kathuria" />
-		<meta name="theme-color" content="#478ac9" />
-		<meta
-			name="keywords"
-			content="Ishani, Ishani Kathuria, Artificial Intelligence, Machine Learning,
-			Deep Learning, Portfolio"
-			/>
-		<meta
-			name="description"
-			content="​Artificial Intelligence programmer with experience in Machine
-			Learning, Deep Neural Networks, Data Analytics, and Web Scraping
-			applications."
-			/>
+			<h2>Research Areas</h2>
+			<p class="desc">
+				Artificial Intelligence, Machine Learning, Deep Learning, Computer Vision, Natural Language Processing
+			</p>
 
-		<meta property="og:title" content="Ishani Kathuria" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="http://ishani.kathuria.net/" />
-		<meta property="og:image" content="https://media-exp2.licdn.com/dms/image/C4D03AQFp-gO_EfYmmg/profile-displayphoto-shrink_200_200/0/1653822480555?e=1662595200&v=beta&t=zMTbzJI1crDgEurZNACW9017tOkVyudF75jXlu7UhXo" />
-		<meta property="og:description" content="​Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications."/>
-
-		<meta property="twitter:title" content="Ishani Kathuria" />
-		<meta property="twitter:image" content="https://media-exp2.licdn.com/dms/image/C4D03AQFp-gO_EfYmmg/profile-displayphoto-shrink_200_200/0/1653822480555?e=1662595200&v=beta&t=zMTbzJI1crDgEurZNACW9017tOkVyudF75jXlu7UhXo" />
-		<meta property="twitter:description" content="​Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications."/>
-
-		<!-- title, favicon -->
-		<title>Ishani Kathuria</title>
-
-		<link rel="icon" href="{% static 'favicon/favicon.ico' %}" type="image/gif" sizes="16x16">
-
-		<!-- css + js -->
-		<link rel="stylesheet" href="{% static 'css/styles.css' %}" media="screen" />
-		<script
-			type="text/javascript"
-			src="{% static 'js/jquery-3.6.0.min.js' %}"
-			defer="">
-		</script>
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-
-		<!-- Bootstrap -->
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
-			crossorigin="anonymous">
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-			crossorigin="anonymous"></script>
-
-		<!-- Fonts -->
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
-			/>
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i"
-			/>
-
-		<!-- Fontawesome -->
-		<script src="https://kit.fontawesome.com/6cd21b588d.js" crossorigin="anonymous"></script>
-	</head>
-
-	<body>
-		<section class="container-fluid row text-center">
-			<div id="detailsParent" class="col-4">
-				<div id="details">
-					<h1 class="name">Ishani Kathuria</h1>
-
-					<p class="desc">
-						Artificial Intelligence programmer with experience in
-						Machine Learning, Deep Neural Networks, Data Analytics,
-						and Web Scraping applications.<br />
-						<br />I am currently pursuing my bachelor's of technology
-						in Artificial Intelligence at Amity University, Noida,
-						Uttar Pradesh, India. In my spare time, I read, draw, and
-						take pictures of beautiful things.
-					</p>
-
-					<div>
-						<a
-						href="https://www.canva.com/design/DAEUaARst6Y/w4Z9FIOR3A1N8P9L9o1zIg/view?utm_content=DAEUaARst6Y&amp;utm_campaign=designshare&amp;utm_medium=link&amp;utm_source=sharebutton"
-						class="resume-btn"
-						target="_blank">
-							Check out my resume
-						</a>
-					</div>
-
-					<div id="socialIcons">
-						<a target="_blank" href="https://www.linkedin.com/in/ishani-kathuria/">
-							<i class="fa-brands fa-2x fa-linkedin-in"></i>
-						</a>
-						<a target="_blank" href="https://github.com/ikathuria">
-							<i class="fa-brands fa-2x fa-github"></i>
-						</a>
-						<a target="_blank" href="https://medium.com/@ishani-kathuria">
-							<i class="fa-brands fa-2x fa-medium"></i>
-						</a>
-						<a target="_blank" href="https://www.instagram.com/ishani_creates/">
-							<i class="fa-brands fa-2x fa-instagram"></i>
-						</a>
-					</div>
-				</div>
+			<h2>Social</h2>
+			<div id="socialIcons">
+				<a target="_blank" href="https://www.linkedin.com/in/ishani-kathuria/">
+					<i class="fa-brands fa-2x fa-linkedin-in"></i>
+				</a>
+				<a target="_blank" href="https://github.com/ikathuria">
+					<i class="fa-brands fa-2x fa-github"></i>
+				</a>
+				<a target="_blank" href="https://orcid.org/0000-0001-7345-7405">
+					<i class="fa-brands fa-2x fa-orcid"></i>
+				</a>
+				<a target="_blank" href="https://medium.com/@ishani-kathuria">
+					<i class="fa-brands fa-2x fa-medium"></i>
+				</a>
+				<a target="_blank" href="https://www.instagram.com/ishani_creates/">
+					<i class="fa-brands fa-2x fa-instagram"></i>
+				</a>
 			</div>
-			<div id="projects-parent" class="col-8">
-				<div id="projects" class="row">
-					{% for repo in repos %}
-					<div id="projects-card-parent" class="col-4">
-						<div
-							class="card"
-							style="width: 100%; height: 25rem;
-								   background-image: linear-gradient(rgba(10, 10, 10, .6), rgba(0, 0, 0, .9)), repeating-linear-gradient(0, transparent, transparent 2px, black 3px, black 3px), url('{{ repo.image }}');"
-						>
-							<div class="card-body text-center">
-								<h5 class="card-title">{{ repo.repo }}</h5>
-								<p class="card-text">{{ repo.description }}</p>
-								<a
-									href="{{ repo.link }}"
-									class="btn project-btn"
-									target="_blank"
-									link-text="On GitHub!">
-									<span>
-										See the code!
-									</span>
-								</a>
+		</div>
+		<div class="col-3">
+			<img
+				src="https://media-exp1.licdn.com/dms/image/C4D03AQFp-gO_EfYmmg/profile-displayphoto-shrink_800_800/0/1653822480555?e=1668038400&v=beta&t=pIbyzSRhpNlMjSwQUDRSJowLM5SKLSxFlQul0iydj64"
+				class="img-fluid img-thumbnail rounded-circle"
+				alt="Ishani-Kathuria-profile-image"
+			>
+		</div>
+	</div>
+</section>
 
-								{% if repo.website %}
-								<a
-									href="{{ repo.website }}"
-									class="btn project-btn"
-									target="_blank"
-									link-text="Let's go!">
-									<span>
-										See live project
-									</span>
-								</a>
-								{% endif %}
-							</div>
-						</div>
-					</div>
+<!-- <div class="container-fluid row">
+	<h2 class="display-2">Certificates</h2>
+
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".intern-certs-modal">
+		Internship certificates
+	</button>
+
+	<div class="modal intern-certs-modal" tabindex="-1" role="dialog" aria-labelledby="internCertificates" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content text-center">
+				<h3 class="modal-title">Internship certificates</h3>
+
+				<div class="modal-body">
+					{% for cert in intern_certs %}
+					<img src="{{internCertsPath}}{{cert}}" class="img-fluid mb-2">
 					{% endfor %}
 				</div>
 			</div>
-		</section>
+		</div>
+	</div>
 
-		<section class="container-fluid row">
-			<h2 class="display-2">Certificates</h2>
+	<hr />
 
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".intern-certs-modal">
-				Internship certificates
-			</button>
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".course-certs-modal">
+		Courses certificates
+	</button>
 
-			<div class="modal intern-certs-modal" tabindex="-1" role="dialog" aria-labelledby="internCertificates" aria-hidden="true">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content text-center">
-						<h3 class="modal-title">Internship certificates</h3>
+	<div class="modal course-certs-modal" tabindex="-1" role="dialog" aria-labelledby="courseCertificates" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content text-center">
+				<h3 class="modal-title">Courses certificates</h3>
 
-						<div class="modal-body">
-							{% for cert in intern_certs %}
-							<img src="{{internCertsPath}}{{cert}}" class="img-fluid mb-2">
-							{% endfor %}
-						</div>
-					</div>
+				<div class="modal-body">
+					{% for cert in course_certs %}
+					<img src="{{courseCertsPath}}{{cert}}" class="img-fluid mb-2">
+					{% endfor %}
 				</div>
 			</div>
+		</div>
+	</div>
 
-			<hr />
+	<hr />
 
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".course-certs-modal">
-				Courses certificates
-			</button>
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".college-certs-modal">
+		College certificates
+	</button>
 
-			<div class="modal course-certs-modal" tabindex="-1" role="dialog" aria-labelledby="courseCertificates" aria-hidden="true">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content text-center">
-						<h3 class="modal-title">Courses certificates</h3>
+	<div class="modal college-certs-modal" tabindex="-1" role="dialog" aria-labelledby="collegeCertificates" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content text-center">
+				<h3 class="modal-title">College certificates</h3>
 
-						<div class="modal-body">
-							{% for cert in course_certs %}
-							<img src="{{courseCertsPath}}{{cert}}" class="img-fluid mb-2">
-							{% endfor %}
-						</div>
-					</div>
+				<div class="modal-body">
+					{% for cert in college_certs %}
+					<img src="{{collegeCertsPath}}{{cert}}" class="img-fluid mb-2">
+					{% endfor %}
 				</div>
 			</div>
-
-			<hr />
-
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".college-certs-modal">
-				College certificates
-			</button>
-
-			<div class="modal college-certs-modal" tabindex="-1" role="dialog" aria-labelledby="collegeCertificates" aria-hidden="true">
-				<div class="modal-dialog modal-lg">
-					<div class="modal-content text-center">
-						<h3 class="modal-title">College certificates</h3>
-
-						<div class="modal-body">
-							{% for cert in college_certs %}
-							<img src="{{collegeCertsPath}}{{cert}}" class="img-fluid mb-2">
-							{% endfor %}
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<footer class="lead text-center">
-			Ishani Kathuria 2022
-		</footer>
-	</body>
-</html>
+		</div>
+	</div>
+</div> -->
+{% endblock %}
