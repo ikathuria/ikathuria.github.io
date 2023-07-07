@@ -1,5 +1,6 @@
 import re
 import requests
+import pandas as pd
 from bs4 import BeautifulSoup
 
 
@@ -28,3 +29,14 @@ def get_stats():
 def sort_files(lis):
     lis.sort(key=lambda x: x.split('.')[0])
     return lis
+
+
+def get_json_data(path):
+    """
+    Get list of research papers from json file.
+
+    Returns:
+        list: List of research papers.
+    """
+    content = pd.read_json(path, convert_dates=False).to_dict(orient='records')
+    return content

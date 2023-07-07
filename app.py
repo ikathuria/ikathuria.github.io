@@ -88,17 +88,6 @@ def get_repos():
     return content
 
 
-def get_json_data(path):
-    """
-    Get list of research papers from json file.
-
-    Returns:
-        list: List of research papers.
-    """
-    content = pd.read_json(path, convert_dates=False).to_dict(orient='records')
-    return content
-
-
 context = {
     'name': 'home'
 }
