@@ -1,6 +1,4 @@
 beautifulsoup4==4.12.2
-Django==4.2.3
-django_heroku==0.3.1
 Flask==2.3.2
 pandas==2.0.3
 Requests==2.31.0
