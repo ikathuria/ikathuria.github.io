@@ -4,12 +4,13 @@ blinker
 certifi
 cffi
 charset-normalizer
+chromedriver-py.90
 click
 colorama
 exceptiongroup
 Flask
 h11
-idna==3.4
+idna
 itsdangerous
 Jinja2
 MarkupSafe

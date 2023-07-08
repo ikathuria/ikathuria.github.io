@@ -4,12 +4,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from chromedriver_py import binary_path
 
 options = Options()
 options.add_argument("--headless")
 options.add_argument("--disable-gpu")
 options.add_argument("enable-automation")
-# options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 
 
 def get_website_image(owner, repo, link):
@@ -145,14 +145,9 @@ def scrape_github(username):
 
     data = []
     DRIVER = webdriver.Chrome(
-        service=Service(os.environ.get("CHROMEDRIVER_PATH")),
+        service=Service(binary_path),
         options=options
     )
-
-    # DRIVER = webdriver.Chrome(
-    #     service=Service(ChromeDriverManager().install()),
-    #     options=options
-    # )
 
     try:
         path = f"https://www.github.com/{username}"
@@ -179,3 +174,5 @@ def scrape_github(username):
     DRIVER.quit()
 
     return data
+
+print(scrape_github("ikathuria"))
