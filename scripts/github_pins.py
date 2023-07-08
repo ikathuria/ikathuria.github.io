@@ -144,14 +144,15 @@ def scrape_github(username):
     global DRIVER
 
     data = []
-    # DRIVER = webdriver.Chrome(
-    #     os.environ.get("CHROMEDRIVER_PATH"), options=options
-    # )
-
     DRIVER = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()),
+        service=Service(os.environ.get("CHROMEDRIVER_PATH")),
         options=options
     )
+
+    # DRIVER = webdriver.Chrome(
+    #     service=Service(ChromeDriverManager().install()),
+    #     options=options
+    # )
 
     try:
         path = f"https://www.github.com/{username}"
