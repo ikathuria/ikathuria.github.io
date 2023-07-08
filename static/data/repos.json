@@ -1,10 +1,10 @@
 [
   {
     "owner": "ikathuria",
-    "repo": "python-to-ai",
+    "repo": "python to ai",
     "link": "https://github.com/ikathuria/python-to-ai",
     "description": "Different machine learning algorithms implemented to predict the outcomes of different datasets.",
-    "image": "https://opengraph.githubassets.com/b8cad3a559e85b2df2cda0f048d14982654d9a6eb41a18d6eeccd2d7cd287e07/ikathuria/python-to-ai",
+    "image": "https://repository-images.githubusercontent.com/335218478/135ad29d-11cb-4447-b877-b98720e61790",
     "website": "https://python-to-ai.herokuapp.com/",
     "language": "Jupyter Notebook",
     "languageColor": "rgb(218, 91, 11)",
@@ -16,7 +16,7 @@
     "repo": "Autbot",
     "link": "https://github.com/ikathuria/Autbot",
     "description": "Converational AI bot to help children on the autistic apectrum.",
-    "image": "https://opengraph.githubassets.com/de20ecdb557b91090ebecb9490dc689fb0d109e9748aeb61722374d533bfc372/ikathuria/Autbot",
+    "image": "https://repository-images.githubusercontent.com/593940340/71b86f94-6980-4acf-8854-64a014415db3",
     "website": "https://github.com/ikathuria/Autbot#readme",
     "language": "Jupyter Notebook",
     "languageColor": "rgb(218, 91, 11)",
@@ -25,7 +25,7 @@
   },
   {
     "owner": "ikathuria",
-    "repo": "ikathuria.github.io",
+    "repo": "ikathuria github io",
     "link": "https://github.com/ikathuria/ikathuria.github.io",
     "description": "My portfolio landing page was made with Django and deployed on Heroku.",
     "image": "https://opengraph.githubassets.com/73db2b66680f9cc542e41352b0dc4c2fb2a2975ddc66e70b70f816cd2305ce75/ikathuria/ikathuria.github.io",
@@ -37,7 +37,7 @@
   },
   {
     "owner": "ikathuria",
-    "repo": "DepthGestureRecognition",
+    "repo": "Depth Gesture Recognition",
     "link": "https://github.com/ikathuria/DepthGestureRecognition",
     "description": "A motion gesture detection and recognition model with depth estimation made with a 3D-CNN using the 20bnJester dataset.",
     "image": "https://repository-images.githubusercontent.com/371683340/6f7fd81f-4fdf-44c5-8beb-5d054534de6c",
@@ -49,7 +49,7 @@
   },
   {
     "owner": "ikathuria",
-    "repo": "GestureRecognition",
+    "repo": "Gesture Recognition",
     "link": "https://github.com/ikathuria/GestureRecognition",
     "description": "Real time gesture recognition of some common gestures.",
     "image": "https://repository-images.githubusercontent.com/349803673/6a802c04-980a-4f1d-a5b6-4fbea2b61ce8",
@@ -61,7 +61,7 @@
   },
   {
     "owner": "ikathuria",
-    "repo": "PythonGames",
+    "repo": "Python Games",
     "link": "https://github.com/ikathuria/PythonGames",
     "description": "Some popular offline games given an online twist with python.",
     "image": "https://repository-images.githubusercontent.com/282120771/af543cba-f428-4def-96df-52398f944115",

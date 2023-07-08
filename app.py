@@ -86,6 +86,8 @@ def get_repos():
 
         else:
             i['repo'] = " ".join(camel_case_split(i['repo']))
+
+    pd.DataFrame(content).to_json('static/data/repos.json', 'records')
     return content
 
 
