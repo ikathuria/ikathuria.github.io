@@ -1,3 +1,4 @@
+import os
 import random
 import pandas as pd
 from flask import Flask, jsonify
@@ -92,7 +93,11 @@ context = {
     'name': 'home'
 }
 
-context['repos'] = get_repos()
+try:
+    context['repos'] = get_repos()
+except:
+    context['repos'] = get_json_data('static/data/repos.json')
+
 context['papers'] = get_json_data('static/data/research_papers.json')
 
 context['intern_certs'] = get_json_data(
