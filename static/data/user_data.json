@@ -1,0 +1,336 @@
+{
+    "USER_INFO": {
+        "login": "ikathuria",
+        "id": 59335998,
+        "node_id": "MDQ6VXNlcjU5MzM1OTk4",
+        "avatar_url": "https://avatars.githubusercontent.com/u/59335998?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/ikathuria",
+        "html_url": "https://github.com/ikathuria",
+        "followers_url": "https://api.github.com/users/ikathuria/followers",
+        "following_url": "https://api.github.com/users/ikathuria/following{/other_user}",
+        "gists_url": "https://api.github.com/users/ikathuria/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/ikathuria/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/ikathuria/subscriptions",
+        "organizations_url": "https://api.github.com/users/ikathuria/orgs",
+        "repos_url": "https://api.github.com/users/ikathuria/repos",
+        "events_url": "https://api.github.com/users/ikathuria/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/ikathuria/received_events",
+        "type": "User",
+        "site_admin": false,
+        "name": "Ishani Kathuria",
+        "company": null,
+        "blog": "https://ishani.kathuria.net/",
+        "location": "Delhi, India",
+        "email": null,
+        "hireable": null,
+        "bio": null,
+        "twitter_username": "IshaniKathuria",
+        "public_repos": 22,
+        "public_gists": 0,
+        "followers": 4,
+        "following": 2,
+        "created_at": "2019-12-29T13:26:42Z",
+        "updated_at": "2021-08-28T18:33:22Z"
+    },
+    "RESEARCH_PAPERS": [
+        {
+            "DOI": "https://doi.org/10.1109/COM-IT-CON54601.2022.9850494",
+            "title": "Predicting daily PM2.5 using Classic Azure ML Studio",
+            "abstract": "With the development of various industries, air pollution is also increasing day by day, and hence the air is getting harmful for living beings whether it be humans or animals. Some of the major factors in determining air pollution are Aerosol Optical Thickness/Depth (AOT/AOD), Ml, and M2. This paper proposes determining the most important factors in determining the PM2.5 level using feature selection methods and developing a model to predict the PM2.5 level using neural network regression on the Azure ML studio platform.",
+            "bibtex": "@inproceedings{\nSaxena2022,\ndoi = {10.1109/com-it-con54601.2022.9850494},\nurl = {https://doi.org/10.1109/com-it-con54601.2022.9850494},\nyear = {2022},\nmonth = may,\npublisher = {{IEEE}},\nauthor = {Kamad Saxena and Ishani Kathuria and Madhulika Bhatia and Anchal Garg},\ntitle = {Predicting daily {PM}2.5 using Classic Azure {ML} Studio},\nbooktitle = {2022 International Conference on Machine Learning,  Big Data,  Cloud and Parallel Computing ({COM}-{IT}-{CON})}\n}",
+            "publisher_name": "2022 International Conference on Machine Learning, Big Data, Cloud and Parallel Computing (COM-IT-CON)",
+            "publisher_link": "https://ieeexplore.ieee.org/xpl/conhome/9850394/proceeding",
+            "publisher": "IEEE"
+        },
+        {
+            "DOI": "https://doi.org/10.1007/978-981-19-9876-8_29",
+            "title": "Applications of Deep Learning in Healthcare: A Systematic Analysis",
+            "abstract": "Deep learning (DL) is a subfield of artificial intelligence (AI) that deals with the recognition of patterns. It learns from the input provided to it to predict an output according to the features it evaluates. With the extensive increase in unstructured data in the past few years, the ability to train machines to predict outcomes became much more difficult but the development of artificial neural networks (ANNs) and DL techniques changed that. One of the biggest advancements made with DL is in the field of healthcare. The objective of this research is to provide a comprehensive analysis of the vast applications of DL techniques used in the healthcare system, specifically in the domains of drug discovery, medical imaging, and electronic health records (EHRs). Due to the past epidemics and the current situation of the ongoing pandemic disease, i.e., COVID-19, the application of AI, ML, and DL in this field has become even more critical. Such work has become even more significant, and these techniques can help make timely predictions to combat the situation. The result showed a lot of research is ongoing to continuously tackle the limitations and improve upon the advantages. Many important advancements have been made in the field and will continue to grow and make our quality of life more efficient, cost-effective, and effortless.",
+            "bibtex": "@incollection{\nKathuria2023,\ndoi = {10.1007/978-981-19-9876-8_29},\nurl = {https://doi.org/10.1007/978-981-19-9876-8_29},\nyear = {2023},\npublisher = {Springer Nature Singapore},\npages = {385--399},\nauthor = {Ishani Kathuria and Madhulika Bhatia and Anchal Garg and Ashish Grover},\ntitle = {Applications of Deep Learning in Healthcare: A Systematic Analysis},\nbooktitle = {Lecture Notes in Electrical Engineering}\n}",
+            "publisher_name": "Proceedings of International Conference on Recent Innovations in Computing",
+            "publisher_link": "https://link.springer.com/chapter/10.1007/978-981-19-9876-8_29",
+            "publisher": "Springer"
+        }
+    ],
+    "INTERNSHIP_CERTIFICATES": [
+        {
+            "id": "Internship7",
+            "company": "Planet E-com Solutions",
+            "role": "Data and Algorithm Lead",
+            "start_date": "May 2022",
+            "end_date": "July 2022",
+            "desc": "The team worked on an overseas abroad consultation software to help students easily apply to their dream universities.",
+            "certificate": "/PECS.jpg",
+            "lor": ""
+        },
+        {
+            "id": "Internship6",
+            "company": "Deloitte",
+            "role": "AI Automation Intern",
+            "start_date": "June 2022",
+            "end_date": "June 2022",
+            "desc": "I used \"automation anywhere\" to create bots. Researched communication methods used in the industry to improve upon them using RPA.",
+            "certificate": "/deloitte.jpg",
+            "lor": ""
+        },
+        {
+            "id": "Internship5",
+            "company": "ProFive Infotech",
+            "role": "Data Mining and Research Intern",
+            "start_date": "October 2021",
+            "end_date": "February 2022",
+            "desc": "Mining text data from various websites according to the need. Cleaning data using various python scripts. Analysing scraped data for research purposes.",
+            "certificate": "/profive.jpg",
+            "lor": ""
+        },
+        {
+            "id": "Internship4",
+            "company": "Docplus Online",
+            "role": "Python Project Manager",
+            "start_date": "July 2021",
+            "end_date": "November 2021",
+            "desc": "Managing 40+ developers and assigning weekly python scripting, data extraction, and data science tasks. Performing data analysis and/or data cleaning. Creating miscellaneous python scripts for various tasks (automatic translation, gender identification, file conversions, etc.)",
+            "certificate": "/docplus online.jpg",
+            "lor": "/docplus online lor.jpg"
+        },
+        {
+            "id": "Internship3",
+            "company": "IotIot.in",
+            "role": "Artificial Intelligence Project Intern",
+            "start_date": "February 2021",
+            "end_date": "March 2021",
+            "desc": "Planning the project (hand gesture recognition with depth estimation) on GitLab using issues and milestones. Researched existing methods and improved upon them. Created a 3D-CNN model trained on the Jester dataset and can detect and recognize hand gestures with an accuracy of more than 90%. Merged the 3D-CNN model with a depth recognition model based on Open3D to be able to give accurate depth estimation of the hand gestures. Documenting the whole project on GitLab wiki.",
+            "certificate": "/iotiot.jpg",
+            "lor": ""
+        },
+        {
+            "id": "Internship2",
+            "company": "The Sparks Foundation",
+            "role": "IOT and Computer Vision Intern",
+            "start_date": "March 2021",
+            "end_date": "April 2021",
+            "desc": "Building real-time industry-level computer vision models using python and machine learning.",
+            "certificate": "/sparks foundation 2.jpg",
+            "lor": ""
+        },
+        {
+            "id": "Internship1",
+            "company": "The Sparks Foundation",
+            "role": "Data Science and Business Analytics Intern",
+            "start_date": "February 2021",
+            "end_date": "March 2021",
+            "desc": "Built machine learning models with python and scikit-learn and performed data analysis tasks to collect and analyze data from internal and external sources.",
+            "certificate": "/sparks foundation 1.jpg",
+            "lor": ""
+        }
+    ],
+    "COURSE_CERTIFICATES": [
+        {
+            "id": "Course12",
+            "course_name": "Elements of AI",
+            "organizer": "University of Helsinki",
+            "skill": "Python, AI",
+            "date": "February 2022",
+            "certificate": "/Elements of AI.png"
+        },
+        {
+            "id": "Course11",
+            "course_name": "Uber Data Analysis",
+            "organizer": "Widhya",
+            "skill": "Python",
+            "date": "2021",
+            "certificate": "/Uber Data Analysis.jpg"
+        },
+        {
+            "id": "Course10",
+            "course_name": "Bitcoin Price Prediction (Data Science)",
+            "organizer": "Widhya",
+            "skill": "Python",
+            "date": "2021",
+            "certificate": "/Bitcoin Price Prediction (Data Science).jpg"
+        },
+        {
+            "id": "Course9",
+            "course_name": "COVID 19 Analysis (Quantitative Modelling)",
+            "organizer": "Widhya",
+            "skill": "Python",
+            "date": "2021",
+            "certificate": "/COVID 19 Analysis (Quantitative Modelling).jpg"
+        },
+        {
+            "id": "Course8",
+            "course_name": "Data Visualization in Python",
+            "organizer": "Widhya",
+            "skill": "Python",
+            "date": "2021",
+            "certificate": "/Data Visualization in Python.jpg"
+        },
+        {
+            "id": "Course7",
+            "course_name": "Deploying Django Apps: Make Your Site Go Live",
+            "organizer": "LinkedIn Learning",
+            "skill": "Python, Django",
+            "date": "November 2020",
+            "certificate": "/Deploying Django Apps Make Your Site Go Live.jpg"
+        },
+        {
+            "id": "Course6",
+            "course_name": "Building a Personal Portfolio with Django",
+            "organizer": "LinkedIn Learning",
+            "skill": "Python, Django",
+            "date": "November 2020",
+            "certificate": "/Building a Personal Portfolio with Django.jpg"
+        },
+        {
+            "id": "Course5",
+            "course_name": "Learning Django",
+            "organizer": "LinkedIn Learning",
+            "skill": "Python, Django",
+            "date": "November 2020",
+            "certificate": "/Learning Django.jpg"
+        },
+        {
+            "id": "Course4",
+            "course_name": "Using Python with Excel",
+            "organizer": "LinkedIn Learning",
+            "skill": "Python",
+            "date": "October 2020",
+            "certificate": "/Using Python with Excel.jpg"
+        },
+        {
+            "id": "Course3",
+            "course_name": "Python Bootcamp: From Zero to Hero in Python",
+            "organizer": "Udemy",
+            "skill": "Python",
+            "date": "October 2020",
+            "certificate": "/Python Bootcamp From Zero to Hero in Python.jpg"
+        },
+        {
+            "id": "Course2",
+            "course_name": "CSS Essential Training",
+            "organizer": "LinkedIn Learning",
+            "skill": "CSS",
+            "date": "June 2020",
+            "certificate": "/CSS Essential Training.jpg"
+        },
+        {
+            "id": "Course1",
+            "course_name": "HTML Essential Training",
+            "organizer": "LinkedIn Learning",
+            "skill": "HTML",
+            "date": "June 2020",
+            "certificate": "/HTML Essential Training.jpg"
+        }
+    ],
+    "COLLEGE_CERTIFICATES": [
+        {
+            "id": "College12",
+            "category": "Worskhop",
+            "event": "Azure Masterclass by EY",
+            "role": "Participation",
+            "date": "April 2022",
+            "desc": "5 day Azure masterclass organized by Ernst & Young.",
+            "certificate": "/12.png"
+        },
+        {
+            "id": "College11",
+            "category": "Research",
+            "event": "IEEE Student Chair Meet",
+            "role": "",
+            "date": "April 2022",
+            "desc": "Attended the Uttar Pradesh section student chair meet held on 21 April 2022 as the chair of the IEEE Student Branch at Amity University, Noida.",
+            "certificate": "/11.jpg"
+        },
+        {
+            "id": "College10",
+            "category": "Webinar",
+            "event": "Building Blocks of Computer Vision and CNNs",
+            "role": "Participation",
+            "date": "",
+            "desc": "",
+            "certificate": "/10.jpg"
+        },
+        {
+            "id": "College9",
+            "category": "Webinar",
+            "event": "AI and ML | What, Why and How?",
+            "role": "Participation",
+            "date": "",
+            "desc": "",
+            "certificate": "/9.jpg"
+        },
+        {
+            "id": "College8",
+            "category": "Coding Competition",
+            "event": "Innerve - IGDTUW 2020",
+            "role": "Participation",
+            "date": "November 2020",
+            "desc": "Participated in CODE FOR CANDIES during Innerve, the annual technical fest of Indira Gandhi Delhi Technical University for Women held on 7-8 November 2020.",
+            "certificate": "/8.png"
+        },
+        {
+            "id": "College7",
+            "category": "Art Competition",
+            "event": "MyNEP2020 - Nation Digital Poster Making Competition",
+            "role": "Participation",
+            "date": "October 2020",
+            "desc": "Participated in myNep2020, the national Digital Poster Making competition in October 2020 as part of \"Strokes\". myNep is an initiative by Vidya Bharati Uccha Shiksha Sansthan (VBUSS) to facilitate the implementation of National Education Policy (NEP) 2020 at various levels.",
+            "certificate": "/7.jpg"
+        },
+        {
+            "id": "College6",
+            "category": "Science Leadership Workshop 2020",
+            "event": "Workshop",
+            "role": "Participation",
+            "date": "August 2019",
+            "desc": "Participated in the Science Leadership Workshop organized by the Central University of Punjab, Bathinda, India from 22 June - 28 June 2020.",
+            "certificate": "/6.jpg"
+        },
+        {
+            "id": "College5",
+            "category": "Webinar",
+            "event": "Deep Learning in Medical Image Analysis - Challenges and Applications",
+            "role": "Participation",
+            "date": "August 2019",
+            "desc": "Attended a webinar on Deep Learning in Medical Image Analysis organized by Dr. A.P.J. Abdul Kalam Technical University, Uttar Pradesh, Lucknow on 9 June 2020.",
+            "certificate": "/5.jpg"
+        },
+        {
+            "id": "College4",
+            "category": "Coding Competition",
+            "event": "Amity Youth Fest 2020",
+            "role": "Participation",
+            "date": "May 2020",
+            "desc": "Participated in Amity Youth Fest conducted online in May 2020.",
+            "certificate": "/4.jpg"
+        },
+        {
+            "id": "College3",
+            "category": "Sports",
+            "event": "Sangathan 2019",
+            "role": "1st Position",
+            "date": "October 2019",
+            "desc": "Received a gold medal in the annual sports meet, Sangathan, as a member of the kho-kho team organized at Amity University, Noida during September-October 2019.",
+            "certificate": "/3.jpg"
+        },
+        {
+            "id": "College2",
+            "category": "Worskhop",
+            "event": "APTRON workshop 2019",
+            "role": "Participation",
+            "date": "August 2019",
+            "desc": "Participated in the interactive Machine Learning workshop held on 22 August 2019 at Amity University, Noida.",
+            "certificate": "/2.jpg"
+        },
+        {
+            "id": "College1",
+            "category": "Worskhop",
+            "event": "Data Science and Application of AI workshop",
+            "role": "Participation",
+            "date": "August 2019",
+            "desc": "Attended the Data Science and Application of AI workshop held on 1 August 2019 at Amity University, Noida.",
+            "certificate": "/1.jpg"
+        }
+    ]
+}
