@@ -1,247 +1,105 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
+/* Base styling for minimalist black & white theme */
 body {
-  width: 100%;
-  margin: 0px;
-  padding: 0px;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  font-family: "Lato", sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: "Lato", sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-a {
-  text-decoration: none !important;
+/* Navbar Styling */
+.navbar {
+    background-color: #000000;
+    padding: 1rem;
 }
 
-/* BASE ------------------------------------------------------------- */
-.pageContent {
-  min-height: 100vh;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
 }
 
-/* SOCIAL ------------------------------------------------------------- */
-#socialIcons {
-  margin-top: 10px;
+.nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 1rem;
+    transition: color 0.3s ease;
 }
 
-#socialIcons .fa-brands {
-  margin-left: 10px;
-  margin-right: 10px;
-  color: #000;
+.nav-link:hover {
+    color: #aaaaaa;
 }
 
-#socialIcons .fa-brands:hover {
-  color: rgba(0, 0, 0, 0.8);
+/* Bento Grid Layout */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    padding: 2rem;
 }
 
-/* HOME ------------------------------------------------------------- */
-
-#projects {
-  height: 100%;
-  display: flex;
+/* Bento Items */
+.bento-item {
+    background-color: #f9f9f9;
+    border: 2px solid #000000;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
 }
 
-#projects .card {
-  margin: 5px 5px;
-  color: white;
-  background-position: center;
+.bento-item:hover {
+    transform: scale(1.05);
+    background-color: #ffffff;
 }
 
-#projects .card-title {
-  font-size: 2rem;
+/* Project Cards */
+.project-card {
+    grid-column: span 1;
 }
 
-#projects .card-title {
-  font-size: 2rem;
+/* About Section (Larger Box) */
+.bento-item.large {
+    grid-column: span 2;
 }
 
-#projects .project-btn {
-  margin: 31px auto 0;
-  padding: 10px 17px 10px 16px;
-  letter-spacing: 0.1em;
-  font-weight: 400;
-  text-transform: uppercase;
-  text-decoration: none;
-  background-color: white;
-  color: #000;
-  --uismLinkDisplay: var(--smLinkDisplay, inline-flex);
-  display: var(--uismLinkDisplay);
-  position: relative;
-  transition-duration: 0.4s;
-  overflow: hidden;
+/* Contact Section (Smaller Box) */
+.bento-item.small {
+    grid-column: span 1;
 }
 
-#projects .project-btn:hover {
-  text-decoration: none;
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
 }
 
-#projects .project-btn::before,
-#projects .project-btn span {
-  margin: 0 auto;
-  transition-timing-function: cubic-bezier(0.86, 0, 0.07, 1);
-  transition-duration: 0.4s;
+.modal-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    text-align: center;
 }
 
-#projects .project-btn:hover {
-  background-color: #000;
+.close-modal {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    margin-top: 1rem;
 }
 
-#projects .project-btn:hover span {
-  color: transparent;
-  -webkit-transform: translateY(-400%) scale(-0.1, 20);
-  transform: translateY(-400%) scale(-0.1, 20);
-}
-
-#projects .project-btn::before {
-  content: attr(link-text);
-  color: #fff;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  -webkit-transform: translateY(500%) scale(-0.1, 20);
-  transform: translateY(500%) scale(-0.1, 20);
-}
-
-#projects .project-btn:hover::before {
-  letter-spacing: 0.05em;
-  -webkit-transform: translateY(0) scale(1, 1);
-  transform: translateY(0) scale(1, 1);
-}
-
-/* RESEARCH ------------------------------------------------------------- */
-#research .research-btn {
-  margin: 5px auto 0;
-  letter-spacing: 0.1em;
-  font-weight: 400;
-  text-transform: uppercase;
-  text-decoration: none;
-  background-color: white;
-  color: #000;
-  border: #000 0.5px solid;
-  --uismLinkDisplay: var(--smLinkDisplay, inline-flex);
-  display: var(--uismLinkDisplay);
-  position: relative;
-  transition-duration: 0.4s;
-  overflow: hidden;
-}
-
-#research .research-btn:hover {
-  text-decoration: none;
-}
-
-#research .research-btn::before,
-#research .research-btn span {
-  margin: 0 auto;
-  transition-timing-function: cubic-bezier(0.86, 0, 0.07, 1);
-  transition-duration: 0.4s;
-}
-
-#research .research-btn:hover {
-  background-color: #000;
-}
-
-#research .research-btn:hover span {
-  color: transparent;
-  -webkit-transform: translateY(-400%) scale(-0.1, 20);
-  transform: translateY(-400%) scale(-0.1, 20);
-}
-
-#research .research-btn::before {
-  content: attr(link-text);
-  color: #fff;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  -webkit-transform: translateY(500%) scale(-0.1, 20);
-  transform: translateY(500%) scale(-0.1, 20);
-}
-
-#research .research-btn:hover::before {
-  letter-spacing: 0.05em;
-  -webkit-transform: translateY(0) scale(1, 1);
-  transform: translateY(0) scale(1, 1);
-}
-
-/* CERTIFICATES ------------------------------------------------------------- */
-#certificates .card-img-top {
-  border: #000 0.5px solid;
-}
-
-#certificates .certificate-btn {
-  margin: 5px auto 0;
-  letter-spacing: 0.1em;
-  font-weight: 400;
-  text-transform: uppercase;
-  text-decoration: none;
-  background-color: #000000;
-  color: #ffffff;
-  border: #8e8e8e 0.5px solid;
-  --uismLinkDisplay: var(--smLinkDisplay, inline-flex);
-  display: var(--uismLinkDisplay);
-  position: relative;
-  transition-duration: 0.4s;
-  overflow: hidden;
-}
-
-#certificates .certificate-btn:hover {
-  text-decoration: none;
-}
-
-#certificates .certificate-btn::before,
-#certificates .certificate-btn span {
-  margin: 0 auto;
-  transition-timing-function: cubic-bezier(0.86, 0, 0.07, 1);
-  transition-duration: 0.4s;
-}
-
-#certificates .certificate-btn:hover {
-  background-color: #ffffff;
-}
-
-#certificates .certificate-btn:hover span {
-  color: transparent;
-  -webkit-transform: translateY(-400%) scale(-0.1, 20);
-  transform: translateY(-400%) scale(-0.1, 20);
-}
-
-#certificates .certificate-btn::before {
-  content: attr(link-text);
-  color: #000000;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  -webkit-transform: translateY(500%) scale(-0.1, 20);
-  transform: translateY(500%) scale(-0.1, 20);
-}
-
-#certificates .certificate-btn:hover::before {
-  letter-spacing: 0.05em;
-  -webkit-transform: translateY(0) scale(1, 1);
-  transform: translateY(0) scale(1, 1);
-}
-
-.modal img {
-  border: #000 0.5px solid;
-  margin-bottom: 10px;
-}
-
-/* FOOTER ------------------------------------------------------------- */
-#footer {
-  /* position: absolute; */
-  bottom: 10px;
-  letter-spacing: 2px;
+.close-modal:hover {
+    background-color: #ffffff;
+    color: #000000;
 }

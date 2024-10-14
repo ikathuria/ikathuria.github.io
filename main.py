@@ -10,20 +10,21 @@ SCRAPER = GetPinnedGithubRepos("ikathuria")
 CONTEXT = SCRAPER.set_repo_context(CONTEXT)
 FLASK_APP = Flask(__name__)
 
+projects = [
+    {'id': 1, 'title': 'Region Build Automation', 'short_desc': 'Automating new region service launches.',
+        'full_desc': 'Detailed info about Region Build Automation project...'},
+    {'id': 2, 'title': 'OpenSearch Optimization', 'short_desc': 'Optimizing OpenSearch domains for AWS.',
+        'full_desc': 'Detailed info about OpenSearch Optimization project...'}
+]
+
+
 @FLASK_APP.route("/")
 def home():
     global CONTEXT
     CONTEXT["name"] = "home"
     return render_template(
         "index.html",
-        name=CONTEXT["name"],
-        repos=CONTEXT["repos"],
-        papers=CONTEXT["papers"],
-        intern_certs=CONTEXT["intern_certs"],
-        college_certs=CONTEXT["college_certs"],
-        course_certs=CONTEXT["course_certs"],
-        typewriter=CONTEXT["typewriter"],
-        choice=random.choice
+        projects=projects
     )
 
 

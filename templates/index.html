@@ -1,249 +1,45 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ishani Kathuria Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Bento Grid Layout -->
+    <main class="bento-grid">
+        <!-- About Section (No Profile Picture) -->
+        <section id="about" class="bento-item large fade-in">
+            <h1>Ishani Kathuria</h1>
+            <p>AI Researcher & Systems Development Engineer</p>
+            <p>Specialized in AI, cloud-based solutions, and automation projects at AWS.</p>
+        </section>
 
-{% block home %}
-<section id="homeContainer" class="pageContent row container-fluid">
-    <h1>Ishani Kathuria</h1>
-
-    <div id="socialIcons">
-        <a target="_blank"
-            href="https://www.linkedin.com/in/ishani-kathuria/">
-            <i class="fa-brands fa-2x fa-linkedin-in"></i>
-        </a>
-        <a target="_blank" href="https://github.com/ikathuria">
-            <i class="fa-brands fa-2x fa-github"></i>
-        </a>
-        <a target="_blank"
-            href="https://orcid.org/0000-0001-7345-7405">
-            <i class="fa-brands fa-2x fa-orcid"></i>
-        </a>
-        <a target="_blank"
-            href="https://medium.com/@ishani-kathuria">
-            <i class="fa-brands fa-2x fa-medium"></i>
-        </a>
-        <a target="_blank"
-            href="https://www.instagram.com/ishani_creates/">
-            <i class="fa-brands fa-2x fa-instagram"></i>
-        </a>
-    </div>
-</section>
-{% endblock %}
-
-{% block projects %}
-<section id="projects" class="pageContent row container-fluid">
-    {% for repo in repos %}
-    <div id="projects-card-parent" class="col-md-4 p-0 d-table">
-        <div
-            class="card card-block d-table-cell align-middle"
-            style="width: 100%; height: 25rem;
-                    background-image: linear-gradient(rgba(10, 10, 10, .6), rgba(0, 0, 0, .9)), repeating-linear-gradient(0, transparent, transparent 2px, black 3px, black 3px), url('{{ repo.image }}');">
-            <div class="card-body text-center">
-                <h5 class="card-title">{{ repo.repo }}</h5>
-                <p class="card-text">{{ repo.description }}</p>
-                <a
-                    href="{{ repo.link }}"
-                    class="btn project-btn"
-                    target="_blank"
-                    link-text="On GitHub!">
-                    <span>
-                        See the code!
-                    </span>
-                </a>
-
-                {% if repo.website %}
-                <a
-                    href="{{ repo.website }}"
-                    class="btn project-btn"
-                    target="_blank"
-                    link-text="Let" s go!">
-                    <span>
-                        See live project
-                    </span>
-                </a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</section>
-{% endblock %}
-
-{% block research %}
-<section id="research" class="pageContent row container-fluid">
-    <a href="https://orcid.org/0000-0001-7345-7405" target="_blank">
-        ORCID: 0000-0001-7345-7405
-    </a>
-
-    <h2>Research Papers</h2>
-    <div class="card-group">
-        {% for paper in papers %}
-        <div class="card card-block align-middle">
-            <div class="card-header">
-                DOI: <a href="{{paper.DOI}}">{{paper.DOI}}</a>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">{{paper.title}}</h5>
-                <p class="card-text">
-                    <b>Abstract—</b>
-                    <em>
-                        {{paper.abstract}}
-                    </em>
-                </p>
-                <a
-                    class="btn research-btn"
-                    link-text="Bibtex"
-                    data-toggle="collapse"
-                    href="#citationCollapse"
-                    role="button"
-                    aria-expanded="false"
-                    aria-controls="citationCollapse">
-                    Citation
-                </a>
-                <div class="collapse" id="citationCollapse">
-                    {{paper.bibtex}}
-                </div>
-                <br />
-                <a
-                    href="{{paper.DOI}}"
-                    class="btn research-btn"
-                    target="_blank"
-                    link-text="On {{paper.publisher}}">
-                    See the published paper!
-                </a>
-            </div>
-            <div class="card-footer">
-                Published in: <a href="{{paper.publisher_link}}">
-                    {{paper.publisher_name}}
-                </a>
+        <!-- Projects Section (Dynamic in Flask) -->
+        {% for project in projects %}
+        <section class="bento-item project-card fade-in" data-modal="modal{{ project.id }}">
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.short_desc }}</p>
+        </section>
+        <!-- Modal for Project Details -->
+        <div id="modal{{ project.id }}" class="modal">
+            <div class="modal-content">
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.full_desc }}</p>
+                <button class="close-modal">Close</button>
             </div>
         </div>
         {% endfor %}
-    </div>
-</section>
-{% endblock %}
 
-{% block certificates %}
-<section id="certificatesParent" class="pageContent row container-fluid">
-    <div class="container-fluid">
-        <h2>Certificates</h2>
+        <!-- Contact Section -->
+        <section id="contact" class="bento-item small fade-in">
+            <h2>Contact Me</h2>
+            <p>Email: <a href="mailto:ishani.kathuria@example.com">ishani.kathuria@example.com</a></p>
+        </section>
+    </main>
 
-        <div id="certificates" class="row" data-masonry="{"percentPosition":
-            true }">
-
-            <!-- internship certificates -->
-            {% for certificate in intern_certs %}
-            <div class="col-sm-6 col-lg-4 mb-3">
-                <div class="card card-block align-middle">
-                    <a
-                        href="{{ url_for("static",
-                        filename="data/certificates/internships"
-                        +certificate.certificate) }}"
-                        target="_blank">
-                        <img
-                            src="{{ url_for("static",
-                            filename="data/certificates/internships"
-                            +certificate.certificate) }}"
-                            class="card-img-top img-fluid">
-                    </a>
-                    <div class="card-body">
-                        <h5
-                            class="card-title">{{certificate.role}}<br /><em>{{certificate.company}}</em></h5>
-                        <p>{{certificate.start_date}} -
-                            {{certificate.end_date}}</p>
-                        <p class="card-text">
-                            <b>Description: </b>{{certificate.desc}}
-                        </p>
-                        {% if certificate.lor %}
-                        <a
-                            href="{{ url_for("static",
-                            filename="data/certificates/internships"
-                            +certificate.lor) }}"
-                            class="btn certificate-btn"
-                            link-text="View"
-                            target="_blank">
-                            LOR
-                        </a>
-                        {% endif %}
-                    </div>
-
-                    <div class="card-footer">
-                        <span class="badge rounded-pill bg-primary">
-                            <em>Internship</em>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-            <!-- course certificates -->
-            {% for certificate in course_certs %}
-            <div class="col-sm-6 col-lg-4 mb-3">
-                <div class="card card-block align-middle">
-                    <a
-                        href="{{ url_for("static",
-                        filename="data/certificates/courses"
-                        +certificate.certificate) }}"
-                        target="_blank">
-                        <img
-                            src="{{ url_for("static",
-                            filename="data/certificates/courses"
-                            +certificate.certificate) }}"
-                            alt="certificate"
-                            class="card-img-top img-fluid" />
-                    </a>
-                    <div class="card-body">
-                        <h5
-                            class="card-title">{{certificate.course_name}}<br /><em>{{certificate.organizer}}</em></h5>
-                        <p>{{certificate.date}}</p>
-                        <!-- <p class="card-text">
-							<b>Description: </b>{{certificate.skill}}
-						</p> -->
-                    </div>
-
-                    <div class="card-footer">
-                        <span class="badge rounded-pill bg-success">
-                            <em>Course - {{certificate.skill}}</em>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-            <!-- college certificates -->
-            {% for certificate in college_certs %}
-            <div class="col-sm-6 col-lg-4 mb-3">
-                <div class="card card-block align-middle">
-                    <a
-                        href="{{ url_for("static",
-                        filename="data/certificates/college"
-                        +certificate.certificate) }}"
-                        target="_blank">
-                        <img
-                            src="{{ url_for("static",
-                            filename="data/certificates/college"
-                            +certificate.certificate) }}"
-                            alt="certificate"
-                            class="card-img-top img-fluid" />
-                    </a>
-                    <div class="card-body">
-                        <h5
-                            class="card-title">{{certificate.event}}<br /><em>{{certificate.role}}</em></h5>
-                        <p>{{certificate.date}}</p>
-                        <p class="card-text">
-                            <b>Description: </b>{{certificate.desc}}
-                        </p>
-                    </div>
-
-                    <div class="card-footer">
-                        <span
-                            class="badge rounded-pill text-dark bg-warning">
-                            <em>College - {{certificate.category}}</em>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-        </div>
-    </div>
-</section>
-{% endblock %}
+    <!-- JavaScript for Animations & Modal -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
