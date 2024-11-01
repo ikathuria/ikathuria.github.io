@@ -1,13 +1,15 @@
 import random
+import pandas as pd
+
 from flask import Flask
 from flask import render_template
 
-from app.github_pins import GetPinnedGithubRepos
+from app.github_pins import CreatePageContext
 from app.constants import *
 from app.utils import *
 
-SCRAPER = GetPinnedGithubRepos("ikathuria")
-CONTEXT = SCRAPER.set_repo_context(CONTEXT)
+SCRAPER = CreatePageContext("ikathuria")
+CONTEXT = SCRAPER.set_context(CONTEXT)
 FLASK_APP = Flask(__name__)
 
 projects = [
@@ -24,7 +26,14 @@ def home():
     CONTEXT["name"] = "home"
     return render_template(
         "index.html",
-        projects=projects
+        repos=CONTEXT['repos'],
+        papers=CONTEXT['papers'],
+        intern_certs=CONTEXT['intern_certs'],
+        college_certs=CONTEXT['college_certs'],
+        course_certs=CONTEXT['course_certs'],
+        typewriter=CONTEXT['typewriter'],
+        choice=random.choice,
+        enumerate=enumerate
     )
 
 

@@ -1,45 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ishani Kathuria Portfolio</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <!-- Bento Grid Layout -->
+{% extends 'base.html' %}
+{% block bento %}
     <main class="bento-grid">
-        <!-- About Section (No Profile Picture) -->
         <section id="about" class="bento-item large fade-in">
             <h1>Ishani Kathuria</h1>
             <p>AI Researcher & Systems Development Engineer</p>
             <p>Specialized in AI, cloud-based solutions, and automation projects at AWS.</p>
+
+            <div id="socialIcons">
+                <a target="_blank" href="https://www.linkedin.com/in/ishani-kathuria/">
+                    <i class="fa-brands fa-2x fa-linkedin-in"></i>
+                </a>
+                <a target="_blank" href="https://github.com/ikathuria">
+                    <i class="fa-brands fa-2x fa-github"></i>
+                </a>
+                <a target="_blank" href="https://orcid.org/0000-0001-7345-7405">
+                    <i class="fa-brands fa-2x fa-orcid"></i>
+                </a>
+                <a target="_blank" href="https://medium.com/@ishani-kathuria">
+                    <i class="fa-brands fa-2x fa-medium"></i>
+                </a>
+                <a target="_blank" href="https://www.instagram.com/ishani_creates/">
+                    <i class="fa-brands fa-2x fa-instagram"></i>
+                </a>
+            </div>
         </section>
 
-        <!-- Projects Section (Dynamic in Flask) -->
-        {% for project in projects %}
-        <section class="bento-item project-card fade-in" data-modal="modal{{ project.id }}">
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.short_desc }}</p>
+        <!-- Research papers -->
+        {% for id, project in enumerate(repos) %}
+        <section class="bento-item project-card fade-in" data-modal="modal{{id}}" style="background-image: url('{{ project.image }}');">
+            <div class="overlay">
+                <h3>{{ project.repo }}</h3>
+            </div>
         </section>
-        <!-- Modal for Project Details -->
-        <div id="modal{{ project.id }}" class="modal">
+        <div id="modal{{ id }}" class="modal">
             <div class="modal-content">
-                <h3>{{ project.title }}</h3>
-                <p>{{ project.full_desc }}</p>
+                <h3>{{ project.repo }}</h3>
+                <p>{{ project.description }}</p>
+                <a href="{{ project.link }}" class="btn project-btn" target="_blank">
+                    <span>See the code!</span>
+                </a>
+                {% if project.website %}
+                <a href="{{ project.website }}" class="btn project-btn" target="_blank">
+                    <span>See live project</span>
+                </a>
+                {% endif %}
                 <button class="close-modal">Close</button>
             </div>
         </div>
         {% endfor %}
 
-        <!-- Contact Section -->
-        <section id="contact" class="bento-item small fade-in">
-            <h2>Contact Me</h2>
-            <p>Email: <a href="mailto:ishani.kathuria@example.com">ishani.kathuria@example.com</a></p>
+        <!-- Projects -->
+        {% for id, project in enumerate(repos) %}
+        <section class="bento-item project-card fade-in" data-modal="modal{{id}}" style="background-image: url('{{ project.image }}');">
+            <div class="overlay">
+                <h3>{{ project.repo }}</h3>
+            </div>
         </section>
-    </main>
+        <div id="modal{{ id }}" class="modal">
+            <div class="modal-content">
+                <h3>{{ project.repo }}</h3>
+                <p>{{ project.description }}</p>
+                <a href="{{ project.link }}" class="btn project-btn" target="_blank">
+                    <span>See the code!</span>
+                </a>
+                {% if project.website %}
+                <a href="{{ project.website }}" class="btn project-btn" target="_blank">
+                    <span>See live project</span>
+                </a>
+                {% endif %}
+                <button class="close-modal">Close</button>
+            </div>
+        </div>
+        {% endfor %}
 
-    <!-- JavaScript for Animations & Modal -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+    </main>
+{% endblock %}

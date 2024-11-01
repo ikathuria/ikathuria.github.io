@@ -1,4 +1,3 @@
-/* Base styling for minimalist black & white theme */
 body {
     background-color: #ffffff;
     color: #000000;
@@ -7,33 +6,15 @@ body {
     padding: 0;
 }
 
-/* Navbar Styling */
-.navbar {
-    background-color: #000000;
-    padding: 1rem;
-}
-
-.navbar ul {
-    list-style: none;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.nav-link {
-    color: #ffffff;
-    text-decoration: none;
-    margin: 0 1rem;
-    transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-    color: #aaaaaa;
+a {
+  text-decoration: none !important;
 }
 
 /* Bento Grid Layout */
 .bento-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(12, minmax(0, 1fr));
     grid-gap: 20px;
     padding: 2rem;
 }
@@ -41,24 +22,12 @@ body {
 /* Bento Items */
 .bento-item {
     background-color: #f9f9f9;
-    border: 2px solid #000000;
+    border: 5px solid rgba(0, 0, 0, 0.5);
     padding: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    cursor: pointer;
-}
-
-.bento-item:hover {
-    transform: scale(1.05);
-    background-color: #ffffff;
-}
-
-/* Project Cards */
-.project-card {
-    grid-column: span 1;
 }
 
 /* About Section (Larger Box) */
@@ -66,9 +35,59 @@ body {
     grid-column: span 2;
 }
 
-/* Contact Section (Smaller Box) */
 .bento-item.small {
     grid-column: span 1;
+}
+
+/* Project Cards */
+.bento-item.project-card {
+    grid-row: span 2;
+    grid-column: span 2;
+    background-position: center;
+    background-size: cover;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    position: relative; /* Important for overlay positioning */
+}
+
+.bento-item.project-card:hover {
+    transform: scale(1.05);
+    background-color: #ffffff;
+}
+
+/* Overlay for Project Name */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bento-item.project-card:hover .overlay {
+    opacity: 1; /* Show overlay on hover */
+}
+
+/* Social Icons */
+#socialIcons {
+  margin-top: 10px;
+}
+
+#socialIcons .fa-brands {
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #000;
+}
+
+#socialIcons .fa-brands:hover {
+  color: rgba(0, 0, 0, 0.8);
 }
 
 /* Modal */
@@ -77,15 +96,16 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 .modal-content {
     background-color: #ffffff;
+    width: 80%;
     padding: 2rem;
     text-align: center;
 }
@@ -102,4 +122,52 @@ body {
 .close-modal:hover {
     background-color: #ffffff;
     color: #000000;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .bento-item.large {
+        grid-column: span 3;
+    }
+
+    .bento-item.project-card {
+        grid-column: span 3;
+        grid-row: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bento-item.large {
+        grid-column: span 2;
+    }
+
+    .bento-item.project-card {
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+        grid-gap: 10px;
+        padding: 1rem;
+    }
+
+    .bento-item.large,
+    .bento-item.project-card {
+        grid-column: span 1;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
 }
