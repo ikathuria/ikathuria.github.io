@@ -100,7 +100,7 @@ try:
 except:
     context['repos'] = get_json_data('static/data/repos.json')
 
-context['papers'] = get_json_data('static/data/research_papers.json')
+context['papers'] = get_json_data('static/data/dynamic_content/research_papers.json')
 
 context['intern_certs'] = get_json_data(
     'static/data/internship_certificates.json'
