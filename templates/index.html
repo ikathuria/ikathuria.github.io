@@ -1,43 +1,119 @@
 {% extends 'base.html' %}
 
 {% block mainContent %}
-<section id="homeContainer" class="">
-    <div id="projects" class="row">
+<section id="projects" class="container py-5">
+    <div class="row g-4">
         {% for repo in repos %}
-        <div id="projects-card-parent" class="col-md-4 p-0 d-table">
-            <div
-                class="card card-block d-table-cell align-middle"
-                style="width: 100%; height: 25rem;
-                        background-image: linear-gradient(rgba(10, 10, 10, .6), rgba(0, 0, 0, .9)), repeating-linear-gradient(0, transparent, transparent 2px, black 3px, black 3px), url('{{ repo.image }}');"
-            >
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ repo.repo }}</h5>
-                    <p class="card-text">{{ repo.description }}</p>
-                    <a
-                        href="{{ repo.link }}"
-                        class="btn project-btn"
-                        target="_blank"
-                        link-text="On GitHub!">
-                        <span>
-                            See the code!
-                        </span>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="project-card h-100" data-bs-toggle="modal" data-bs-target="#projectModal{{ loop.index }}">
+                <h3 class="mb-3">{{ repo.repo }}</h3>
+                <p class="text-secondary mb-4">{{ repo.description }}</p>
+                <div class="tech-stack mb-4">
+                    {% if repo.language %}
+                    <span class="tech-badge">{{ repo.language }}</span>
+                    {% endif %}
+                    {% if repo.topics %}
+                    {% for topic in repo.topics[:3] %}
+                    <span class="tech-badge">{{ topic }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ repo.link }}" class="btn btn-outline-light btn-sm" target="_blank">
+                        <i class="fab fa-github me-2"></i>Code
                     </a>
-
                     {% if repo.website %}
-                    <a
-                        href="{{ repo.website }}"
-                        class="btn project-btn"
-                        target="_blank"
-                        link-text="Let's go!">
-                        <span>
-                            See live project
-                        </span>
+                    <a href="{{ repo.website }}" class="btn btn-outline-light btn-sm" target="_blank">
+                        <i class="fas fa-external-link-alt me-2"></i>Live
                     </a>
                     {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Modal -->
+        <div class="modal fade" id="projectModal{{ loop.index }}" tabindex="-1" aria-labelledby="projectModalLabel{{ loop.index }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="projectModalLabel{{ loop.index }}">{{ repo.repo }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-4">{{ repo.description }}</p>
+                        
+                        <div class="tech-stack mb-4">
+                            {% if repo.language %}
+                            <span class="tech-badge">{{ repo.language }}</span>
+                            {% endif %}
+                            {% if repo.topics %}
+                            {% for topic in repo.topics %}
+                            <span class="tech-badge">{{ topic }}</span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a href="{{ repo.link }}" class="btn btn-outline-light" target="_blank">
+                                <i class="fab fa-github me-2"></i>View on GitHub
+                            </a>
+                            {% if repo.website %}
+                            <a href="{{ repo.website }}" class="btn btn-outline-light" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </section>
+
+<!-- Tooltip for node hover -->
+<div id="node-tooltip" class="tooltip" role="tooltip" aria-live="polite" style="display:none;"></div>
+<!-- Node Info Modal -->
+<div class="modal fade" id="nodeInfoModal" tabindex="-1" aria-hidden="true" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span class="node-type-tag"></span>
+                <p class="node-description"></p>
+                <div class="node-tech-stack mb-3"></div>
+                <div class="node-links"></div>
+                <div class="node-image mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Social Icons -->
+<div class="social-icons" aria-label="Social links">
+    <a href="https://github.com/ikathuria" class="github" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://www.linkedin.com/in/ishani-kathuria/" class="linkedin" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://orcid.org/my-orcid?orcid=0000-0001-7345-7405" class="orcid" target="_blank" aria-label="OrcID"><i class="ai ai-orcid"></i></a>
+    <a href="https://medium.com/@ishani-kathuria" class="medium" target="_blank" aria-label="Medium"><i class="fab fa-medium"></i></a>
+</div>
+
+<!-- Footer -->
+<div class="site-footer">© 2025 Ishani Kathuria</div>
+{% endblock %}
+
+{% block pageScripts %}
+<script>
+    // Pass data to JavaScript
+    window.projectData = {{ projectData|tojson|safe }};
+    window.researchData = {{ researchData|tojson|safe }};
+    
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic'
+    });
+</script>
 {% endblock %}

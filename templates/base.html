@@ -6,7 +6,7 @@
 
 		<!-- meta tags -->
 		<meta name="author" content="Ishani Kathuria" />
-		<meta name="theme-color" content="#478ac9" />
+		<meta name="theme-color" content="#0a0a0a" />
 		<meta
 			name="keywords"
 			content="Ishani, Ishani Kathuria, Artificial Intelligence, Machine Learning,
@@ -32,7 +32,7 @@
 			content="Artificial Intelligence programmer with experience in Machine Learning, Deep Neural Networks, Data Analytics, and Web Scraping applications." />
 
 		<!-- title, favicon -->
-		<title>Ishani Kathuria</title>
+		<title>{% block title %}Ishani Kathuria{% endblock %}</title>
 
 		<link rel="icon"
 			href="{{ url_for('static', filename='favicon/favicon.ico') }}"
@@ -41,131 +41,60 @@
 		<!-- css + js -->
 		<link rel="stylesheet"
 			href="{{ url_for('static', filename='css/styles.css') }}" media="screen" />
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-			crossorigin="anonymous"></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
-			integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
-			crossorigin="anonymous"></script>
-		<script
-			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
-			integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
-			crossorigin="anonymous"></script>
-
+		<link rel="stylesheet"
+			href="{{ url_for('static', filename='css/neural-cosmos.css') }}" media="screen" />
+		
 		<!-- Bootstrap -->
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
 			rel="stylesheet"
 			integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
 			crossorigin="anonymous">
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-			crossorigin="anonymous"></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
-			async></script>
 
 		<!-- Fonts -->
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" />
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700,700i,900,900i" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 		<!-- Fontawesome -->
 		<script src="https://kit.fontawesome.com/6cd21b588d.js"
 			crossorigin="anonymous"></script>
+
+		<!-- p5.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+
+		<!-- AOS -->
+		<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+		<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+		{% block pageStyles %}{% endblock %}
 	</head>
 
 	<body>
-		<div id="mainDiv" class="row">
-
-			<div id="details" class="col-4 container text-center" style="position: relative;">
-				<div class="container">
-					<h1>Ishani Kathuria</h1>
-
-					<p class="desc">
-						Artificial Intelligence programmer with experience in Machine Learning,
-						Deep Neural Networks, Data Analytics, and Web Scraping applications.
-						<br />
-						I am currently pursuing my bachelor's of technology in Artificial
-						Intelligence at Amity University, Noida, Uttar Pradesh, India. In my spare
-						time, I read, draw, and take pictures of beautiful things.
-					</p>
-
-					<h3>Research Areas</h3>
-					<p class="desc">
-						Artificial Intelligence, Machine Learning, Deep Learning, Computer Vision,
-						Natural Language Processing
-					</p>
-
-					<h3>Social</h3>
-					<div id="socialIcons">
-						<a target="_blank" href="https://www.linkedin.com/in/ishani-kathuria/">
-							<i class="fa-brands fa-2x fa-linkedin-in"></i>
-						</a>
-						<a target="_blank" href="https://github.com/ikathuria">
-							<i class="fa-brands fa-2x fa-github"></i>
-						</a>
-						<a target="_blank" href="https://orcid.org/0000-0001-7345-7405">
-							<i class="fa-brands fa-2x fa-orcid"></i>
-						</a>
-						<a target="_blank" href="https://medium.com/@ishani-kathuria">
-							<i class="fa-brands fa-2x fa-medium"></i>
-						</a>
-						<a target="_blank" href="https://www.instagram.com/ishani_creates/">
-							<i class="fa-brands fa-2x fa-instagram"></i>
-						</a>
+		<div id="neural-network"></div>
+		
+		<!-- Node Info Modal -->
+		<div class="modal fade" id="nodeInfoModal" tabindex="-1" aria-hidden="true" aria-modal="true" role="dialog">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<span class="node-type-tag"></span>
+						<div class="node-description"></div>
+						<div class="node-tech-stack mb-3"></div>
+						<div class="node-links"></div>
+						<div class="node-image mt-3"></div>
 					</div>
 				</div>
-
-					<div id="footer">
-						<p>
-							&copy; Ishani Kathuria 2023
-							<br />
-							{{ choice(typewriter) }}
-						</p>
-					</div>
 			</div>
-
-			<div id="pageContent" class="col-8 scrollit">
-				<nav
-					class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-center">
-					<button class="navbar-toggler" type="button" data-toggle="collapse"
-						data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-						aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-
-					<div class="collapse navbar-collapse justify-content-center text-center"
-						id="navbarNav">
-						<ul class="nav navbar-nav nav-tabs">
-							<li class="nav-item">
-								<a class="nav-link {% if name == 'home' %}active{% endif %}" href="/">Projects</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link {% if name == 'research' %}active{% endif %}"
-									href="/research">Research</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link {% if name == 'resume' %}active{% endif %}"
-									href="/resume">Resume</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link {% if name == 'certificates' %}active{% endif %}"
-									href="/certificates">Certificates</a>
-							</li>
-						</ul>
-					</div>
-				</nav>
-				{% block mainContent %} {% endblock %}
-			</div>
-
 		</div>
 
+		<!-- Scripts -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="{{ url_for('static', filename='js/neural-network.js') }}"></script>
 		{% block pageScripts %} {% endblock %}
 	</body>
 </html>

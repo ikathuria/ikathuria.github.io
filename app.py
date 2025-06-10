@@ -19,7 +19,8 @@ def home():
     return render_template(
         'index.html',
         name=context['name'],
-        repos=context['repos'],
+        projectData=context['repos'],
+        researchData=context['papers'],
         typewriter=context['typewriter'],
         choice=random.choice
     )
@@ -126,4 +127,4 @@ context['typewriter'] = [
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8080, debug=True)
