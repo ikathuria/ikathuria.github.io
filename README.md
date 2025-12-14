@@ -1,20 +1,61 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Ishani Kathuria - Research Portfolio
 
-# Run and deploy your AI Studio app
+A personal portfolio website showcasing research publications, projects, and professional experience in Artificial Intelligence and Machine Learning.
 
-This contains everything you need to run your app locally.
+## Overview
 
-View your app in AI Studio: https://ai.studio/apps/drive/1Rybyb4DmVrwuD7BYrjhHgQhz6l7Lce6o
+This portfolio features an interactive and dynamic design to present work in:
+- **Research**: Deep learning applications in healthcare, accessibility (Autism support), and environmental science.
+- **Projects**: Real-world implementations of AI, including educational chatbots, medical diagnostic tools, and gesture recognition systems.
+- **Professional Experience**: Work history at AWS and research roles at Purdue University.
+
+## Tech Stack
+
+Built with a modern frontend stack focusing on performance and interactivity:
+
+- **Framework**: [React](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **3D Visualization**: [Three.js](https://threejs.org/) via [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
+- **Icons**: [Lucide React](https://lucide.dev/)
+
+## Features
+
+- **Interactive 3D Backgrounds**: Custom shaders and particle systems for unique visual identities per project.
+- **Dynamic Content Rendering**: Data-driven components for papers, projects, and resume sections.
+- **Responsive Design**: Fully optimized for mobile and desktop viewing.
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
+To run this project on your local machine:
 
+1.  **Prerequisites**: Ensure you have [Node.js](https://nodejs.org/) installed.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
+
+4.  **Build for production**:
+    ```bash
+    npm run build
+    ```
+
+## Deployment
+
+This project is configured for deployment on [GitHub Pages](https://pages.github.com/).
+
+To deploy a new version:
+```bash
+npm run deploy
+```
+
+## License
+
+This project is licensed under the Apache License 2.0.
