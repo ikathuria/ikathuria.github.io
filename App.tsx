@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { HeroScene, AbstractImpactScene } from './components/QuantumScene';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
-import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ExternalLink, GraduationCap, Briefcase, Code, Terminal, Database, Cloud, Github, Linkedin, Mail, FileText, Cpu, Layers } from 'lucide-react';
+import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ExternalLink, GraduationCap, Briefcase, Code, Terminal, Database, Cloud, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge } from 'lucide-react';
 import { papers, projects, resume, PortfolioItem } from './data';
 
 // --- COMPONENTS ---
@@ -129,6 +129,22 @@ const ResumeSection = () => {
                                 </div>
                              </div>
                         </div>
+
+                        {/* Certifications */}
+                        <div>
+                            <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-6">
+                                <Badge size={24} className="text-stone-400" />
+                                Certifications
+                            </h3>
+                            <div className="space-y-6">
+                                <div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">AI & ML</div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {resume.skills.certs.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {/* RIGHT COLUMN: Experience */}
@@ -230,12 +246,12 @@ const App: React.FC = () => {
                      <div className="flex flex-wrap justify-center gap-3 md:gap-6 text-xs md:text-sm font-mono uppercase tracking-widest text-stone-300 mb-8">
                         <span>MS in AI @ Purdue</span>
                         <span className="text-stone-500">•</span>
-                        <span>ex-SDE AWS</span>
+                        <span>ex-SDE @ AWS</span>
                         <span className="text-stone-500">•</span>
                         <span>4x Published</span>
                      </div>
                      <p className="max-w-2xl mx-auto text-lg md:text-xl text-stone-200 font-light leading-relaxed mb-12">
-                         Passionate about bridging research and real-world applications—building deep learning models, optimizing large-scale systems, and designing ethical AI solutions.
+                         Passionate about bridging research and real-world applications by building deep learning models, optimizing large-scale systems, and designing ethical AI solutions.
                      </p>
                      
                      <div className="flex justify-center gap-6 mb-16">

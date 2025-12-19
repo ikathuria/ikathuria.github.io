@@ -53,8 +53,8 @@ export const papers: PortfolioItem[] = [
       diagramType: 'flow-chart'
     },
     technical: {
-        techStack: ["Python", "Keras", "Librosa", "NLTK"],
-        codeSnippet: `def extract_features(data, sample_rate):
+      techStack: ["Python", "Keras", "Librosa", "NLTK"],
+      codeSnippet: `def extract_features(data, sample_rate):
     # ZCR
     result = np.array([])
     zcr = np.mean(librosa.feature.zero_crossing_rate(y=data).T, axis=0)
@@ -98,8 +98,8 @@ export const papers: PortfolioItem[] = [
       diagramType: 'fuzzy-curves'
     },
     technical: {
-        techStack: ["Scikit-Learn", "Fuzzy Logic", "OpenWeatherMap API", "Flask"],
-        codeSnippet: `from skfuzzy import control as ctrl
+      techStack: ["Scikit-Learn", "Fuzzy Logic", "OpenWeatherMap API", "Flask"],
+      codeSnippet: `from skfuzzy import control as ctrl
 
 # Antecedents & Consequent
 temperature = ctrl.Antecedent(np.arange(-10, 50, 1), 'temp')
@@ -142,8 +142,8 @@ rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation[
       diagramType: 'venn-diagram'
     },
     technical: {
-        techStack: ["Systematic Review", "Meta-Analysis", "Prisma Guidelines"],
-        codeSnippet: `Key Findings:
+      techStack: ["Systematic Review", "Meta-Analysis", "Prisma Guidelines"],
+      codeSnippet: `Key Findings:
 1. CNNs (Convolutional Neural Networks):
    - Best for: Medical Imaging (X-Ray, MRI)
    - Accuracy: >95% in Diabetic Retinopathy detection
@@ -183,8 +183,8 @@ rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation[
       diagramType: 'bar-chart'
     },
     technical: {
-        techStack: ["Azure ML Studio", "Neural Network Regression", "Pearson Correlation"],
-        codeSnippet: `Experiment Setup (Azure ML):
+      techStack: ["Azure ML Studio", "Neural Network Regression", "Pearson Correlation"],
+      codeSnippet: `Experiment Setup (Azure ML):
 
 dataset = Dataset.get_by_name(workspace, name='PM25_Data')
 
@@ -232,8 +232,8 @@ export const projects: PortfolioItem[] = [
       diagramType: 'waveform'
     },
     technical: {
-        techStack: ["TensorFlow", "DistilRoBERTa", "HuggingFace", "React"],
-        codeSnippet: `import tensorflow as tf
+      techStack: ["TensorFlow", "DistilRoBERTa", "HuggingFace", "React"],
+      codeSnippet: `import tensorflow as tf
 from transformers import TFDistilBertModel
 
 # Multi-Modal Model Architecture
@@ -278,8 +278,8 @@ def build_dual_model():
       diagramType: 'network-graph'
     },
     technical: {
-        techStack: ["BERT", "Flask", "Telegram API", "Pandas"],
-        codeSnippet: `@app.route('/predict', methods=['POST'])
+      techStack: ["BERT", "Flask", "Telegram API", "Pandas"],
+      codeSnippet: `@app.route('/predict', methods=['POST'])
 def predict():
     user_input = request.json['message']
     
@@ -327,8 +327,8 @@ def predict():
       diagramType: 'confidence-meter'
     },
     technical: {
-        techStack: ["PyTorch", "Siamese Networks", "Computer Vision", "OpenCV"],
-        codeSnippet: `class SiameseNetwork(nn.Module):
+      techStack: ["PyTorch", "Siamese Networks", "Computer Vision", "OpenCV"],
+      codeSnippet: `class SiameseNetwork(nn.Module):
     def __init__(self):
         super(SiameseNetwork, self).__init__()
         # Shared CNN layers
@@ -381,8 +381,8 @@ def predict():
       diagramType: 'depth-grid'
     },
     technical: {
-        techStack: ["TensorFlow", "3D-CNN", "Open3D", "NumPy"],
-        codeSnippet: `def create_3d_cnn(input_shape):
+      techStack: ["TensorFlow", "3D-CNN", "Open3D", "NumPy"],
+      codeSnippet: `def create_3d_cnn(input_shape):
     model = Sequential()
     
     # 3D Convolution captures Spatial (X,Y) + Temporal (Depth/Time) features
@@ -410,14 +410,14 @@ export const resume = {
     {
       degree: "Master of Science in Applied Artificial Intelligence",
       school: "Purdue University Northwest",
-      location: "Hammond, IN",
+      location: "Indiana, USA",
       period: "Aug 2025 – Present",
-      details: ["Coursework: Generative AI, Ethical AI, Applied ML, Data Visualization"]
+      details: ["Current GPA: 4.0/4.0", "Coursework: Generative AI, Ethical AI, Applied ML, Data Visualization"]
     },
     {
       degree: "Bachelor of Technology in Artificial Intelligence",
       school: "Amity University",
-      location: "Noida, India",
+      location: "Uttar Pradesh, India",
       period: "July 2019 – July 2023",
       details: ["CGPA: 9.09/10", "Coursework: Deep Learning, Computer Vision, NLP"]
     }
@@ -462,21 +462,21 @@ export const resume = {
       ]
     },
     {
-        role: "Previous Internships",
-        company: "Various",
-        period: "2021 - 2022",
-        details: [
-            "Planet E-com Solutions: Data & Algorithm Lead",
-            "Deloitte: AI Automation Intern",
-            "ProfiVe Infotech: Data Mining Intern"
-        ]
+      role: "Previous Internships",
+      company: "Various",
+      period: "2021 - 2022",
+      details: [
+        "Planet E-com Solutions: Data & Algorithm Lead",
+        "Deloitte: AI Automation Intern",
+        "ProfiVe Infotech: Data Mining Intern"
+      ]
     }
   ],
   skills: {
     ai: ["PyTorch", "Tensorflow", "HuggingFace", "Langchain", "Ollama", "Scikit-learn", "RAG"],
     dev: ["Python", "Golang", "TypeScript", "MATLAB"],
     data: ["Pandas", "NumPy", "Tableau", "Matplotlib", "Seaborn"],
-    cloud: ["AWS Bedrock", "Lambda", "ECS", "Step Functions", "CloudFormation", "CloudWatch"],
+    cloud: ["Bedrock", "Lambda", "ECS", "Step Functions", "CloudFormation", "CloudWatch"],
     web: ["Flask", "Django", "HTML", "CSS", "Bootstrap"],
     certs: ["AWS Certified AI Practitioner", "AWS Certified Cloud Practitioner"]
   }
