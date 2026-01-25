@@ -213,6 +213,141 @@ nn_regressor = NeuralNetworkRegression(
 
 export const projects: PortfolioItem[] = [
   {
+    id: 'trustworthyrag',
+    type: 'project',
+    metadata: {
+      title: "TrustworthyRAG",
+      subtitle: "Query-Adaptive Learned Fusion (QALF) for optimal multimodal retrieval.",
+      venue: "Project",
+      date: "2024",
+      themeColor: "#8b5cf6", // Violet
+      secondaryColor: "#f5f3ff",
+    },
+    narrative: {
+      problem: "Standard RAG systems struggle with complex reasoning queries, often retrieving irrelevant chunks. Fixed routing strategies fail to adapt to the nuance of user intent and query complexity.",
+      innovation: "Designed QALF (Query-Adaptive Learned Fusion) to dynamically route queries to Vector, Graph, or Keyword modalities based on 4D complexity analysis. Integrated Neo4j with Llama 3 to link unstructured data into a unified multimodal knowledge graph.",
+      impact: "Significantly outperformed standard RRF baselines by optimizing retrieval paths. enabled complex multi-hop retrieval across text, images, and tables, improving answer fidelity for high-complexity queries."
+    },
+    visuals: {
+      diagramType: 'network-graph'
+    },
+    technical: {
+      techStack: ["Neo4j", "LangChain", "Llama 3", "Python"],
+      codeSnippet: `def qalf_routing(query, context):
+    # 4D Complexity & Intent Analysis
+    complexity = analyze_complexity(query) # 0.0 to 1.0
+    intent = classify_intent(query)        # e.g., 'multi_hop', 'factual'
+
+    # Dynamic Routing Logic
+    if complexity > 0.8 or intent == 'multi_hop':
+        # Prioritize Graph Traversal for reasoning
+        return graph_retriever.query(query)
+    elif intent == 'visual_lookup':
+        # Route to Vector Store for image embeddings
+        return multimodal_vector_store.similarity_search(query)
+    else:
+        # Fallback to Hybrid (Keyword + Dense)
+        return hybrid_retriever.invoke(query)`
+    },
+    authors: [
+      { name: "Ishani Kathuria", role: "Project Lead" }
+    ]
+  },
+  {
+    id: 'autoredteam',
+    type: 'project',
+    metadata: {
+      title: "AutoRedTeam",
+      subtitle: "Multi-agent adversarial simulation framework for LLM safety.",
+      venue: "Project",
+      date: "2024",
+      themeColor: "#ef4444", // Red
+      secondaryColor: "#fef2f2",
+    },
+    narrative: {
+      problem: "Manual red-teaming of LLMs is unscalable and inconsistent. Ensuring safety against prompt injections and jailbreaks requires continuous, adaptive adversarial testing.",
+      innovation: "Engineered a 3-agent feedback loop (Attacker, Target, Judge) where the 'Attacker' iteratively refines Chain-of-Thought jailbreak strategies based on the 'Target's' responses. Built a deterministic 'Judge' to score defense performance.",
+      impact: "Enabled systematic stress-testing across Gemini 1.5 Pro, GPT-4, and Llama 3. The React/TypeScript frontend visualizes real-time thought processes, simulating enterprise-grade red-teaming workflows."
+    },
+    visuals: {
+      diagramType: 'flow-chart'
+    },
+    technical: {
+      techStack: ["React", "TypeScript", "LangChain", "Gemini/GPT-4"],
+      codeSnippet: `const redTeamLoop = async (target: LLM, attack: string) => {
+  // 1. Attack Execution
+  const response = await target.generate(attack);
+  
+  // 2. Deterministic Judging
+  const judgeScore = await judgeAgent.evaluate(response, safetyRubric);
+
+  if (judgeScore.isUnsafe) {
+    console.log("Jailbreak Successful:", attack);
+    return { success: true, prompt: attack };
+  }
+
+  // 3. Iterative Refinement (CoT)
+  const refinedAttack = await attackerAgent.refine({
+    original: attack,
+    targetResponse: response,
+    critique: judgeScore.reasoning
+  });
+  
+  return redTeamLoop(target, refinedAttack);
+}`
+    },
+    authors: [
+      { name: "Ishani Kathuria", role: "Project Lead" }
+    ]
+  },
+  {
+    id: 'deepfakeguard',
+    type: 'project',
+    metadata: {
+      title: "DeepFakeGuard",
+      subtitle: "Client-side Edge AI forensic tool for synthetic audio detection.",
+      venue: "Project",
+      date: "2024",
+      themeColor: "#0ea5e9", // Sky Blue
+      secondaryColor: "#f0f9ff",
+    },
+    narrative: {
+      problem: "Deepfake audio is becoming indistinguishable from reality, posing risks to privacy and security. Server-side detection raises privacy concerns and introduces latency.",
+      innovation: "Evolved from a FastAPI microservice to a fully client-side solution using Transformers.js. Implemented streaming inference logic to analyze spectrograms and waveforms directly in the browser without external dependencies.",
+      impact: "Eliminated server-side processing, ensuring user privacy and sub-second latency. The forensic dashboard visualizes detection confidence in real-time, providing immediate feedback on audio authenticity."
+    },
+    visuals: {
+      diagramType: 'waveform'
+    },
+    technical: {
+      techStack: ["Transformers.js", "React", "Recharts", "Web Audio API"],
+      codeSnippet: `import { pipeline } from '@xenova/transformers';
+
+// Initialize Client-side Pipeline
+const detector = await pipeline('audio-classification', 'xenova/audio-fake-detect', {
+    quantized: true // Optimized for browser
+});
+
+async function processAudioStream(chunk: Float32Array) {
+    // 1. Feature Extraction (Spectrogram/MFCC)
+    const features = extractFeatures(chunk);
+    
+    // 2. Inference in Browser
+    const result = await detector(features);
+    
+    // 3. Update Visualizer
+    updateDashboard({
+        timestamp: Date.now(),
+        probability: result[0].score,
+        isFake: result[0].label === 'FAKE'
+    });
+}`
+    },
+    authors: [
+      { name: "Ishani Kathuria", role: "Project Lead" }
+    ]
+  },
+  {
     id: 'autbot',
     type: 'project',
     metadata: {
@@ -224,12 +359,12 @@ export const projects: PortfolioItem[] = [
       secondaryColor: "#e0e7ff",
     },
     narrative: {
-      problem: "Children with autism often find standard educational tools unengaging because these tools fail to recognize or respond to the child's emotional state, leading to frustration and disengagement.",
-      innovation: "I developed 'Autbot' using DistilRoBERTa and TensorFlow. The key innovation was a dual-input system that analyzes both speech (tone/pitch) and text simultaneously to gauge emotion with higher fidelity.",
-      impact: "The system improved user engagement by 30% in pilot tests. It achieved over 90% accuracy in speech-based emotion recognition and 73% in text-based recognition, providing a more empathetic learning partner."
+      problem: "Children with autism often find standard educational tools unengaging because these tools fail to recognize or respond to the child's emotional state, leading to frustration.",
+      innovation: "Developed a conversational AI using DistilRoBERTa and TensorFlow. The system employs a dual-input architecture analyzing both speech (tone) and text (semantics) to gauge emotion with high fidelity.",
+      impact: "Improved engagement by 30% in pilot tests. Achieved over 90% accuracy in speech-based emotion recognition and 73% in text-based recognition, adjusting responses to the child's feelings."
     },
     visuals: {
-      diagramType: 'waveform'
+      diagramType: 'confidence-meter'
     },
     technical: {
       techStack: ["TensorFlow", "DistilRoBERTa", "HuggingFace", "React"],
@@ -257,169 +392,24 @@ def build_dual_model():
     authors: [
       { name: "Ishani Kathuria", role: "Project Lead" }
     ]
-  },
-  {
-    id: 'selfmed',
-    type: 'project',
-    metadata: {
-      title: "SelfMed – Medical AI Chatbot",
-      subtitle: "Diagnosing diseases and suggesting home remedies using BERT and Transformers.",
-      venue: "Project",
-      date: "2023",
-      themeColor: "#10b981", // Emerald
-      secondaryColor: "#d1fae5",
-    },
-    narrative: {
-      problem: "Access to quick, reliable preliminary medical advice is often limited, especially regarding home remedies where information is scattered and unverified.",
-      innovation: "I built an NLP-driven chatbot integrating BERT and Transformers via Flask and the Telegram API. The model was trained to specifically map natural language descriptions of symptoms to potential conditions and Indian home remedies.",
-      impact: "The chatbot achieved 85% accuracy in symptom-to-condition mapping. Deployed to over 100 users, it successfully reduced dependency on immediate physical consultations by 30% for minor ailments."
-    },
-    visuals: {
-      diagramType: 'network-graph'
-    },
-    technical: {
-      techStack: ["BERT", "Flask", "Telegram API", "Pandas"],
-      codeSnippet: `@app.route('/predict', methods=['POST'])
-def predict():
-    user_input = request.json['message']
-    
-    # Tokenize input using BERT Tokenizer
-    inputs = tokenizer(
-        user_input, 
-        return_tensors="pt", 
-        padding=True, 
-        truncation=True
-    )
-    
-    # Inference
-    with torch.no_grad():
-        logits = model(**inputs).logits
-    
-    predicted_class_id = logits.argmax().item()
-    condition = class_labels[predicted_class_id]
-    
-    # Fetch Remedy from Database
-    remedy = remedies_df.loc[remedies_df['condition'] == condition, 'remedy'].values[0]
-    
-    return jsonify({'condition': condition, 'remedy': remedy})`
-    },
-    authors: [
-      { name: "Ishani Kathuria", role: "Project Lead" }
-    ]
-  },
-  {
-    id: 'signature-verification',
-    type: 'project',
-    metadata: {
-      title: "Offline Signature Verification",
-      subtitle: "Detecting forgeries with Siamese Convolutional Neural Networks.",
-      venue: "Project",
-      date: "2023",
-      themeColor: "#64748b", // Slate
-      secondaryColor: "#f1f5f9",
-    },
-    narrative: {
-      problem: "Manual signature verification is slow, subjective, and prone to human error, creating security vulnerabilities in banking and legal document processing.",
-      innovation: "I implemented a Siamese Convolutional Neural Network (CNN). Unlike standard classification, this architecture learns a 'similarity metric', taking two signatures as input and calculating the distance between their feature vectors to detect forgeries.",
-      impact: "The model achieved 90% accuracy on benchmark signature datasets, offering a robust, automated solution for authenticating offline documents."
-    },
-    visuals: {
-      diagramType: 'confidence-meter'
-    },
-    technical: {
-      techStack: ["PyTorch", "Siamese Networks", "Computer Vision", "OpenCV"],
-      codeSnippet: `class SiameseNetwork(nn.Module):
-    def __init__(self):
-        super(SiameseNetwork, self).__init__()
-        # Shared CNN layers
-        self.cnn = nn.Sequential(
-            nn.Conv2d(1, 96, kernel_size=11, stride=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(3, stride=2),
-            nn.Conv2d(96, 256, kernel_size=5, stride=1),
-            nn.ReLU(inplace=True)
-        )
-        # Fully connected distance metric
-        self.fc = nn.Sequential(
-            nn.Linear(256 * 5 * 5, 1024),
-            nn.ReLU(inplace=True),
-            nn.Linear(1024, 128)
-        )
-
-    def forward_once(self, x):
-        output = self.cnn(x)
-        output = output.view(output.size()[0], -1)
-        output = self.fc(output)
-        return output
-
-    def forward(self, input1, input2):
-        output1 = self.forward_once(input1)
-        output2 = self.forward_once(input2)
-        return output1, output2`
-    },
-    authors: [
-      { name: "Ishani Kathuria", role: "Project Lead" }
-    ]
-  },
-  {
-    id: 'gesture-recognition',
-    type: 'project',
-    metadata: {
-      title: "Depth Gesture Recognition",
-      subtitle: "3D CNNs for dynamic hand gesture estimation.",
-      venue: "Project",
-      date: "2022",
-      themeColor: "#f59e0b", // Amber
-      secondaryColor: "#fef3c7",
-    },
-    narrative: {
-      problem: "Standard 2D gesture recognition systems often fail in complex lighting or when hands overlap, as they lack depth perception and spatial context.",
-      innovation: "I built a 3D Convolutional Neural Network (3D-CNN) using TensorFlow, integrating it with Open3D. This allowed the system to process depth maps alongside RGB data, capturing the 'Z-axis' of movement.",
-      impact: "This approach enabled accurate estimation of hand depth and robust detection of dynamic gestures in real-time, suitable for touchless interfaces."
-    },
-    visuals: {
-      diagramType: 'depth-grid'
-    },
-    technical: {
-      techStack: ["TensorFlow", "3D-CNN", "Open3D", "NumPy"],
-      codeSnippet: `def create_3d_cnn(input_shape):
-    model = Sequential()
-    
-    # 3D Convolution captures Spatial (X,Y) + Temporal (Depth/Time) features
-    model.add(Conv3D(32, kernel_size=(3, 3, 3), activation='relu', input_shape=input_shape))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-    
-    model.add(Conv3D(64, kernel_size=(3, 3, 3), activation='relu'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-    
-    model.add(Flatten())
-    model.add(Dense(256, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(num_classes, activation='softmax'))
-    
-    return model`
-    },
-    authors: [
-      { name: "Ishani Kathuria", role: "Project Lead" }
-    ]
   }
 ];
 
 export const resume = {
   education: [
     {
-      degree: "Master of Science in Applied Artificial Intelligence",
+      degree: "Master of Science in Applied Artificial Intelligence. GPA: 4.0/4.0",
       school: "Purdue University Northwest",
       location: "Indiana, USA",
-      period: "Aug 2025 – Present",
-      details: ["Current GPA: 4.0/4.0", "Coursework: Generative AI, Ethical AI, Applied ML, Data Visualization"]
+      period: "Aug 2025 – Expected May 2027",
+      details: ["Coursework: Generative AI, Ethical AI, Applied Machine Learning, Data Visualization"]
     },
     {
-      degree: "Bachelor of Technology in Artificial Intelligence",
+      degree: "Bachelor of Technology in Artificial Intelligence. CGPA: 9.09/10",
       school: "Amity University",
       location: "Uttar Pradesh, India",
       period: "July 2019 – July 2023",
-      details: ["CGPA: 9.09/10", "Coursework: Deep Learning, Computer Vision, NLP"]
+      details: ["Coursework: Deep Learning, Computer Vision, Natural Language Processing"]
     }
   ],
   experience: [
@@ -428,28 +418,27 @@ export const resume = {
       company: "Center for Cybersecurity, Purdue University",
       period: "Sept 2025 – Present",
       details: [
-        "Conducting research on Retrieval Augmented Generation (RAG) pipelines and LLM optimization.",
-        "Collaborate with faculty/student teams, presenting results at lab meetings."
+        "Conducting research on Retrieval Augmented Generation (RAG) pipelines, focusing on retrieval quality, hallucination reduction, and latency optimization for LLM-based systems."
       ]
     },
     {
       role: "Software Development Engineer",
-      company: "Amazon Web Services (AWS)",
+      company: "Amazon Web Services",
       period: "March 2025 – July 2025",
       details: [
-        "Worked on an applied AI service to analyze customer data/logs, reducing debugging time from 2.5h to 30m.",
-        "Built internal tools to simulate customer interactions, reducing external reported issues by 30%.",
-        "Deployed AI chatbots improving operational efficiency by 40%."
+        "Contributed to internal AI-assisted debugging workflows leveraging LLM-based log summarization and retrieval techniques, reducing average debugging time from 2.5 hours to 30 minutes.",
+        "Built internal tools to simulate customer interactions, enabling proactive bug detection in microservices and reducing external customer reported issues by 30%.",
+        "Designed and deployed AI-powered chatbots for internal tools, guiding operators on command usage and troubleshooting steps; improved operational efficiency by 40%."
       ]
     },
     {
       role: "System Development Engineer",
-      company: "Amazon Web Services (AWS)",
+      company: "Amazon Web Services",
       period: "July 2023 – March 2025",
       details: [
-        "Automated region-build processes for 15+ OpenSearch services, reducing manual intervention by 80%.",
-        "Optimized scripts cutting CPU/memory utilization by >50%, saving $15,000 monthly.",
-        "Collaborated on pre-launch testing, reducing downtime incidents by 25%."
+        "Automated region-build processes for 15+ AWS OpenSearch services, reducing manual intervention by 80% and cutting deployment timelines by 3 weeks.",
+        "Refactored and optimized domain scripts, cutting CPU and memory utilization by >50%, saving $15,000 monthly and improving query performance.",
+        "Collaborated with cross-functional teams to ensure rigorous pre-launch testing, reducing downtime incidents during regional expansions by 25%."
       ]
     },
     {
@@ -457,26 +446,16 @@ export const resume = {
       company: "Get It Done",
       period: "Oct 2021 – June 2023",
       details: [
-        "Founded student-focused AI startup, mentoring 200 students.",
+        "Founded and led a student-focused AI startup, mentoring 200 students.",
         "Organized workshops leading to 78% of students achieving placements."
-      ]
-    },
-    {
-      role: "Previous Internships",
-      company: "Various",
-      period: "2021 - 2022",
-      details: [
-        "Planet E-com Solutions: Data & Algorithm Lead",
-        "Deloitte: AI Automation Intern",
-        "ProfiVe Infotech: Data Mining Intern"
       ]
     }
   ],
   skills: {
-    ai: ["PyTorch", "Tensorflow", "HuggingFace", "Langchain", "Ollama", "Scikit-learn", "RAG"],
+    ai: ["Generative AI", "RAG", "Agentic AI", "PyTorch", "Tensorflow", "HuggingFace", "Langchain", "Ollama", "Scikit-learn"],
     dev: ["Python", "Golang", "TypeScript", "MATLAB"],
     data: ["Pandas", "NumPy", "Tableau", "Matplotlib", "Seaborn"],
-    cloud: ["Bedrock", "Lambda", "ECS", "Step Functions", "CloudFormation", "CloudWatch"],
+    cloud: ["AWS Bedrock", "Lambda", "ECS", "Step Functions", "CloudFormation", "CloudWatch"],
     web: ["Flask", "Django", "HTML", "CSS", "Bootstrap"],
     certs: ["AWS Certified AI Practitioner", "AWS Certified Cloud Practitioner"]
   }
