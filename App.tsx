@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { HeroScene, AbstractImpactScene } from './components/QuantumScene';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
-import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ExternalLink, GraduationCap, Briefcase, Code, Terminal, Database, Cloud, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge } from 'lucide-react';
+import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ExternalLink, GraduationCap, Briefcase, Code, Terminal, Database, Cloud, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe } from 'lucide-react';
 import { papers, projects, resume, PortfolioItem } from './data';
 
 // --- COMPONENTS ---
@@ -69,13 +69,19 @@ const CodeTerminal = ({ code, color }: { code: string, color: string }) => {
     )
 }
 
-const ResumeSection = () => {
+const ResumeSection = ({ onViewPdf }: { onViewPdf: () => void }) => {
     return (
         <section id="resume" className="py-24 bg-white border-t border-stone-200">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">EXPERIENCE & EDUCATION</div>
                     <h2 className="font-serif text-4xl md:text-5xl mb-4 text-stone-900">Resume</h2>
+                    <button
+                        onClick={onViewPdf}
+                        className="mt-4 px-6 py-2 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center gap-2"
+                    >
+                        <FileText size={16} /> View PDF
+                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -110,21 +116,33 @@ const ResumeSection = () => {
                             </h3>
                             <div className="space-y-6">
                                 <div>
-                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">AI & ML</div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Generative     AI</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {resume.skills.ai.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
+                                        {resume.skills.genai.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Development</div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">ML Frameworks</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {resume.skills.dev.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
+                                        {resume.skills.ml.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Programming</div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {resume.skills.programming.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
                                     </div>
                                 </div>
                                 <div>
                                     <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Cloud (AWS)</div>
                                     <div className="flex flex-wrap gap-2">
                                         {resume.skills.cloud.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Web & Data Science</div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {resume.skills.data.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
                                     </div>
                                 </div>
                             </div>
@@ -186,6 +204,7 @@ const App: React.FC = () => {
     const [activeItemId, setActiveItemId] = useState<string | null>(null);
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [showResumePdf, setShowResumePdf] = useState(false);
     const [showTechnical, setShowTechnical] = useState(false);
 
     useEffect(() => {
@@ -194,14 +213,110 @@ const App: React.FC = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const allItems = [...papers, ...projects];
+
+    // --- NAVIGATION SYNC (Back Button Fix) ---
+
+    // 1. Sync State -> Hash (When State Changes, Update URL)
+    useEffect(() => {
+        const currentHash = window.location.hash;
+        let desiredHash = '';
+
+        if (showResumePdf) {
+            desiredHash = '#resume';
+        } else if (activeItemId) {
+            desiredHash = `#project=${activeItemId}`;
+        }
+
+        if (currentHash !== desiredHash) {
+            if (desiredHash) {
+                window.location.hash = desiredHash;
+            } else {
+                // Remove hash without reloading (Home view)
+                // We use pushState to add a history entry for "Home" if coming from a project
+                // effectively allowing "Forward" to work too.
+                // However, strictly clearing hash might simply be:
+                if (currentHash) {
+                    history.pushState(null, '', window.location.pathname);
+                }
+            }
+        }
+    }, [activeItemId, showResumePdf]);
+
+    // 2. Sync Hash -> State (When URL/Hash Changes, Update State)
+    useEffect(() => {
+        const handleHashChange = () => {
+            const hash = window.location.hash;
+
+            if (hash === '#resume') {
+                setShowResumePdf(true);
+                setActiveItemId(null);
+            } else if (hash.startsWith('#project=')) {
+                const id = hash.replace('#project=', '');
+                // Validate ID
+                if (allItems.find(p => p.id === id)) {
+                    setActiveItemId(id);
+                    setShowResumePdf(false);
+                }
+            } else {
+                // Default / Home
+                setShowResumePdf(false);
+                setActiveItemId(null);
+            }
+        };
+
+        // Handle initial load (e.g., reloading on #resume)
+        handleHashChange();
+
+        window.addEventListener('hashchange', handleHashChange);
+        return () => window.removeEventListener('hashchange', handleHashChange);
+    }, []); // Empty dependency array relying on stable setters
+
     // Reset scroll and technical view when changing items
     useEffect(() => {
         window.scrollTo(0, 0);
         setShowTechnical(false);
+        setShowResumePdf(false);
     }, [activeItemId]);
 
-    const allItems = [...papers, ...projects];
+
     const activeItem = allItems.find(p => p.id === activeItemId);
+
+    // --- RESUME PDF VIEW ---
+    if (showResumePdf) {
+        return (
+            <div className="min-h-screen bg-[#F9F8F4] flex flex-col h-screen">
+                <nav className="bg-stone-900 text-white py-4 shadow-md flex-shrink-0">
+                    <div className="container mx-auto px-6 flex justify-between items-center">
+                        <button
+                            onClick={() => setShowResumePdf(false)}
+                            className="flex items-center gap-2 text-stone-300 hover:text-white transition-colors"
+                        >
+                            <ArrowLeft size={20} />
+                            <span className="font-medium text-sm tracking-wide uppercase">Back to Portfolio</span>
+                        </button>
+                        <div className="font-serif font-bold text-xl tracking-tight">
+                            Resume.pdf
+                        </div>
+                        <a
+                            href="/resume.pdf"
+                            download
+                            className="flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-colors"
+                        >
+                            <ArrowDown size={16} /> <span className="hidden sm:inline">Download</span>
+                        </a>
+                    </div>
+                </nav>
+                <div className="flex-grow w-full h-full bg-stone-200">
+                    <iframe
+                        src="/resume.pdf"
+                        className="w-full h-full border-none"
+                        title="Resume PDF"
+                    />
+                </div>
+            </div>
+        )
+    }
 
     // --- HOME VIEW (PORTFOLIO) ---
     if (!activeItem) {
@@ -304,7 +419,7 @@ const App: React.FC = () => {
                     </section>
 
                     {/* Resume */}
-                    <ResumeSection />
+                    <ResumeSection onViewPdf={() => setShowResumePdf(true)} />
 
                 </main>
 
@@ -363,6 +478,27 @@ const App: React.FC = () => {
                         <a href="#problem" onClick={scrollToSection('problem')} className="hover:opacity-70 transition-opacity cursor-pointer uppercase" style={{ color: metadata.themeColor }}>The Problem</a>
                         <a href="#innovation" onClick={scrollToSection('innovation')} className="hover:opacity-70 transition-opacity cursor-pointer uppercase" style={{ color: metadata.themeColor }}>Innovation</a>
                         <a href="#impact" onClick={scrollToSection('impact')} className="hover:opacity-70 transition-opacity cursor-pointer uppercase" style={{ color: metadata.themeColor }}>Impact</a>
+                        {metadata.demoUrl && (
+                            <a
+                                href={metadata.demoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-5 py-2 text-white rounded-full hover:opacity-90 transition-opacity shadow-sm cursor-pointer flex items-center gap-2"
+                                style={{ backgroundColor: metadata.themeColor }}
+                            >
+                                <Globe size={14} /> Live Demo
+                            </a>
+                        )}
+                        {metadata.githubUrl && (
+                            <a
+                                href={metadata.githubUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-5 py-2 text-white rounded-full hover:opacity-90 transition-opacity shadow-sm cursor-pointer flex items-center gap-2 bg-stone-900"
+                            >
+                                <Github size={14} /> View Code
+                            </a>
+                        )}
                         {metadata.link && (
                             <a
                                 href={metadata.link}
@@ -388,6 +524,27 @@ const App: React.FC = () => {
                     <button onClick={() => { setActiveItemId(null); setMenuOpen(false); }} className="text-stone-500 uppercase text-sm mb-8">Back to Portfolio</button>
                     <a href="#problem" onClick={scrollToSection('problem')} className="uppercase">The Problem</a>
                     <a href="#innovation" onClick={scrollToSection('innovation')} className="uppercase">Innovation</a>
+                    {metadata.demoUrl && (
+                        <a
+                            href={metadata.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-6 py-3 text-white rounded-full shadow-lg cursor-pointer flex items-center gap-2"
+                            style={{ backgroundColor: metadata.themeColor }}
+                        >
+                            <Globe size={18} /> Live Demo
+                        </a>
+                    )}
+                    {metadata.githubUrl && (
+                        <a
+                            href={metadata.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-6 py-3 text-white rounded-full shadow-lg cursor-pointer bg-stone-900 flex items-center gap-2"
+                        >
+                            <Github size={18} /> View Code
+                        </a>
+                    )}
                     {metadata.link && (
                         <a
                             href={metadata.link}

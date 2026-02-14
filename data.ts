@@ -15,6 +15,8 @@ export interface PortfolioItem {
     link?: string;
     themeColor: string;
     secondaryColor: string;
+    githubUrl?: string;
+    demoUrl?: string;
   };
   narrative: {
     problem: string;
@@ -40,7 +42,7 @@ export const papers: PortfolioItem[] = [
       subtitle: "A deep learning-based virtual agent for social and language skills development.",
       venue: "Book Chapter (Springer)",
       date: "July 2025",
-      link: "https://link.springer.com/chapter/10.1007/978-981-96-7556-2_16",
+      link: "https://link.springer.com/chapter/10.1007/978-981-96-7556-2_16/",
       themeColor: "#20c997", // Soft Teal
       secondaryColor: "#e6fffa",
     },
@@ -129,7 +131,7 @@ rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation[
       subtitle: "A review of DL architectures in Drug Discovery, Imaging, and EHR.",
       venue: "ICRIC (Springer)",
       date: "May 2023",
-      link: "https://link.springer.com/chapter/10.1007/978-981-19-9876-8_29",
+      link: "https://link.springer.com/chapter/10.1007/978-981-19-9876-8_29/",
       themeColor: "#EF4444", // Medical Red
       secondaryColor: "#fef2f2",
     },
@@ -170,7 +172,7 @@ rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation[
       subtitle: "A comparative analysis of neural networks and linear regression for air quality prediction.",
       venue: "COM-IT-CON (IEEE)",
       date: "May 2022",
-      link: "https://ieeexplore.ieee.org/document/9850494",
+      link: "https://ieeexplore.ieee.org/document/9850494/",
       themeColor: "#007FFF", // Azure Blue
       secondaryColor: "#e0f2fe",
     },
@@ -219,9 +221,10 @@ export const projects: PortfolioItem[] = [
       title: "TrustworthyRAG",
       subtitle: "Query-Adaptive Learned Fusion (QALF) for optimal multimodal retrieval.",
       venue: "Project",
-      date: "2024",
+      date: "2025",
       themeColor: "#8b5cf6", // Violet
       secondaryColor: "#f5f3ff",
+      githubUrl: "https://github.com/ikathuria/TrustworthyRAG/",
     },
     narrative: {
       problem: "Standard RAG systems struggle with complex reasoning queries, often retrieving irrelevant chunks. Fixed routing strategies fail to adapt to the nuance of user intent and query complexity.",
@@ -260,9 +263,11 @@ export const projects: PortfolioItem[] = [
       title: "AutoRedTeam",
       subtitle: "Multi-agent adversarial simulation framework for LLM safety.",
       venue: "Project",
-      date: "2024",
+      date: "2026",
       themeColor: "#ef4444", // Red
       secondaryColor: "#fef2f2",
+      githubUrl: "https://github.com/ikathuria/AutoRedTeam/",
+      demoUrl: "http://ishani.kathuria.net/AutoRedTeam/",
     },
     narrative: {
       problem: "Manual red-teaming of LLMs is unscalable and inconsistent. Ensuring safety against prompt injections and jailbreaks requires continuous, adaptive adversarial testing.",
@@ -307,9 +312,11 @@ export const projects: PortfolioItem[] = [
       title: "DeepFakeGuard",
       subtitle: "Client-side Edge AI forensic tool for synthetic audio detection.",
       venue: "Project",
-      date: "2024",
+      date: "2026",
       themeColor: "#0ea5e9", // Sky Blue
       secondaryColor: "#f0f9ff",
+      githubUrl: "https://github.com/ikathuria/DeepFakeGuard/",
+      demoUrl: "https://ishani.kathuria.net/DeepfakeGuard/",
     },
     narrative: {
       problem: "Deepfake audio is becoming indistinguishable from reality, posing risks to privacy and security. Server-side detection raises privacy concerns and introduces latency.",
@@ -357,6 +364,7 @@ async function processAudioStream(chunk: Float32Array) {
       date: "2023",
       themeColor: "#6366f1", // Indigo
       secondaryColor: "#e0e7ff",
+      githubUrl: "https://github.com/ikathuria/Autbot/",
     },
     narrative: {
       problem: "Children with autism often find standard educational tools unengaging because these tools fail to recognize or respond to the child's emotional state, leading to frustration.",
@@ -401,14 +409,14 @@ export const resume = {
       degree: "Master of Science in Applied Artificial Intelligence. GPA: 4.0/4.0",
       school: "Purdue University Northwest",
       location: "Indiana, USA",
-      period: "Aug 2025 – Expected May 2027",
+      period: "Aug 2025 – May 2027",
       details: ["Coursework: Generative AI, Ethical AI, Applied Machine Learning, Data Visualization"]
     },
     {
       degree: "Bachelor of Technology in Artificial Intelligence. CGPA: 9.09/10",
       school: "Amity University",
       location: "Uttar Pradesh, India",
-      period: "July 2019 – July 2023",
+      period: "Jul 2019 – Jul 2023",
       details: ["Coursework: Deep Learning, Computer Vision, Natural Language Processing"]
     }
   ],
@@ -416,15 +424,16 @@ export const resume = {
     {
       role: "AI Research Assistant",
       company: "Center for Cybersecurity, Purdue University",
-      period: "Sept 2025 – Present",
+      period: "Sep 2025 – Present",
       details: [
-        "Conducting research on Retrieval Augmented Generation (RAG) pipelines, focusing on retrieval quality, hallucination reduction, and latency optimization for LLM-based systems."
+        "Conducting applied research on Retrieval-Augmented Generation (RAG) systems, focusing on retrieval quality, hallucination reduction, and end-to-end latency optimization for LLM-based applications.",
+        "Evaluating retrieval strategies using Recall@K and nDCG to optimize real-world question answering performance."
       ]
     },
     {
       role: "Software Development Engineer",
       company: "Amazon Web Services",
-      period: "March 2025 – July 2025",
+      period: "Jul 2023 – Jul 2025",
       details: [
         "Contributed to internal AI-assisted debugging workflows leveraging LLM-based log summarization and retrieval techniques, reducing average debugging time from 2.5 hours to 30 minutes.",
         "Built internal tools to simulate customer interactions, enabling proactive bug detection in microservices and reducing external customer reported issues by 30%.",
@@ -432,31 +441,45 @@ export const resume = {
       ]
     },
     {
-      role: "System Development Engineer",
-      company: "Amazon Web Services",
-      period: "July 2023 – March 2025",
-      details: [
-        "Automated region-build processes for 15+ AWS OpenSearch services, reducing manual intervention by 80% and cutting deployment timelines by 3 weeks.",
-        "Refactored and optimized domain scripts, cutting CPU and memory utilization by >50%, saving $15,000 monthly and improving query performance.",
-        "Collaborated with cross-functional teams to ensure rigorous pre-launch testing, reducing downtime incidents during regional expansions by 25%."
-      ]
-    },
-    {
       role: "Founder",
       company: "Get It Done",
-      period: "Oct 2021 – June 2023",
+      period: "Oct 2021 – Jun 2023",
       details: [
         "Founded and led a student-focused AI startup, mentoring 200 students.",
         "Organized workshops leading to 78% of students achieving placements."
       ]
+    },
+    {
+      role: "Data and Algorithm Lead",
+      company: "Planet E-Com Solutions",
+      period: "May 2022 – Jul 2022",
+      details: [
+        "Engineered web scraping pipelines and data processing algorithms in Python to improve the accuracy of education consultation software."
+      ]
+    },
+    {
+      role: "Artificial Intelligence Automation Intern",
+      company: "Deloitte",
+      period: "Jun 2022 – Jul 2022",
+      details: [
+        "Developed hybrid RPA solutions using Automation Anywhere and Python, automating complex internal reporting tasks."
+      ]
+    },
+    {
+      role: "AI Developer & Lead",
+      company: "Docplus Online",
+      period: "Jul 2021 – Nov 2021",
+      details: [
+        "Engineered Python-based AI pipelines for translation models and gender identification, coordinating technical implementation across 40 + developers."
+      ]
     }
   ],
   skills: {
-    ai: ["Generative AI", "RAG", "Agentic AI", "PyTorch", "Tensorflow", "HuggingFace", "Langchain", "Ollama", "Scikit-learn"],
-    dev: ["Python", "Golang", "TypeScript", "MATLAB"],
-    data: ["Pandas", "NumPy", "Tableau", "Matplotlib", "Seaborn"],
-    cloud: ["AWS Bedrock", "Lambda", "ECS", "Step Functions", "CloudFormation", "CloudWatch"],
-    web: ["Flask", "Django", "HTML", "CSS", "Bootstrap"],
+    genai: ["Large Language Models (LLMs)", "RAG", "Fine-Tuning", "Multi-Agent Systems", "Prompt Engineering", "LangChain", "HuggingFace"],
+    ml: ["Ollama", "PyTorch", "TensorFlow", "Scikit-learn"],
+    programming: ["Python", "Golang", "TypeScript", "Java"],
+    cloud: ["AWS Bedrock", "AWS Lambda", "AWS ECS", "AWS Step Functions", "AWS CloudFormation", "AWS CloudWatch", "Azure"],
+    data: ["React", "Flask", "Django", "Pandas", "NumPy", "Tableau", "Matplotlib", "Seaborn"],
     certs: ["AWS Certified AI Practitioner", "AWS Certified Cloud Practitioner"]
   }
 };

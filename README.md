@@ -2,13 +2,6 @@
 
 A personal portfolio website showcasing research publications, projects, and professional experience in Artificial Intelligence and Machine Learning.
 
-## Overview
-
-This portfolio features an interactive and dynamic design to present work in:
-- **Research**: Deep learning applications in healthcare, accessibility (Autism support), and environmental science.
-- **Projects**: Real-world implementations of AI, including educational chatbots, medical diagnostic tools, and gesture recognition systems.
-- **Professional Experience**: Work history at AWS and research roles at Purdue University.
-
 ## Tech Stack
 
 Built with a modern frontend stack focusing on performance and interactivity:
