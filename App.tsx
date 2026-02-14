@@ -69,19 +69,23 @@ const CodeTerminal = ({ code, color }: { code: string, color: string }) => {
     )
 }
 
-const ResumeSection = ({ onViewPdf }: { onViewPdf: () => void }) => {
+const ResumeSection = () => {
     return (
         <section id="resume" className="py-24 bg-white border-t border-stone-200">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">EXPERIENCE & EDUCATION</div>
                     <h2 className="font-serif text-4xl md:text-5xl mb-4 text-stone-900">Resume</h2>
-                    <button
-                        onClick={onViewPdf}
-                        className="mt-4 px-6 py-2 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center gap-2"
-                    >
-                        <FileText size={16} /> View PDF
-                    </button>
+                    <div className="flex justify-center mt-6">
+                        <a
+                            href="/resume.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-8 py-3 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                        >
+                            <FileText size={18} /> View Resume PDF
+                        </a>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -204,7 +208,6 @@ const App: React.FC = () => {
     const [activeItemId, setActiveItemId] = useState<string | null>(null);
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [showResumePdf, setShowResumePdf] = useState(false);
     const [showTechnical, setShowTechnical] = useState(false);
 
     useEffect(() => {
@@ -222,9 +225,7 @@ const App: React.FC = () => {
         const currentHash = window.location.hash;
         let desiredHash = '';
 
-        if (showResumePdf) {
-            desiredHash = '#resume';
-        } else if (activeItemId) {
+        if (activeItemId) {
             desiredHash = `#project=${activeItemId}`;
         }
 
@@ -241,26 +242,21 @@ const App: React.FC = () => {
                 }
             }
         }
-    }, [activeItemId, showResumePdf]);
+    }, [activeItemId]);
 
     // 2. Sync Hash -> State (When URL/Hash Changes, Update State)
     useEffect(() => {
         const handleHashChange = () => {
             const hash = window.location.hash;
 
-            if (hash === '#resume') {
-                setShowResumePdf(true);
-                setActiveItemId(null);
-            } else if (hash.startsWith('#project=')) {
+            if (hash.startsWith('#project=')) {
                 const id = hash.replace('#project=', '');
                 // Validate ID
                 if (allItems.find(p => p.id === id)) {
                     setActiveItemId(id);
-                    setShowResumePdf(false);
                 }
             } else {
                 // Default / Home
-                setShowResumePdf(false);
                 setActiveItemId(null);
             }
         };
@@ -276,47 +272,12 @@ const App: React.FC = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         setShowTechnical(false);
-        setShowResumePdf(false);
     }, [activeItemId]);
 
 
     const activeItem = allItems.find(p => p.id === activeItemId);
 
-    // --- RESUME PDF VIEW ---
-    if (showResumePdf) {
-        return (
-            <div className="min-h-screen bg-[#F9F8F4] flex flex-col h-screen">
-                <nav className="bg-stone-900 text-white py-4 shadow-md flex-shrink-0">
-                    <div className="container mx-auto px-6 flex justify-between items-center">
-                        <button
-                            onClick={() => setShowResumePdf(false)}
-                            className="flex items-center gap-2 text-stone-300 hover:text-white transition-colors"
-                        >
-                            <ArrowLeft size={20} />
-                            <span className="font-medium text-sm tracking-wide uppercase">Back to Portfolio</span>
-                        </button>
-                        <div className="font-serif font-bold text-xl tracking-tight">
-                            Resume.pdf
-                        </div>
-                        <a
-                            href="/resume.pdf"
-                            download
-                            className="flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-colors"
-                        >
-                            <ArrowDown size={16} /> <span className="hidden sm:inline">Download</span>
-                        </a>
-                    </div>
-                </nav>
-                <div className="flex-grow w-full h-full bg-stone-200">
-                    <iframe
-                        src="/resume.pdf"
-                        className="w-full h-full border-none"
-                        title="Resume PDF"
-                    />
-                </div>
-            </div>
-        )
-    }
+
 
     // --- HOME VIEW (PORTFOLIO) ---
     if (!activeItem) {
@@ -419,7 +380,7 @@ const App: React.FC = () => {
                     </section>
 
                     {/* Resume */}
-                    <ResumeSection onViewPdf={() => setShowResumePdf(true)} />
+                    <ResumeSection />
 
                 </main>
 
