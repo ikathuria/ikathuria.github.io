@@ -5,6 +5,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { HeroScene, AbstractImpactScene } from './components/QuantumScene';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
 import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ExternalLink, GraduationCap, Briefcase, Code, Terminal, Database, Cloud, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe } from 'lucide-react';
@@ -14,7 +15,7 @@ import { papers, projects, resume, PortfolioItem } from './data';
 
 const AuthorCard = ({ name, role, delay, themeColor }: { name: string, role: string, delay: string, themeColor: string }) => {
     return (
-        <div className="flex flex-col group animate-fade-in-up items-center p-8 bg-white rounded-xl border border-stone-200 shadow-sm hover:shadow-md transition-all duration-300 w-full max-w-xs" style={{ animationDelay: delay, borderColor: 'transparent' }}>
+        <div className="flex flex-col group animate-fade-in-up items-center md:p-8 p-6 bg-white rounded-xl border border-stone-200 shadow-sm hover:shadow-md transition-all duration-300 w-full max-w-xs" style={{ animationDelay: delay, borderColor: 'transparent' }}>
             <div className="group-hover:border-opacity-100 border border-transparent transition-all duration-300 rounded-xl absolute inset-0 pointer-events-none" style={{ borderColor: themeColor, opacity: 0.3 }}></div>
             <h3 className="font-serif text-2xl text-stone-900 text-center mb-3 relative z-10">{name}</h3>
             <div className="w-12 h-0.5 mb-4 opacity-60" style={{ backgroundColor: themeColor }}></div>
@@ -25,9 +26,14 @@ const AuthorCard = ({ name, role, delay, themeColor }: { name: string, role: str
 
 const PaperCard = ({ item, onClick }: { item: PortfolioItem; onClick: () => void }) => {
     return (
-        <div
+        <motion.article
             onClick={onClick}
-            className="group cursor-pointer bg-white rounded-2xl p-8 border border-stone-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden h-full flex flex-col"
+            className="group cursor-pointer bg-white rounded-2xl p-8 border border-stone-200 relative overflow-hidden h-full flex flex-col"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -8, boxShadow: '0 24px 60px rgba(15,23,42,0.15)' }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            viewport={{ once: true, amount: 0.3 }}
         >
             <div className="absolute top-0 left-0 w-2 h-full transition-all duration-300" style={{ backgroundColor: item.metadata.themeColor }}></div>
             <div className="pl-6 flex flex-col h-full">
@@ -44,7 +50,7 @@ const PaperCard = ({ item, onClick }: { item: PortfolioItem; onClick: () => void
                     Explore {item.type === 'research' ? 'Research' : 'Project'} <ArrowRight size={16} />
                 </div>
             </div>
-        </div>
+        </motion.article>
     )
 }
 
@@ -71,19 +77,24 @@ const CodeTerminal = ({ code, color }: { code: string, color: string }) => {
 
 const ResumeSection = () => {
     return (
-        <section id="resume" className="py-24 bg-white border-t border-stone-200">
+        <motion.section
+            id="resume"
+            className="py-24 bg-white border-t border-stone-200"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
+            viewport={{ once: true, amount: 0.25 }}
+        >
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
                     <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">EXPERIENCE & EDUCATION</div>
                     <h2 className="font-serif text-4xl md:text-5xl mb-4 text-stone-900">Resume</h2>
                     <div className="flex justify-center mt-6">
                         <a
-                            href="/resume.pdf"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href="mailto:ishani@kathuria.net?subject=Resume%20Request"
                             className="px-8 py-3 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition-colors inline-flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                         >
-                            <FileText size={18} /> View Resume PDF
+                            <FileText size={18} /> Request Full Resume
                         </a>
                     </div>
                 </div>
@@ -120,7 +131,7 @@ const ResumeSection = () => {
                             </h3>
                             <div className="space-y-6">
                                 <div>
-                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Generative     AI</div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">Generative AI</div>
                                     <div className="flex flex-wrap gap-2">
                                         {resume.skills.genai.map(s => <span key={s} className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-md">{s}</span>)}
                                     </div>
@@ -198,7 +209,7 @@ const ResumeSection = () => {
                     </div>
                 </div>
             </div>
-        </section>
+        </motion.section>
     )
 }
 
@@ -283,6 +294,12 @@ const App: React.FC = () => {
     if (!activeItem) {
         return (
             <div className="min-h-screen bg-[#F9F8F4] text-stone-800">
+                <a
+                    href="#main"
+                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:rounded-full focus:bg-stone-900 focus:text-white"
+                >
+                    Skip to main content
+                </a>
                 <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#F9F8F4]/90 backdrop-blur-md shadow-sm py-4 text-stone-900' : 'bg-transparent py-8 text-white'}`}>
                     <div className="container mx-auto px-6 flex justify-between items-center">
                         <div className="font-serif font-bold text-2xl tracking-tight">
@@ -293,7 +310,13 @@ const App: React.FC = () => {
                             <a href="#research" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Research</a>
                             <a href="#resume" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Resume</a>
                         </div>
-                        <button className={`${scrolled ? 'text-stone-900' : 'text-white'} md:hidden`} onClick={() => setMenuOpen(!menuOpen)}>
+                        <button
+                            className={`${scrolled ? 'text-stone-900' : 'text-white'} md:hidden`}
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            aria-label="Toggle navigation menu"
+                            aria-expanded={menuOpen}
+                            aria-controls="primary-menu"
+                        >
                             {menuOpen ? <X /> : <Menu />}
                         </button>
                     </div>
@@ -301,7 +324,12 @@ const App: React.FC = () => {
 
                 {/* Mobile Menu Overlay */}
                 {menuOpen && (
-                    <div className="fixed inset-0 z-40 bg-[#F9F8F4] flex flex-col items-center justify-center gap-8 text-xl font-serif animate-fade-in text-stone-900">
+                    <div
+                        id="primary-menu"
+                        className="fixed inset-0 z-40 bg-[#F9F8F4] flex flex-col items-center justify-center gap-8 text-xl font-serif animate-fade-in text-stone-900"
+                        role="dialog"
+                        aria-modal="true"
+                    >
                         <a href="#projects" onClick={() => setMenuOpen(false)}>Projects</a>
                         <a href="#research" onClick={() => setMenuOpen(false)}>Research</a>
                         <a href="#resume" onClick={() => setMenuOpen(false)}>Resume</a>
@@ -320,64 +348,120 @@ const App: React.FC = () => {
                             Ishani Kathuria
                         </h1>
                         <div className="flex flex-wrap justify-center gap-3 md:gap-6 text-xs md:text-sm font-mono uppercase tracking-widest text-stone-300 mb-8">
-                            <span>MS in AI @ Purdue</span>
+                            <span>MS in Applied AI @ Purdue</span>
                             <span className="text-stone-500">•</span>
                             <span>ex-SDE @ AWS</span>
                             <span className="text-stone-500">•</span>
-                            <span>4x Published</span>
+                            <span>4 peer-reviewed publications</span>
                         </div>
-                        <p className="max-w-2xl mx-auto text-lg md:text-xl text-stone-200 font-light leading-relaxed mb-12">
-                            Passionate about bridging research and real-world applications by building Agentic AI systems, RAG pipelines, and optimizing large-scale cloud infrastructure.
+                        <p className="max-w-2xl mx-auto text-lg md:text-xl text-stone-200 font-light leading-relaxed mb-10">
+                            Applied AI researcher building agentic systems, RAG pipelines, and safety tools that bridge research and real-world products.
                         </p>
 
-                        <div className="flex justify-center gap-6 mb-16">
-                            <a href="mailto:ishani@kathuria.net" className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-all text-white border border-white/10" aria-label="Email">
+                        {/* Primary product-style CTAs */}
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+                            <a
+                                href="#projects"
+                                className="px-7 py-3 rounded-full bg-white text-stone-900 text-sm font-semibold tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white focus-visible:ring-offset-stone-900"
+                            >
+                                View projects
+                            </a>
+                            <a
+                                href="#research"
+                                className="px-7 py-3 rounded-full border border-white/40 text-sm font-semibold tracking-wide text-stone-50 bg-white/5 hover:bg-white/10 hover:-translate-y-0.5 transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white focus-visible:ring-offset-stone-900"
+                            >
+                                View publications
+                            </a>
+                        </div>
+
+                        {/* Social / contact icons */}
+                        <div className="flex justify-center gap-6 mb-10">
+                            <a
+                                href="mailto:ishani@kathuria.net"
+                                className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-transform transition-colors border border-white/10 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white focus-visible:ring-offset-stone-900"
+                                aria-label="Email"
+                            >
                                 <Mail size={24} />
                             </a>
-                            <a href="https://www.linkedin.com/in/ishani-kathuria" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-all text-white border border-white/10" aria-label="LinkedIn">
+                            <a
+                                href="https://www.linkedin.com/in/ishani-kathuria"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-transform transition-colors border border-white/10 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white focus-visible:ring-offset-stone-900"
+                                aria-label="LinkedIn"
+                            >
                                 <Linkedin size={24} />
                             </a>
-                            <a href="https://github.com/ikathuria" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-all text-white border border-white/10" aria-label="GitHub">
+                            <a
+                                href="https://github.com/ikathuria"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-transform transition-colors border border-white/10 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white focus-visible:ring-offset-stone-900"
+                                aria-label="GitHub"
+                            >
                                 <Github size={24} />
                             </a>
-                            <a href="#resume" className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-all text-white border border-white/10" aria-label="Resume">
+                            <a
+                                href="#resume"
+                                className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-transform transition-colors border border-white/10 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white focus-visible:ring-offset-stone-900"
+                                aria-label="Resume"
+                            >
                                 <FileText size={24} />
                             </a>
                         </div>
 
-                        <a href="#projects" className="animate-bounce inline-block text-stone-400 hover:text-white transition-colors cursor-pointer">
+                        <a href="#projects" className="animate-float-soft inline-block text-stone-400 hover:text-white transition-colors cursor-pointer">
                             <ArrowDown size={32} />
                         </a>
                     </div>
                 </header>
 
-                <main className="container mx-auto px-6 pb-32 space-y-32 pt-24">
+                <main id="main" className="container mx-auto px-6 pb-32 space-y-32 pt-24">
 
                     {/* Projects */}
-                    <section id="projects">
-                        <div className="flex items-center gap-4 mb-8">
+                    <motion.section
+                        id="projects"
+                        className=""
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, ease: 'easeOut' }}
+                        viewport={{ once: true, amount: 0.25 }}
+                    >
+                        <div className="flex items-center gap-4 mb-4">
                             <h2 className="font-serif text-3xl text-stone-900">Selected Projects</h2>
                             <div className="h-px bg-stone-200 flex-grow"></div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <p className="text-sm md:text-base text-stone-600 mb-8 max-w-2xl">
+                            Systems that translate my research into production-ready tools for safety, retrieval, and multimodal understanding.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                             {projects.map(project => (
                                 <PaperCard key={project.id} item={project} onClick={() => setActiveItemId(project.id)} />
                             ))}
                         </div>
-                    </section>
+                    </motion.section>
 
                     {/* Research Papers */}
-                    <section id="research">
-                        <div className="flex items-center gap-4 mb-8">
+                    <motion.section
+                        id="research"
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
+                        viewport={{ once: true, amount: 0.25 }}
+                    >
+                        <div className="flex items-center gap-4 mb-4">
                             <h2 className="font-serif text-3xl text-stone-900">Research Publications</h2>
                             <div className="h-px bg-stone-200 flex-grow"></div>
                         </div>
+                        <p className="text-sm md:text-base text-stone-600 mb-8 max-w-2xl">
+                            Peer-reviewed work spanning healthcare, recommendation systems, and trustworthy AI, with a focus on practical deployment.
+                        </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {papers.map(paper => (
                                 <PaperCard key={paper.id} item={paper} onClick={() => setActiveItemId(paper.id)} />
                             ))}
                         </div>
-                    </section>
+                    </motion.section>
 
                     {/* Resume */}
                     <ResumeSection />
@@ -385,7 +469,7 @@ const App: React.FC = () => {
                 </main>
 
                 <footer className="bg-stone-900 text-stone-400 py-12 text-center text-sm">
-                    <p>© 2024 Ishani Kathuria Research Portfolio. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Ishani Kathuria Research Portfolio. All rights reserved.</p>
                 </footer>
             </div>
         )
@@ -473,7 +557,13 @@ const App: React.FC = () => {
                         )}
                     </div>
 
-                    <button className="md:hidden text-stone-900 p-2" onClick={() => setMenuOpen(!menuOpen)}>
+                    <button
+                        className="md:hidden text-stone-900 p-2"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label="Toggle section navigation"
+                        aria-expanded={menuOpen}
+                        aria-controls="detail-menu"
+                    >
                         {menuOpen ? <X /> : <Menu />}
                     </button>
                 </div>
@@ -481,7 +571,12 @@ const App: React.FC = () => {
 
             {/* Mobile Menu */}
             {menuOpen && (
-                <div className="fixed inset-0 z-40 bg-[#F9F8F4] flex flex-col items-center justify-center gap-8 text-xl font-serif animate-fade-in">
+                <div
+                    id="detail-menu"
+                    className="fixed inset-0 z-40 bg-[#F9F8F4] flex flex-col items-center justify-center gap-8 text-xl font-serif animate-fade-in"
+                    role="dialog"
+                    aria-modal="true"
+                >
                     <button onClick={() => { setActiveItemId(null); setMenuOpen(false); }} className="text-stone-500 uppercase text-sm mb-8">Back to Portfolio</button>
                     <a href="#problem" onClick={scrollToSection('problem')} className="uppercase">The Problem</a>
                     <a href="#innovation" onClick={scrollToSection('innovation')} className="uppercase">Innovation</a>
@@ -539,9 +634,13 @@ const App: React.FC = () => {
                     </p>
 
                     <div className="flex justify-center">
-                        <a href="#problem" onClick={scrollToSection('problem')} className="group flex flex-col items-center gap-2 text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors cursor-pointer">
+                        <a
+                            href="#problem"
+                            onClick={scrollToSection('problem')}
+                            className="group flex flex-col items-center gap-2 text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
+                        >
                             <span>DISCOVER</span>
-                            <span className="p-2 border border-stone-300 rounded-full group-hover:border-stone-900 transition-colors bg-white/50">
+                            <span className="p-2 border border-stone-300 rounded-full group-hover:border-stone-900 transition-colors bg-white/50 animate-float-soft">
                                 <ArrowDown size={16} />
                             </span>
                         </a>
@@ -549,7 +648,7 @@ const App: React.FC = () => {
                 </div>
             </header>
 
-            <main>
+            <main id="main">
                 {/* The Problem */}
                 <section id="problem" className="py-24 bg-white">
                     <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">

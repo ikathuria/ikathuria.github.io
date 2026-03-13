@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+body {
+  background-color: #f9f8f4;
+  color: #1a1a1a;
+}
+
+@media print {
+  nav,
+  footer,
+  button {
+    display: none !important;
+  }
+}
+
+/* Accessibility: keep focus visible when navigating via keyboard */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
