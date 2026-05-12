@@ -214,7 +214,7 @@ const AuthorCard = ({ name, role, delay, themeColor }: { name: string; role: str
     </div>
 );
 
-const PaperCard = ({ item, onClick }: { item: PortfolioItem; onClick: () => void }) => (
+const PaperCard = ({ item }: { item: PortfolioItem }) => (
     <motion.article
         className="group bg-white rounded-3xl p-7 border border-stone-200/80 relative overflow-hidden h-full flex flex-col"
         initial={{ opacity: 0, y: 24 }}
@@ -226,15 +226,15 @@ const PaperCard = ({ item, onClick }: { item: PortfolioItem; onClick: () => void
     >
         <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
             style={{ background: `linear-gradient(135deg, ${item.metadata.themeColor}10 0%, transparent 60%)` }} />
-        {/* Clickable main area */}
-        <button onClick={onClick} className="flex flex-col flex-grow relative z-10 text-left cursor-pointer">
+        {/* Clickable main area — href enables right-click → open in new tab */}
+        <a href={`#project=${item.id}`} className="flex flex-col flex-grow relative z-10 text-left cursor-pointer">
             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mb-4 w-fit"
                 style={{ background: item.metadata.themeColor + '18', color: item.metadata.themeColor }}>
                 {item.metadata.venue} · {item.metadata.date}
             </div>
             <h3 className="font-serif text-xl text-stone-900 mb-3 leading-snug">{item.metadata.title}</h3>
             <p className="text-stone-500 text-sm leading-relaxed mb-5 flex-grow">{item.metadata.subtitle}</p>
-        </button>
+        </a>
         {/* Footer: tech chips + external links */}
         <div className="relative z-10 flex items-center justify-between gap-3 pt-4 border-t border-stone-100 mt-auto">
             <div className="flex flex-wrap gap-1.5">
@@ -847,7 +847,7 @@ const App: React.FC = () => {
                                 <p className="text-stone-400 max-w-xl text-sm leading-relaxed">Systems that translate research into production-ready tools — AI safety, retrieval, and multimodal understanding.</p>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                                {projects.map(project => <PaperCard key={project.id} item={project} onClick={() => setActiveItemId(project.id)} />)}
+                                {projects.map(project => <PaperCard key={project.id} item={project} />)}
                             </div>
                         </div>
                     </motion.section>
@@ -865,9 +865,9 @@ const App: React.FC = () => {
                             </div>
                             <div className="flex flex-col">
                                 {papers.map((paper, i) => (
-                                    <motion.button
+                                    <motion.a
                                         key={paper.id}
-                                        onClick={() => setActiveItemId(paper.id)}
+                                        href={`#project=${paper.id}`}
                                         className="group grid gap-4 md:gap-6 items-baseline py-5 px-2 border-t border-stone-200 hover:bg-white/70 transition-colors text-left w-full last:border-b"
                                         style={{ gridTemplateColumns: '64px 1fr auto' }}
                                         initial={{ opacity: 0, y: 12 }}
@@ -883,7 +883,7 @@ const App: React.FC = () => {
                                         <span className="w-8 h-8 rounded-full border border-stone-200 inline-flex items-center justify-center text-stone-400 group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 group-hover:rotate-[-45deg] transition-all flex-shrink-0">
                                             <ArrowUpRight size={13} />
                                         </span>
-                                    </motion.button>
+                                    </motion.a>
                                 ))}
                             </div>
                         </div>
@@ -965,10 +965,10 @@ const App: React.FC = () => {
             {/* Nav — pill style matching home */}
             <nav className="fixed top-0 left-0 right-0 z-50 py-4 bg-[#FAFAF7]/90 backdrop-blur-md border-b border-stone-100/80">
                 <div className="container mx-auto px-6 flex justify-between items-center">
-                    <button onClick={() => setActiveItemId(null)} className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors">
+                    <a href="/" onClick={(e) => { e.preventDefault(); setActiveItemId(null); }} className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors">
                         <ArrowLeft size={16} />
                         <span className="font-medium text-sm">Back</span>
-                    </button>
+                    </a>
                     <div className="hidden md:flex items-center gap-1 bg-white border border-stone-200 rounded-full px-2 py-1.5 shadow-sm">
                         {(['problem', 'innovation', 'impact'] as const).map(sec => (
                             <a key={sec} href={`#${sec}`} onClick={scrollToSection(sec)}
@@ -990,7 +990,7 @@ const App: React.FC = () => {
 
             {menuOpen && (
                 <div className="fixed inset-0 z-40 bg-[#FAFAF7]/95 backdrop-blur-sm flex flex-col items-center justify-center gap-6 animate-fade-in">
-                    <button onClick={() => { setActiveItemId(null); setMenuOpen(false); }} className="text-stone-400 text-sm mb-4 flex items-center gap-2"><ArrowLeft size={16} /> Back to Portfolio</button>
+                    <a href="/" onClick={(e) => { e.preventDefault(); setActiveItemId(null); setMenuOpen(false); }} className="text-stone-400 text-sm mb-4 flex items-center gap-2"><ArrowLeft size={16} /> Back to Portfolio</a>
                     {(['problem', 'innovation', 'impact'] as const).map(sec => (
                         <a key={sec} href={`#${sec}`} onClick={scrollToSection(sec)} className="font-serif text-3xl text-stone-700 hover:text-stone-900 capitalize transition-colors">{sec}</a>
                     ))}
@@ -1126,10 +1126,10 @@ const App: React.FC = () => {
                         <div className="font-serif text-xl text-stone-900 mb-1">{metadata.title}</div>
                         <p className="text-sm text-stone-400 max-w-md">{metadata.subtitle}</p>
                     </div>
-                    <button onClick={() => setActiveItemId(null)}
+                    <a href="/" onClick={(e) => { e.preventDefault(); setActiveItemId(null); }}
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-stone-200 text-sm font-medium text-stone-600 hover:bg-stone-50 hover:-translate-y-0.5 transition-all">
                         <ArrowLeft size={14} /> Back to Portfolio
-                    </button>
+                    </a>
                 </div>
             </footer>
         </div>

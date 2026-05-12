@@ -1,24 +1,24 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 
 type IllProps = { color: string };
 
 // Draw-in variant for stroked paths/lines
-const draw = (delay = 0, dur = 1.1) => ({
+const draw = (delay = 0, dur = 1.1): Variants => ({
     hidden: { pathLength: 0, opacity: 0 },
     visible: {
         pathLength: 1, opacity: 1,
         transition: {
-            pathLength: { delay, duration: dur, ease: 'easeInOut' },
+            pathLength: { delay, duration: dur, ease: 'easeInOut' as any },
             opacity: { delay, duration: 0.01 },
         },
     },
 });
 
 // Fade/scale variant for filled shapes & text
-const pop = (delay = 0) => ({
+const pop = (delay = 0): Variants => ({
     hidden: { opacity: 0, scale: 0.7 },
-    visible: { opacity: 1, scale: 1, transition: { delay, duration: 0.35, ease: 'backOut' } },
+    visible: { opacity: 1, scale: 1, transition: { delay, duration: 0.35, ease: 'backOut' as any } },
 });
 
 // ── TrustworthyRAG: databases → fusion node → document ──────────────────────
