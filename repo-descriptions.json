@@ -1,0 +1,81 @@
+{
+  "A11yDataViz": "Accessibility-focused data visualization checker built with Python. Lets researchers and designers test accessibility of charts and graphs before publication by simulating color blindness, low vision, and screen reader interactions. Provides actionable feedback to improve inclusive data communication.",
+
+  "ASLRecognition": "Computer vision model that recognizes American Sign Language alphabet letters in real time using Python and OpenCV. Classifies hand-gesture images into 26 letter classes with a convolutional neural network.",
+
+  "Autbot": "Conversational AI chatbot designed to help children with autism improve socialization and language skills through empathetic dialogue. Built with deep learning NLP models trained on speech and text datasets to support structured therapeutic interactions.",
+
+  "AutoRedTeam": "Autonomous red-teaming agent built with LangGraph that systematically probes LLMs for prompt injection vulnerabilities. Uses multi-agent orchestration to automate adversarial safety testing, deployed as a Google AI Studio app in TypeScript.",
+
+  "C-Lab": "Collection of C programming laboratory exercises, from my undergraduate systems coursework covering pointers, memory management, and data structures.",
+
+  "covid-tracker": "COVID-19 data tracker built with Python and Jupyter that pulls live case counts and visualizes pandemic trends. Uses pandas and matplotlib to present infection, recovery, and fatality statistics by region.",
+
+  "DeepfakeGuard": "Client-side deepfake detection tool that performs audio and media forensics in the browser without sending data to a server. Built as a Google AI Studio app using TypeScript and Gemini, with a focus on privacy-preserving inference.",
+
+  "DepthGestureRecognition": "3D-CNN model that combines depth estimation with motion gesture recognition, trained on the 20bn-Jester dataset of 148,000 labeled video clips. Achieves spatiotemporal understanding by processing both gesture trajectory and depth cues in a single model.",
+
+  "DistractedDrivingFatalities": "Exploratory data analysis on distracted driving fatality statistics using Python and Jupyter. Visualizes trends across regions (in the United States), time periods, and driver demographics to surface patterns in road safety data.",
+
+  "DjangoPortfolio": "Personal portfolio web application built with Django and deployed on Heroku. Features project showcases and a contact section, serving as an early full-stack Python web development project.",
+
+  "exploratory-data-analysis": "Collection of EDA notebooks covering a range of datasets with statistical profiling, missing-value analysis, and visualizations using pandas, seaborn, and matplotlib. A reference library of data exploration techniques.",
+
+  "FaceMaskDetection": "Real-time face mask detection model built with OpenCV and deep learning that identifies whether individuals in images or video streams are wearing masks. Achieved practical relevance during the COVID-19 period as a Python computer vision project.",
+
+  "FacialExpressionRecognition": "Deep learning model that classifies human facial expressions — such as happiness, anger, and surprise — from static images. Built with convolutional neural networks to learn discriminative facial feature representations.",
+
+  "FaveBinge": "Web platform that aggregates multiple streaming subscription services alongside IMDb data to generate personalized content recommendations. Connects library overlap across platforms to surface titles most aligned with a user's viewing history.",
+
+  "FirstWebsite": "Introductory static website built as a hands-on exercise from LinkedIn Learning's CSS Essential Training course. Demonstrates foundational HTML and CSS layout, typography, and styling skills.",
+
+  "GestureRecognition": "Real-time gesture recognition system that classifies common hand gestures from a live webcam feed using Python and computer vision libraries. Demonstrates low-latency inference on a standard CPU without dedicated hardware.",
+
+  "gh-pinned-repos": "Lightweight TypeScript API service that fetches and returns a GitHub user's pinned repositories as structured JSON. Useful for embedding live repo highlights on personal portfolio sites without a full GitHub OAuth integration.",
+
+  "GlobalBuddy": "Graph-powered support platform for international students arriving in US cities, built on Neo4j AuraDB for evidence-based local knowledge. Uses multiple AI providers (Gemini, Anthropic) to generate 30-day onboarding plans and explain US-specific concepts — credit scores, security deposits, SSNs — with home-country analogies.",
+
+  "groundwork": "Multi-agent research synthesis tool that takes a plain-language research question, pulls 35–45 high-signal papers from arXiv, Semantic Scholar, OpenReview, and Papers With Code, then compiles an Obsidian-compatible wiki and a structured Research Brief. Designed to compress hours of literature review into a 90-second navigable overview, with full Claude Code slash-command integration.",
+
+  "Hatch": "Full-featured hackathon hosting platform built with Astro and Tailwind CSS covering the complete event lifecycle. Organizers get branded event pages, application management, CSV exports, weighted rubric judging with revocable judge links, and tie-break workflows; participants get magic-link sign-in, project submissions, and People's Choice voting.",
+
+  "ikathuria": "GitHub profile README repository — the special repo that renders custom content on the ikathuria GitHub profile page.",
+
+  "ikathuria.github.io": "Personal AI/ML research portfolio built with React 19, Vite, and Three.js, featuring animated 3D hero scenes, full project and publication deep-dives, and Framer Motion page transitions. Deployed to GitHub Pages via GitHub Actions.",
+
+  "ImageManipulation": "Python scripts for image processing tasks including real-time color identification and dominant-color extraction from images using OpenCV. Demonstrates pixel-level manipulation and color-space conversion techniques.",
+
+  "image_triplet_loss": "Implementation of image similarity learning using Triplet Loss, training a neural network to embed images so that similar images cluster closer together in the embedding space. A core technique used in face verification and visual search systems.",
+
+  "JobApply": "Python automation tool for streamlining the job application process. Parses job descriptions, extracts key requirements, and generates tailored resume and cover letter using an LLM.",
+
+  "my-website": "Personal website built with Next.js and deployed on Vercel, serving as an earlier iteration of the developer's web presence before the current Three.js portfolio.",
+
+  "OS": "Operating systems coursework and programming exercises in C, covering process scheduling, memory management, and inter-process communication.",
+
+  "PortfolioWebsite": "Static portfolio website built with HTML, CSS, Bootstrap, and JavaScript, hosted on GitHub Pages. An earlier portfolio iteration showcasing projects and skills with a clean responsive layout.",
+
+  "pt-mesh-pipeline": "Boilerplate template for building data ingestion ETL pipelines, with a standardized folder structure covering scraping, cleaning, geocoding, and standardization stages. Designed for projects-and-tenders data processing workflows using Docker and a modular client script.",
+
+  "python-to-ai": "Comprehensive educational repository walking from Python fundamentals all the way through machine learning and deep learning, with annotated Jupyter notebooks, a GitHub wiki, and companion YouTube and Medium content. Covers NumPy, pandas, data visualization, and multiple ML algorithm implementations.",
+
+  "PythonGames": "Classic offline games — including Tic-Tac-Toe, Snake, and others — rebuilt with an online multiplayer twist using Python and PyQt5. Explores networked game state management in Python and was deployed on Replit for easy sharing.",
+
+  "RealityShift": "Hackathon entry (Mistral AI) — a voice-controlled RPG where players rewrite the game's physics and logic live by speaking commands to an AI Architect. Uses Mistral devstral-medium for real-time Python code patching and ElevenLabs for TTS narration, with hot-reload of game_logic.py mid-session without interrupting gameplay.",
+
+  "Riley": "Python-based voice assistant that processes spoken commands to handle tasks like web search, system controls, and information retrieval. An early exploration of speech-to-intent pipelines before LLM-based assistants became mainstream.",
+
+  "SelfMed": "Telegram bot that acts as a home medical assistant, taking symptom descriptions in plain language, running NLP synonym expansion and similarity matching against a disease database, and returning diagnosis suggestions with home remedies.",
+
+  "Sign-Language-to-Text": "Real-time sign language interpreter that converts hand gestures shown to a webcam into text output using computer vision. Complements ASLRecognition with a live-translation interface rather than batch classification.",
+
+  "siren-student-research-pnw": "Student-facing website for Purdue University Northwest's SIREN (Students In Research Empowerment Network) organization, built with Vite, React, and React Router. Features a searchable faculty research explorer by college and topic, ODADC hackathon event archives, and a SIREN Brief newsletter archive.",
+
+  "TrustworthyRAG": "Research implementation of QALF (Query-Adaptive Learned Fusion), a multimodal RAG system that classifies each query across 4 complexity dimensions, routes to the right subset of vector, keyword, and graph retrievers, and fuses results with consensus-aware weighted RRF. Achieves a 14% NDCG@10 improvement over vector-only baselines on DocBench with 76.4% generative accuracy, backed by a published paper.",
+
+  "WeatherFoodRecommendation": "ML system that recommends food and menu items based on real-time temperature data, combining Gradient Boosting with Fuzzy Logic for dynamic personalization across weather conditions. The underlying approach is published as an IEEE paper at ICCNT 2023.",
+
+  "WebScraping": "Collection of Python web scraping scripts for commonly targeted websites using requests and BeautifulSoup, with inline notes on rate-limiting and responsible use. A practical reference for data collection workflows.",
+
+  "WidhyaProjects": "Completion of structured data science missions on the Widhya learning platform, covering ML model building, data analysis, and algorithm implementation across varied real-world datasets."
+}
