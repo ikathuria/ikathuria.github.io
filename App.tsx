@@ -6,13 +6,65 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { HeroScene, AbstractImpactScene } from './components/QuantumScene';
+import { AbstractImpactScene } from './components/QuantumScene';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
-import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ExternalLink, GraduationCap, Briefcase, Code, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe, User, Bot, Copy, Check } from 'lucide-react';
+import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, GraduationCap, Briefcase, Code, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe, User, Bot, Copy, Check, Sparkles } from 'lucide-react';
 import { papers, projects, resume, PortfolioItem } from './data';
 import Dashboard from './components/Dashboard';
 
 const BRAND = '#3B5BDB';
+
+// ─── HOOKS ────────────────────────────────────────────────────────────────────
+
+const useActiveSection = (ids: string[]) => {
+    const [active, setActive] = useState(ids[0]);
+    useEffect(() => {
+        const fn = () => {
+            const y = window.scrollY + 130;
+            let cur = ids[0];
+            for (const id of ids) {
+                const el = document.getElementById(id);
+                if (el && el.offsetTop <= y) cur = id;
+            }
+            setActive(cur);
+        };
+        fn();
+        window.addEventListener('scroll', fn, { passive: true });
+        return () => window.removeEventListener('scroll', fn);
+    }, []);
+    return active;
+};
+
+// ─── STICKER SYSTEM ───────────────────────────────────────────────────────────
+
+const STICKER_PALETTE = {
+    yellow:  { bg: '#FFD43B', shadow: '#c49d00', text: '#292524' },
+    coral:   { bg: '#FF6B6B', shadow: '#bb2929', text: '#fff'    },
+    mint:    { bg: '#51CF66', shadow: '#1e8a3a', text: '#fff'    },
+    indigo:  { bg: '#3B5BDB', shadow: '#1c3ab0', text: '#fff'    },
+    purple:  { bg: '#9C36B5', shadow: '#6b1a82', text: '#fff'    },
+    lime:    { bg: '#94D82D', shadow: '#527a10', text: '#292524' },
+} as const;
+type StickerColor = keyof typeof STICKER_PALETTE;
+
+const Sticker: React.FC<{
+    children: React.ReactNode;
+    color?: StickerColor;
+    rotation?: number;
+    className?: string;
+}> = ({ children, color = 'indigo', rotation = 0, className = '' }) => {
+    const c = STICKER_PALETTE[color];
+    return (
+        <motion.div
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap select-none cursor-default ${className}`}
+            style={{ background: c.bg, color: c.text, boxShadow: `0 4px 0 0 ${c.shadow}, 0 6px 20px rgba(0,0,0,0.08)` }}
+            initial={{ rotate: rotation }}
+            whileHover={{ rotate: 0, y: -5, boxShadow: `0 8px 0 0 ${c.shadow}, 0 14px 28px rgba(0,0,0,0.14)`, transition: { duration: 0.15 } }}
+        >
+            {children}
+        </motion.div>
+    );
+};
 
 const SUBTITLES = [
     "Building AI systems that ship to production.",
@@ -164,25 +216,46 @@ const AuthorCard = ({ name, role, delay, themeColor }: { name: string; role: str
 
 const PaperCard = ({ item, onClick }: { item: PortfolioItem; onClick: () => void }) => (
     <motion.article
-        onClick={onClick}
-        className="group cursor-pointer bg-white rounded-2xl p-8 border border-stone-200 relative overflow-hidden h-full flex flex-col"
+        className="group bg-white rounded-3xl p-7 border border-stone-200/80 relative overflow-hidden h-full flex flex-col"
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -8, boxShadow: '0 24px 60px rgba(15,23,42,0.12)' }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
+        whileHover={{ y: -6, rotate: -0.4, boxShadow: '0 20px 48px rgba(15,23,42,0.10), 0 4px 0 rgba(15,23,42,0.04)' }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
         viewport={{ once: true, amount: 0.3 }}
+        style={{ boxShadow: '0 2px 8px rgba(15,23,42,0.05), 0 0 0 1px rgba(15,23,42,0.04)' }}
     >
-        <div className="absolute top-0 left-0 w-1.5 h-full" style={{ backgroundColor: item.metadata.themeColor }} />
-        <div className="pl-6 flex flex-col h-full">
-            <div className="text-xs font-bold tracking-widest text-stone-400 uppercase mb-4 group-hover:text-stone-600 transition-colors">
+        <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            style={{ background: `linear-gradient(135deg, ${item.metadata.themeColor}10 0%, transparent 60%)` }} />
+        {/* Clickable main area */}
+        <button onClick={onClick} className="flex flex-col flex-grow relative z-10 text-left cursor-pointer">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mb-4 w-fit"
+                style={{ background: item.metadata.themeColor + '18', color: item.metadata.themeColor }}>
                 {item.metadata.venue} · {item.metadata.date}
             </div>
-            <h3 className="font-serif text-2xl text-stone-900 mb-4 leading-tight group-hover:underline decoration-1 underline-offset-4 decoration-stone-300">
-                {item.metadata.title}
-            </h3>
-            <p className="text-stone-600 leading-relaxed mb-6 flex-grow">{item.metadata.subtitle}</p>
-            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider mt-auto" style={{ color: item.metadata.themeColor }}>
-                Explore {item.type === 'research' ? 'Research' : 'Project'} <ArrowRight size={16} />
+            <h3 className="font-serif text-xl text-stone-900 mb-3 leading-snug">{item.metadata.title}</h3>
+            <p className="text-stone-500 text-sm leading-relaxed mb-5 flex-grow">{item.metadata.subtitle}</p>
+        </button>
+        {/* Footer: tech chips + external links */}
+        <div className="relative z-10 flex items-center justify-between gap-3 pt-4 border-t border-stone-100 mt-auto">
+            <div className="flex flex-wrap gap-1.5">
+                {item.technical?.techStack.slice(0, 3).map(t => (
+                    <span key={t} className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-stone-100 text-stone-500">{t}</span>
+                ))}
+            </div>
+            <div className="flex gap-1.5 flex-shrink-0">
+                {item.metadata.githubUrl && (
+                    <a href={item.metadata.githubUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                        className="w-7 h-7 rounded-full bg-stone-900 text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="GitHub">
+                        <Github size={12} />
+                    </a>
+                )}
+                {item.metadata.demoUrl && (
+                    <a href={item.metadata.demoUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                        className="w-7 h-7 rounded-full text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="Demo"
+                        style={{ backgroundColor: item.metadata.themeColor }}>
+                        <ArrowUpRight size={12} />
+                    </a>
+                )}
             </div>
         </div>
     </motion.article>
@@ -230,23 +303,23 @@ const StatCard = ({ stat, index }: { stat: typeof IMPACT_STATS[0]; index: number
     return (
         <motion.div
             ref={ref}
-            className="text-center py-10 px-4"
-            initial={{ opacity: 0, y: 16 }}
+            className="text-center py-8 px-3 rounded-2xl hover:bg-stone-50 transition-colors"
+            initial={{ opacity: 0, y: 12 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: index * 0.08 }}
         >
-            <div className="text-3xl md:text-4xl font-bold mb-2 font-mono" style={{ color: BRAND }}>
+            <div className="text-2xl md:text-3xl font-bold mb-1.5 font-mono tracking-tight" style={{ color: BRAND }}>
                 {displayText}
             </div>
-            <div className="text-xs text-stone-500 leading-snug max-w-[120px] mx-auto">{stat.label}</div>
+            <div className="text-xs text-stone-400 leading-snug max-w-[100px] mx-auto">{stat.label}</div>
         </motion.div>
     );
 };
 
 const ImpactStrip = () => (
-    <section className="border-y border-stone-200 bg-white">
+    <section className="border-y border-stone-100 bg-white py-4">
         <div className="container mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 divide-x divide-stone-100">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
                 {IMPACT_STATS.map((stat, i) => <StatCard key={i} stat={stat} index={i} />)}
             </div>
         </div>
@@ -255,7 +328,7 @@ const ImpactStrip = () => (
 
 const AboutSection = () => (
     <motion.section
-        className="py-24"
+        className="py-24 bg-[#FAFAF7] border-t border-stone-100"
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -272,10 +345,14 @@ const AboutSection = () => (
                 </div>
                 <div className="md:col-span-8 space-y-5 text-lg text-stone-600 leading-relaxed">
                     <p>
-                        I'm an AI/ML engineer who spent two years shipping production LLM systems at AWS — log summarization tools, internal chatbots, automated deployment pipelines across 15+ distributed services — before returning to academia to research the harder questions.
+                        I'm an AI/ML engineer who spent two years shipping production LLM systems at{' '}
+                        <span style={{ background: 'linear-gradient(180deg, transparent 62%, rgba(59,91,219,0.18) 62%)', padding: '0 2px' }}>AWS</span>
+                        {' '}— log summarization tools, internal chatbots, automated deployment pipelines across 15+ distributed services — before returning to academia to research the harder questions.
                     </p>
                     <p>
-                        Now at Purdue, I focus on what makes AI systems trustworthy: retrieval quality, hallucination reduction, safety evaluation. I've published four peer-reviewed papers (IEEE + Springer) and co-founded an initiative that helped 200+ students build their first ML projects.
+                        Now at{' '}
+                        <span style={{ background: 'linear-gradient(180deg, transparent 62%, rgba(59,91,219,0.18) 62%)', padding: '0 2px' }}>Purdue</span>
+                        , I focus on what makes AI systems trustworthy: retrieval quality, hallucination reduction, safety evaluation. I've published four peer-reviewed papers (IEEE + Springer) and co-founded an initiative that helped 200+ students build their first ML projects.
                     </p>
                     <p>
                         I'm looking for opportunities — internships or full-time — where rigorous research and real-world impact aren't at odds.
@@ -300,44 +377,17 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
     const MLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
         <>
             <span className="text-stone-600 select-none">[</span>
-            <a
-                href={href}
-                target={href.startsWith('http') || href.startsWith('mailto') ? '_blank' : undefined}
-                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="text-indigo-400 hover:underline underline-offset-2"
-            >
-                {children}
-            </a>
+            <a href={href} target={href.startsWith('http') || href.startsWith('mailto') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-indigo-400 hover:underline underline-offset-2">{children}</a>
             <span className="text-stone-600 select-none">]</span>
         </>
     );
-
-    const H1 = ({ children }: { children: React.ReactNode }) => (
-        <div className="mb-3 mt-1">
-            <span className="text-stone-700 select-none mr-1">#</span>
-            <span className="text-white font-semibold">{children}</span>
-        </div>
-    );
-
-    const H2 = ({ children }: { children: React.ReactNode }) => (
-        <div className="mb-3 mt-8">
-            <span className="text-stone-700 select-none mr-1">##</span>
-            <span className="text-indigo-400 font-semibold">{children}</span>
-        </div>
-    );
-
-    const H3 = ({ children }: { children: React.ReactNode }) => (
-        <div className="mb-1 mt-5">
-            <span className="text-stone-700 select-none mr-1">###</span>
-            <span className="text-stone-200 font-semibold">{children}</span>
-        </div>
-    );
-
+    const H1 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-1"><span className="text-stone-700 select-none mr-1">#</span><span className="text-white font-semibold">{children}</span></div>;
+    const H2 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-8"><span className="text-stone-700 select-none mr-1">##</span><span className="text-indigo-400 font-semibold">{children}</span></div>;
+    const H3 = ({ children }: { children: React.ReactNode }) => <div className="mb-1 mt-5"><span className="text-stone-700 select-none mr-1">###</span><span className="text-stone-200 font-semibold">{children}</span></div>;
     const Hr = () => <div className="border-t border-stone-800 my-8" />;
 
     return (
         <div className="min-h-screen bg-[#0D0D0F] font-mono text-sm">
-            {/* Top bar */}
             <div className="sticky top-0 z-50 bg-[#0D0D0F]/95 backdrop-blur-sm border-b border-stone-800 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="flex gap-1.5">
@@ -348,27 +398,16 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                     <span className="text-xs text-stone-500 ml-2">ishani.kathuria.net</span>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={handleCopy}
-                        className="flex items-center gap-2 text-xs px-3 py-1.5 rounded border border-stone-700 hover:border-indigo-500 hover:text-indigo-400 transition-colors text-stone-400"
-                    >
+                    <button onClick={handleCopy} className="flex items-center gap-2 text-xs px-3 py-1.5 rounded border border-stone-700 hover:border-indigo-500 hover:text-indigo-400 transition-colors text-stone-400">
                         {copied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy as Text</>}
                     </button>
                     <div className="flex items-center gap-0.5 bg-stone-900 rounded-full p-1 border border-stone-800">
-                        <button onClick={onToggle} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-stone-500 hover:text-stone-300 transition-colors text-xs">
-                            <User size={11} /> Human
-                        </button>
-                        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-600 text-white font-semibold text-xs">
-                            <Bot size={11} /> Machine
-                        </button>
+                        <button onClick={onToggle} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-stone-500 hover:text-stone-300 transition-colors text-xs"><User size={11} /> Human</button>
+                        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-600 text-white font-semibold text-xs"><Bot size={11} /> Machine</button>
                     </div>
                 </div>
             </div>
-
-            {/* Document body */}
             <div className="max-w-3xl mx-auto px-6 py-12 text-stone-300 leading-relaxed text-xs">
-
-                {/* Header */}
                 <div className="text-white font-bold text-base mb-2">ISHANI KATHURIA</div>
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-stone-500 mb-1">
                     <MLink href="mailto:ishani@kathuria.net">ishani@kathuria.net</MLink>
@@ -380,7 +419,6 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                     <MLink href="https://ishani.kathuria.net">ishani.kathuria.net</MLink>
                 </div>
                 <div className="text-emerald-400 mb-6">● Open to internships & full-time opportunities</div>
-
                 <H1>AI/ML Engineer & Researcher</H1>
                 <div className="text-stone-500 mb-2">MS Applied AI @ Purdue · ex-SDE @ AWS · 4× Published (IEEE + Springer)</div>
                 <p className="text-stone-300 mb-3">Applied AI researcher building LLM systems, agentic pipelines, and safety tools that bridge research and real-world products.</p>
@@ -389,33 +427,22 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                     <MLink href="#research">View Publications</MLink>
                     <MLink href="mailto:ishani@kathuria.net?subject=Resume%20Request">Request Resume</MLink>
                 </div>
-
                 <Hr />
-
                 <H2>Impact</H2>
                 <div className="space-y-1.5 mb-2">
                     {IMPACT_STATS.map((stat, i) => {
                         const val = stat.displayValue ?? `${stat.prefix}${stat.numericEnd}${stat.suffix}`;
-                        return (
-                            <div key={i} className="flex gap-4">
-                                <span className="text-indigo-400 font-bold w-20 flex-shrink-0">{val}</span>
-                                <span className="text-stone-400">{stat.label}</span>
-                            </div>
-                        );
+                        return <div key={i} className="flex gap-4"><span className="text-indigo-400 font-bold w-20 flex-shrink-0">{val}</span><span className="text-stone-400">{stat.label}</span></div>;
                     })}
                 </div>
-
                 <Hr />
-
                 <H2>About</H2>
                 <div className="space-y-3 mb-2 text-stone-300">
                     <p>I'm an AI/ML engineer who spent two years shipping production LLM systems at AWS — log summarization tools, internal chatbots, automated deployment pipelines across 15+ distributed services — before returning to academia to research the harder questions.</p>
                     <p>Now at Purdue, I focus on what makes AI systems trustworthy: retrieval quality, hallucination reduction, safety evaluation. I've published four peer-reviewed papers (IEEE + Springer) and co-founded an initiative that helped 200+ students build their first ML projects.</p>
                     <p>I'm looking for opportunities — internships or full-time — where rigorous research and real-world impact aren't at odds.</p>
                 </div>
-
                 <Hr />
-
                 <H2>Selected Projects</H2>
                 {projects.map(project => (
                     <div key={project.id}>
@@ -423,9 +450,7 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                         <div className="text-stone-600 mb-1">{project.metadata.venue} · {project.metadata.date}</div>
                         <p className="text-stone-400 italic mb-2">{project.metadata.subtitle}</p>
                         <p className="text-stone-300 mb-2">{project.narrative.innovation}</p>
-                        {project.technical && (
-                            <p className="text-stone-600 mb-2">Tech Stack: {project.technical.techStack.join(', ')}</p>
-                        )}
+                        {project.technical && <p className="text-stone-600 mb-2">Tech Stack: {project.technical.techStack.join(', ')}</p>}
                         <div className="flex flex-wrap gap-4 mb-2">
                             {project.metadata.githubUrl && <MLink href={project.metadata.githubUrl}>View Code →</MLink>}
                             {project.metadata.demoUrl && <MLink href={project.metadata.demoUrl}>Live Demo →</MLink>}
@@ -433,54 +458,37 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                         </div>
                     </div>
                 ))}
-
                 <Hr />
-
                 <H2>Research Publications</H2>
                 {papers.map(paper => (
                     <div key={paper.id}>
                         <H3>{paper.metadata.title}</H3>
                         <div className="text-stone-600 mb-1">{paper.metadata.venue} · {paper.metadata.date}</div>
                         <p className="text-stone-400 italic mb-2">{paper.metadata.subtitle}</p>
-                        {paper.metadata.link && (
-                            <div className="mb-2"><MLink href={paper.metadata.link}>Read Paper →</MLink></div>
-                        )}
+                        {paper.metadata.link && <div className="mb-2"><MLink href={paper.metadata.link}>Read Paper →</MLink></div>}
                     </div>
                 ))}
-
                 <Hr />
-
                 <H2>Experience</H2>
                 {resume.experience.map((exp, idx) => (
                     <div key={idx}>
                         <H3>{exp.company}</H3>
                         <div className="text-stone-600 mb-2">{exp.role} · {exp.period}</div>
                         <ul className="space-y-1 mb-2">
-                            {exp.details.map((d, i) => (
-                                <li key={i} className="flex gap-2 text-stone-400">
-                                    <span className="text-stone-700 flex-shrink-0">-</span>
-                                    <span>{d}</span>
-                                </li>
-                            ))}
+                            {exp.details.map((d, i) => <li key={i} className="flex gap-2 text-stone-400"><span className="text-stone-700 flex-shrink-0">-</span><span>{d}</span></li>)}
                         </ul>
                     </div>
                 ))}
-
                 <Hr />
-
                 <H2>Education</H2>
                 {resume.education.map((edu, idx) => (
                     <div key={idx} className="mb-4">
                         <span className="text-stone-200 font-semibold">{edu.degree}</span>
                         <span className="text-stone-600"> · {edu.school} · {edu.period}</span>
-                        {edu.details.map((d, i) => (
-                            <div key={i} className="text-stone-500 mt-0.5">{d}</div>
-                        ))}
+                        {edu.details.map((d, i) => <div key={i} className="text-stone-500 mt-0.5">{d}</div>)}
                     </div>
                 ))}
-
                 <Hr />
-
                 <H2>Skills</H2>
                 <div className="space-y-1.5 mb-2">
                     {[
@@ -497,9 +505,7 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                         </div>
                     ))}
                 </div>
-
                 <Hr />
-
                 <div className="space-y-1 text-stone-500">
                     <div className="text-stone-400 font-semibold mb-3">CONTACT</div>
                     <div><MLink href="mailto:ishani@kathuria.net">ishani@kathuria.net</MLink></div>
@@ -515,17 +521,22 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
 // ─── MODE PILL ────────────────────────────────────────────────────────────────
 
 const ModePill = ({ machineMode, onToggle }: { machineMode: boolean; onToggle: () => void }) => (
-    <div className={`flex items-center gap-0.5 rounded-full p-1 text-xs border transition-colors ${machineMode ? 'bg-stone-900 border-stone-700' : 'bg-stone-100 border-stone-200'}`}>
-        <button
-            onClick={() => machineMode && onToggle()}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${!machineMode ? 'bg-white shadow text-stone-900 font-semibold' : 'text-stone-500 hover:text-stone-300'}`}
-        >
+    <div className={`flex items-center gap-0.5 rounded-full p-1 text-xs border transition-colors ${machineMode ? 'bg-stone-900 border-stone-700' : 'bg-white/20 border-white/20'}`}>
+        <button onClick={() => machineMode && onToggle()} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${!machineMode ? 'bg-white shadow text-stone-900 font-semibold' : 'text-stone-400 hover:text-stone-200'}`}>
             <User size={11} /> Human
         </button>
-        <button
-            onClick={() => !machineMode && onToggle()}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${machineMode ? 'bg-indigo-600 text-white font-semibold' : 'text-stone-500 hover:text-stone-900'}`}
-        >
+        <button onClick={() => !machineMode && onToggle()} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${machineMode ? 'bg-indigo-600 text-white font-semibold' : 'text-stone-300 hover:text-white'}`}>
+            <Bot size={11} /> Machine
+        </button>
+    </div>
+);
+
+const ModePillLight = ({ machineMode, onToggle }: { machineMode: boolean; onToggle: () => void }) => (
+    <div className={`flex items-center gap-0.5 rounded-full p-1 text-xs border transition-colors ${machineMode ? 'bg-stone-900 border-stone-700' : 'bg-stone-100 border-stone-200'}`}>
+        <button onClick={() => machineMode && onToggle()} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${!machineMode ? 'bg-white shadow text-stone-900 font-semibold' : 'text-stone-400 hover:text-stone-200'}`}>
+            <User size={11} /> Human
+        </button>
+        <button onClick={() => !machineMode && onToggle()} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${machineMode ? 'bg-indigo-600 text-white font-semibold' : 'text-stone-500 hover:text-stone-900'}`}>
             <Bot size={11} /> Machine
         </button>
     </div>
@@ -547,22 +558,15 @@ const ResumeSection = () => (
                 <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">EXPERIENCE & EDUCATION</div>
                 <h2 className="font-serif text-4xl md:text-5xl mb-4 text-stone-900">Resume</h2>
                 <div className="flex justify-center mt-6">
-                    <a
-                        href="mailto:ishani@kathuria.net?subject=Resume%20Request"
-                        className="px-8 py-3 rounded-full text-white text-sm font-medium hover:opacity-90 transition-all inline-flex items-center gap-2 shadow-lg hover:-translate-y-0.5"
-                        style={{ backgroundColor: BRAND }}
-                    >
+                    <a href="mailto:ishani@kathuria.net?subject=Resume%20Request" className="px-8 py-3 rounded-full text-white text-sm font-medium hover:opacity-90 transition-all inline-flex items-center gap-2 shadow-lg hover:-translate-y-0.5" style={{ backgroundColor: BRAND }}>
                         <FileText size={18} /> Request Full Resume
                     </a>
                 </div>
             </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div className="lg:col-span-4 space-y-12">
                     <div>
-                        <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-6">
-                            <GraduationCap size={24} className="text-stone-400" /> Education
-                        </h3>
+                        <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-6"><GraduationCap size={24} className="text-stone-400" /> Education</h3>
                         <div className="space-y-8 border-l-2 border-stone-100 pl-6 ml-3">
                             {resume.education.map((edu, idx) => (
                                 <div key={idx} className="relative">
@@ -570,18 +574,13 @@ const ResumeSection = () => (
                                     <h4 className="font-bold text-stone-800">{edu.degree}</h4>
                                     <div className="text-sm text-stone-500 mb-1">{edu.school}, {edu.location}</div>
                                     <div className="text-xs font-mono text-stone-400 uppercase tracking-wider mb-2">{edu.period}</div>
-                                    <ul className="text-sm text-stone-600 list-disc list-inside space-y-1">
-                                        {edu.details.map((d, i) => <li key={i}>{d}</li>)}
-                                    </ul>
+                                    <ul className="text-sm text-stone-600 list-disc list-inside space-y-1">{edu.details.map((d, i) => <li key={i}>{d}</li>)}</ul>
                                 </div>
                             ))}
                         </div>
                     </div>
-
                     <div>
-                        <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-6">
-                            <Code size={24} className="text-stone-400" /> Skills
-                        </h3>
+                        <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-6"><Code size={24} className="text-stone-400" /> Skills</h3>
                         <div className="space-y-6">
                             {[
                                 { label: 'Generative AI', items: resume.skills.genai },
@@ -593,42 +592,25 @@ const ResumeSection = () => (
                                 <div key={label}>
                                     <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-2">{label}</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {items.map(s => (
-                                            <span key={s} className="px-3 py-1 text-sm rounded-md border border-stone-200 text-stone-600 bg-stone-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors cursor-default">
-                                                {s}
-                                            </span>
-                                        ))}
+                                        {items.map(s => <span key={s} className="px-3 py-1 text-sm rounded-md border border-stone-200 text-stone-600 bg-stone-50 hover:border-indigo-300 hover:text-indigo-700 transition-colors cursor-default">{s}</span>)}
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
-
                     <div>
-                        <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-6">
-                            <Badge size={24} className="text-stone-400" /> Certifications
-                        </h3>
+                        <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-6"><Badge size={24} className="text-stone-400" /> Certifications</h3>
                         <div className="flex flex-wrap gap-2">
-                            {resume.skills.certs.map(s => (
-                                <span key={s} className="px-3 py-1 text-sm rounded-md border text-stone-600 bg-stone-50" style={{ borderColor: BRAND + '55' }}>
-                                    {s}
-                                </span>
-                            ))}
+                            {resume.skills.certs.map(s => <span key={s} className="px-3 py-1 text-sm rounded-md border text-stone-600 bg-stone-50" style={{ borderColor: BRAND + '55' }}>{s}</span>)}
                         </div>
                     </div>
                 </div>
-
                 <div className="lg:col-span-8">
-                    <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-8">
-                        <Briefcase size={24} className="text-stone-400" /> Professional Experience
-                    </h3>
+                    <h3 className="flex items-center gap-3 text-xl font-serif font-bold text-stone-900 mb-8"><Briefcase size={24} className="text-stone-400" /> Professional Experience</h3>
                     <div className="space-y-12 border-l-2 border-stone-100 pl-8 ml-3">
                         {resume.experience.map((exp, idx) => (
                             <div key={idx} className="relative group">
-                                <div
-                                    className="absolute -left-[39px] top-1.5 w-4 h-4 rounded-full border-4 border-white group-hover:scale-110 transition-transform"
-                                    style={{ backgroundColor: idx === 0 ? BRAND : '#D1D5DB' }}
-                                />
+                                <div className="absolute -left-[39px] top-1.5 w-4 h-4 rounded-full border-4 border-white group-hover:scale-110 transition-transform" style={{ backgroundColor: idx === 0 ? BRAND : '#D1D5DB' }} />
                                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
                                     <h4 className="text-lg font-bold text-stone-900">{exp.role}</h4>
                                     <span className="text-xs font-mono text-stone-400 uppercase bg-stone-50 px-2 py-1 rounded">{exp.period}</span>
@@ -670,9 +652,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         if (activeItemId || showDashboard) return;
-        const timer = setInterval(() => {
-            setSubtitleIndex(i => (i + 1) % SUBTITLES.length);
-        }, 3200);
+        const timer = setInterval(() => setSubtitleIndex(i => (i + 1) % SUBTITLES.length), 3200);
         return () => clearInterval(timer);
     }, [activeItemId, showDashboard]);
 
@@ -692,39 +672,25 @@ const App: React.FC = () => {
     useEffect(() => {
         const handleHashChange = () => {
             const hash = window.location.hash;
-            if (hash === '#dashboard') {
-                setShowDashboard(true);
-                setActiveItemId(null);
-            } else if (hash.startsWith('#project=')) {
+            if (hash === '#dashboard') { setShowDashboard(true); setActiveItemId(null); }
+            else if (hash.startsWith('#project=')) {
                 const id = hash.replace('#project=', '');
-                if (allItems.find(p => p.id === id)) {
-                    setShowDashboard(false);
-                    setActiveItemId(id);
-                }
-            } else {
-                setShowDashboard(false);
-                setActiveItemId(null);
-            }
+                if (allItems.find(p => p.id === id)) { setShowDashboard(false); setActiveItemId(id); }
+            } else { setShowDashboard(false); setActiveItemId(null); }
         };
         handleHashChange();
         window.addEventListener('hashchange', handleHashChange);
         return () => window.removeEventListener('hashchange', handleHashChange);
     }, []);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        setShowTechnical(false);
-    }, [activeItemId, showDashboard]);
+    useEffect(() => { window.scrollTo(0, 0); setShowTechnical(false); }, [activeItemId, showDashboard]);
 
     const activeItem = allItems.find(p => p.id === activeItemId);
+    const activeSection = useActiveSection(['work', 'research', 'resume']);
 
     if (showDashboard) return <Dashboard onBack={() => setShowDashboard(false)} />;
+    if (!activeItem && machineMode) return <MachineMode onToggle={() => setMachineMode(false)} />;
 
-    if (!activeItem && machineMode) {
-        return <MachineMode onToggle={() => setMachineMode(false)} />;
-    }
-
-    // ── Home View ──────────────────────────────────────────────────────────────
     if (!activeItem) {
         return (
             <div className="min-h-screen bg-[#FAFAF8] text-stone-800">
@@ -732,28 +698,40 @@ const App: React.FC = () => {
                     Skip to main content
                 </a>
 
-                <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#FAFAF8]/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
-                    <div className="container mx-auto px-6 flex justify-between items-center">
-                        <div className={`font-serif font-bold text-xl tracking-tight ${scrolled ? 'text-stone-900' : 'text-white'}`}>
-                            Ishani<span className={scrolled ? 'text-stone-400' : 'text-stone-400/80'}>.ai</span>
-                        </div>
-                        <div className={`hidden md:flex items-center gap-8 text-sm font-medium ${scrolled ? 'text-stone-500' : 'text-stone-300'}`}>
-                            <a href="#projects" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Projects</a>
-                            <a href="#research" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Research</a>
-                            <a href="#resume" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Resume</a>
-                            <button onClick={() => setShowDashboard(true)} className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Dashboard</button>
-                            <ModePill machineMode={machineMode} onToggle={() => setMachineMode(m => !m)} />
-                        </div>
-                        <button
-                            className={`${scrolled ? 'text-stone-900' : 'text-white'} md:hidden`}
-                            onClick={() => setMenuOpen(!menuOpen)}
-                            aria-label="Toggle navigation menu"
-                            aria-expanded={menuOpen}
-                        >
-                            {menuOpen ? <X /> : <Menu />}
-                        </button>
+                {/* Floating pill nav — always light */}
+                <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-1 px-3 py-2 rounded-full border text-sm transition-all duration-300"
+                    style={scrolled
+                        ? { background: 'rgba(255,255,255,0.95)', borderColor: 'rgb(231,229,228)', boxShadow: '0 4px 24px rgba(15,23,42,0.09)', backdropFilter: 'blur(12px)' }
+                        : { background: 'rgba(255,255,255,0.80)', borderColor: 'rgba(231,229,228,0.8)', backdropFilter: 'blur(12px)' }
+                    }
+                >
+                    <span className="font-serif font-bold px-2 mr-1 text-stone-900">
+                        Ishani<span className="text-stone-400">.ai</span>
+                    </span>
+                    {([['work', 'Projects'], ['research', 'Research'], ['resume', 'Resume']] as [string, string][]).map(([id, label]) => (
+                        <a key={id} href={`#${id}`}
+                            className={`px-3 py-1.5 rounded-full transition-colors text-sm ${activeSection === id ? 'bg-stone-900 text-white' : 'text-stone-500 hover:text-stone-900 hover:bg-stone-100'}`}>
+                            {label}
+                        </a>
+                    ))}
+                    <button onClick={() => setShowDashboard(true)} className="px-3 py-1.5 rounded-full transition-colors text-stone-500 hover:text-stone-900 hover:bg-stone-100 text-sm">
+                        Dashboard
+                    </button>
+                    <div className="ml-1">
+                        <ModePillLight machineMode={machineMode} onToggle={() => setMachineMode(m => !m)} />
                     </div>
                 </nav>
+
+                {/* Mobile hamburger */}
+                <button
+                    className="fixed top-4 right-4 z-50 md:hidden p-2.5 rounded-full border backdrop-blur-md transition-all"
+                    style={{ background: 'rgba(255,255,255,0.90)', borderColor: 'rgb(231,229,228)', color: '#1c1917' }}
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label="Toggle navigation menu"
+                    aria-expanded={menuOpen}
+                >
+                    {menuOpen ? <X size={18} /> : <Menu size={18} />}
+                </button>
 
                 {menuOpen && (
                     <div className="fixed inset-0 z-40 bg-[#FAFAF8] flex flex-col items-center justify-center gap-8 text-xl font-serif animate-fade-in text-stone-900">
@@ -761,165 +739,191 @@ const App: React.FC = () => {
                         <a href="#research" onClick={() => setMenuOpen(false)}>Research</a>
                         <a href="#resume" onClick={() => setMenuOpen(false)}>Resume</a>
                         <button onClick={() => { setMenuOpen(false); setShowDashboard(true); }}>Dashboard</button>
-                        <ModePill machineMode={machineMode} onToggle={() => { setMachineMode(m => !m); setMenuOpen(false); }} />
+                        <ModePillLight machineMode={machineMode} onToggle={() => { setMachineMode(m => !m); setMenuOpen(false); }} />
                     </div>
                 )}
 
-                {/* Hero */}
-                <header className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0D0D1A] text-white">
-                    <div className="absolute inset-0">
-                        <HeroScene themeColor={BRAND} />
+                {/* Hero — light, sticker-decorated */}
+                <header className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#FAFAF7]">
+                    {/* Decorative sticker cluster — desktop only */}
+                    {/* Stickers live ABOVE the name (top ≤ 28%) and BELOW the CTAs (bottom ≤ 24%) */}
+                    <div className="hidden lg:block absolute inset-0 pointer-events-none select-none">
+                        {/* Above-name row */}
+                        <div className="absolute left-[5%] top-[20%]">
+                            <Sticker color="indigo" rotation={-2}><Layers size={14} /> Multi-Agent AI</Sticker>
+                        </div>
+                        <div className="absolute left-[22%] top-[14%]">
+                            <Sticker color="yellow" rotation={-3}><Briefcase size={14} /> Ex-AWS SDE</Sticker>
+                        </div>
+                        <div className="absolute right-[22%] top-[14%]">
+                            <Sticker color="mint" rotation={1.5}><GraduationCap size={14} /> Purdue · 4.0 GPA</Sticker>
+                        </div>
+                        <div className="absolute right-[5%] top-[20%]">
+                            <Sticker color="lime" rotation={2}><Mail size={14} /> Open to Work</Sticker>
+                        </div>
+                        {/* Below-CTAs row */}
+                        <div className="absolute left-[14%] bottom-[18%]">
+                            <Sticker color="coral" rotation={2}><Cpu size={14} /> LLM Safety</Sticker>
+                        </div>
+                        <div className="absolute right-[14%] bottom-[18%]">
+                            <Sticker color="purple" rotation={-2}><FileText size={14} /> 4× Published</Sticker>
+                        </div>
                     </div>
-                    <div className="absolute inset-0 bg-[#0D0D1A]/60 z-0" />
 
-                    <div className="relative z-10 container mx-auto px-6 text-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm text-xs font-medium text-stone-200 mb-8"
-                        >
+                    {/* Center content — pt-24 clears the fixed nav */}
+                    <div className="relative z-10 container mx-auto px-6 text-center pt-24 pb-12">
+                        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-stone-200 bg-white text-xs font-medium text-stone-500 mb-10 shadow-sm">
                             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                             Open to internships & full-time opportunities
                         </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.1 }}
-                            className="font-serif text-6xl md:text-9xl mb-6 tracking-tight text-white drop-shadow-lg"
-                        >
+                        <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
+                            className="font-serif text-6xl md:text-9xl mb-6 tracking-tight text-stone-900">
                             Ishani Kathuria
                         </motion.h1>
-
-                        <div className="h-8 mb-10 overflow-hidden flex items-center justify-center">
+                        <div className="h-8 mb-8 overflow-hidden flex items-center justify-center">
                             <AnimatePresence mode="wait">
-                                <motion.p
-                                    key={subtitleIndex}
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -12 }}
-                                    transition={{ duration: 0.45 }}
-                                    className="text-stone-300 text-base md:text-xl font-light"
-                                >
+                                <motion.p key={subtitleIndex} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.45 }}
+                                    className="text-stone-400 text-base md:text-xl italic font-light">
                                     {SUBTITLES[subtitleIndex]}
                                 </motion.p>
                             </AnimatePresence>
                         </div>
-
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5, delay: 0.3 }}
-                            className="flex flex-wrap justify-center gap-2 md:gap-4 text-xs font-mono uppercase tracking-widest text-stone-400 mb-10"
-                        >
+                        {/* Sticker chips — inline below name on non-lg screens */}
+                        <div className="flex lg:hidden flex-wrap gap-2 justify-center mb-8 px-4">
+                            <Sticker color="yellow" rotation={-2}><Briefcase size={13} /> Ex-AWS</Sticker>
+                            <Sticker color="mint" rotation={1.5}><GraduationCap size={13} /> Purdue · 4.0</Sticker>
+                            <Sticker color="purple" rotation={-1.5}><FileText size={13} /> 4× Published</Sticker>
+                            <Sticker color="lime" rotation={2}><Mail size={13} /> Open to Work</Sticker>
+                        </div>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.3 }}
+                            className="flex flex-wrap justify-center gap-2 md:gap-4 text-xs font-mono uppercase tracking-widest text-stone-400 mb-10">
                             <span>MS Applied AI @ Purdue</span>
-                            <span className="text-stone-600">·</span>
+                            <span className="text-stone-300">·</span>
                             <span>ex-SDE @ AWS</span>
-                            <span className="text-stone-600">·</span>
+                            <span className="text-stone-300">·</span>
                             <span>4× Published (IEEE + Springer)</span>
                         </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
-                            className="flex flex-col sm:flex-row justify-center gap-4 mb-10"
-                        >
-                            <a href="#projects" className="px-7 py-3 rounded-full bg-white text-stone-900 text-sm font-semibold tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}
+                            className="flex flex-col sm:flex-row justify-center gap-3 mb-10">
+                            <a href="#work" className="px-7 py-3 rounded-full text-white text-sm font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all" style={{ backgroundColor: BRAND, boxShadow: `0 4px 0 0 #1c3ab0, 0 8px 20px rgba(59,91,219,0.25)` }}>
                                 View projects
                             </a>
-                            <a href="#research" className="px-7 py-3 rounded-full border border-white/30 text-sm font-semibold text-stone-50 bg-white/10 hover:bg-white/15 hover:-translate-y-0.5 transition-all">
+                            <a href="#research" className="px-7 py-3 rounded-full border border-stone-200 text-sm font-semibold text-stone-700 bg-white hover:bg-stone-50 hover:-translate-y-0.5 transition-all shadow-sm">
                                 View publications
                             </a>
                         </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5, delay: 0.5 }}
-                            className="flex justify-center gap-4 mb-12"
-                        >
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }}
+                            className="flex justify-center gap-3 mb-16">
                             {[
-                                { href: 'mailto:ishani@kathuria.net', icon: <Mail size={20} />, label: 'Email' },
-                                { href: 'https://www.linkedin.com/in/ishani-kathuria', icon: <Linkedin size={20} />, label: 'LinkedIn' },
-                                { href: 'https://github.com/ikathuria', icon: <Github size={20} />, label: 'GitHub' },
-                                { href: '#resume', icon: <FileText size={20} />, label: 'Resume' },
+                                { href: 'mailto:ishani@kathuria.net', icon: <Mail size={18} />, label: 'Email' },
+                                { href: 'https://www.linkedin.com/in/ishani-kathuria', icon: <Linkedin size={18} />, label: 'LinkedIn' },
+                                { href: 'https://github.com/ikathuria', icon: <Github size={18} />, label: 'GitHub' },
+                                { href: '#resume', icon: <FileText size={18} />, label: 'Resume' },
                             ].map(({ href, icon, label }) => (
-                                <a
-                                    key={label}
-                                    href={href}
-                                    target={href.startsWith('http') ? '_blank' : undefined}
-                                    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="p-3 rounded-full bg-white/10 hover:bg-white/20 hover:scale-110 transition-all border border-white/10"
-                                    aria-label={label}
-                                >
+                                <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                    className="p-3 rounded-full bg-white border border-stone-200 text-stone-500 hover:text-stone-900 hover:scale-110 hover:shadow-md transition-all shadow-sm" aria-label={label}>
                                     {icon}
                                 </a>
                             ))}
                         </motion.div>
-
-                        <a href="#about" className="animate-float-soft inline-block text-stone-500 hover:text-white transition-colors">
-                            <ArrowDown size={28} />
-                        </a>
+                        <a href="#about" className="animate-float-soft inline-block text-stone-300 hover:text-stone-600 transition-colors"><ArrowDown size={26} /></a>
                     </div>
                 </header>
 
                 <ImpactStrip />
 
-                <main id="main" className="container mx-auto px-6 pb-32 space-y-32 pt-24">
-                    <div id="about">
-                        <AboutSection />
-                    </div>
+                <main id="main">
+                    <div id="about"><AboutSection /></div>
 
-                    <motion.section
-                        id="projects"
-                        initial={{ opacity: 0, y: 24 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        viewport={{ once: true, amount: 0.25 }}
-                    >
-                        <div className="flex items-center gap-4 mb-4">
-                            <h2 className="font-serif text-3xl text-stone-900">Selected Projects</h2>
-                            <div className="h-px bg-stone-200 flex-grow" />
-                        </div>
-                        <p className="text-stone-500 mb-8 max-w-2xl">
-                            Systems that translate research into production-ready tools — AI safety, retrieval, and multimodal understanding.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                            {projects.map(project => (
-                                <PaperCard key={project.id} item={project} onClick={() => setActiveItemId(project.id)} />
-                            ))}
+                    <motion.section id="work" className="py-24 bg-white border-t border-stone-100"
+                        initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true, amount: 0.15 }}>
+                        <div className="container mx-auto px-6">
+                            <div className="mb-10">
+                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-stone-100 border border-stone-200 text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">
+                                    Projects
+                                </div>
+                                <h2 className="font-serif text-4xl text-stone-900 mb-3">Selected Projects</h2>
+                                <p className="text-stone-400 max-w-xl text-sm leading-relaxed">Systems that translate research into production-ready tools — AI safety, retrieval, and multimodal understanding.</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                                {projects.map(project => <PaperCard key={project.id} item={project} onClick={() => setActiveItemId(project.id)} />)}
+                            </div>
                         </div>
                     </motion.section>
 
-                    <motion.section
-                        id="research"
-                        initial={{ opacity: 0, y: 24 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.05 }}
-                        viewport={{ once: true, amount: 0.25 }}
-                    >
-                        <div className="flex items-center gap-4 mb-4">
-                            <h2 className="font-serif text-3xl text-stone-900">Research Publications</h2>
-                            <div className="h-px bg-stone-200 flex-grow" />
-                        </div>
-                        <p className="text-stone-500 mb-8 max-w-2xl">
-                            Peer-reviewed work spanning healthcare, recommendation systems, and trustworthy AI.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {papers.map(paper => (
-                                <PaperCard key={paper.id} item={paper} onClick={() => setActiveItemId(paper.id)} />
-                            ))}
+                    {/* Research — list layout */}
+                    <motion.section id="research" className="py-24 bg-[#FAFAF7] border-t border-stone-100"
+                        initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }} viewport={{ once: true, amount: 0.15 }}>
+                        <div className="container mx-auto px-6">
+                            <div className="mb-10">
+                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-stone-100 border border-stone-200 text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">
+                                    Research
+                                </div>
+                                <h2 className="font-serif text-4xl text-stone-900 mb-3">Research Publications</h2>
+                                <p className="text-stone-400 max-w-xl text-sm leading-relaxed">Peer-reviewed work across healthcare, recommendation systems, and trustworthy AI.</p>
+                            </div>
+                            <div className="flex flex-col">
+                                {papers.map((paper, i) => (
+                                    <motion.button
+                                        key={paper.id}
+                                        onClick={() => setActiveItemId(paper.id)}
+                                        className="group grid gap-4 md:gap-6 items-baseline py-5 px-2 border-t border-stone-200 hover:bg-white/70 transition-colors text-left w-full last:border-b"
+                                        style={{ gridTemplateColumns: '64px 1fr auto' }}
+                                        initial={{ opacity: 0, y: 12 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.4, delay: i * 0.06 }}
+                                        viewport={{ once: true }}
+                                    >
+                                        <span className="font-mono text-xs text-stone-400">{paper.metadata.date.split(' ').pop()}</span>
+                                        <span>
+                                            <span className="font-serif text-lg md:text-xl text-stone-900 leading-snug">{paper.metadata.title}</span>
+                                            <span className="font-mono text-[10px] tracking-widest uppercase text-stone-400 ml-3 align-middle">{paper.metadata.venue}</span>
+                                        </span>
+                                        <span className="w-8 h-8 rounded-full border border-stone-200 inline-flex items-center justify-center text-stone-400 group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 group-hover:rotate-[-45deg] transition-all flex-shrink-0">
+                                            <ArrowUpRight size={13} />
+                                        </span>
+                                    </motion.button>
+                                ))}
+                            </div>
                         </div>
                     </motion.section>
 
-                    <ResumeSection />
+                    {/* CTA / Contact */}
+                    <section id="resume" className="py-24 border-t border-stone-100 bg-white">
+                        <div className="container mx-auto px-6">
+                            <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-12 items-end">
+                                <motion.h2
+                                    className="font-serif text-5xl md:text-6xl lg:text-7xl leading-[1.0] tracking-tight text-stone-900"
+                                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}
+                                >
+                                    Got a hard problem?<br />
+                                    <em className="italic" style={{ color: BRAND }}>Let's break it together.</em>
+                                </motion.h2>
+                                <motion.div
+                                    className="flex flex-col gap-4 items-start md:items-end"
+                                    initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} viewport={{ once: true }}
+                                >
+                                    <div className="flex gap-2 flex-wrap md:justify-end">
+                                        <a href="mailto:ishani@kathuria.net?subject=Hello" className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-white text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ backgroundColor: BRAND, boxShadow: `0 4px 0 0 #1c3ab0, 0 8px 20px rgba(59,91,219,0.22)` }}>
+                                            <Mail size={15} /> Email me
+                                        </a>
+                                        <a href="https://www.linkedin.com/in/ishani-kathuria" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-stone-700 text-sm font-semibold bg-white border border-stone-200 hover:bg-stone-50 hover:-translate-y-0.5 transition-all shadow-sm">
+                                            <Linkedin size={15} /> LinkedIn
+                                        </a>
+                                        <a href="https://github.com/ikathuria" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-stone-700 text-sm font-semibold bg-white border border-stone-200 hover:bg-stone-50 hover:-translate-y-0.5 transition-all shadow-sm">
+                                            <Github size={15} /> GitHub
+                                        </a>
+                                    </div>
+                                    <div className="font-mono text-[10.5px] tracking-widest uppercase text-stone-400">
+                                        © {new Date().getFullYear()} — Built in Indiana, mostly at 1am
+                                    </div>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </section>
                 </main>
 
-                <footer className="bg-stone-900 text-stone-400 py-12 text-center text-sm">
-                    <p>© {new Date().getFullYear()} Ishani Kathuria. All rights reserved.</p>
-                </footer>
             </div>
         );
     }
@@ -939,161 +943,139 @@ const App: React.FC = () => {
 
     const renderDiagram = () => {
         switch (visuals.diagramType) {
-            case 'bar-chart': return <FeatureSelectionChart color={metadata.themeColor} />;
-            case 'flow-chart': return <DualStreamPipeline color={metadata.themeColor} />;
-            case 'fuzzy-curves': return <FuzzyLogicCurves color={metadata.themeColor} />;
-            case 'venn-diagram': return <AIHierarchyVenn color={metadata.themeColor} />;
-            case 'waveform': return <AudioWaveform color={metadata.themeColor} />;
-            case 'network-graph': return <NetworkGraph color={metadata.themeColor} />;
+            case 'bar-chart':        return <FeatureSelectionChart color={metadata.themeColor} />;
+            case 'flow-chart':       return <DualStreamPipeline color={metadata.themeColor} />;
+            case 'fuzzy-curves':     return <FuzzyLogicCurves color={metadata.themeColor} />;
+            case 'venn-diagram':     return <AIHierarchyVenn color={metadata.themeColor} />;
+            case 'waveform':         return <AudioWaveform color={metadata.themeColor} />;
+            case 'network-graph':    return <NetworkGraph color={metadata.themeColor} />;
             case 'confidence-meter': return <ConfidenceMeter color={metadata.themeColor} />;
-            case 'depth-grid': return <DepthGrid color={metadata.themeColor} />;
+            case 'depth-grid':       return <DepthGrid color={metadata.themeColor} />;
             default: return null;
         }
     };
 
+    const detailStickerColors = (['indigo', 'coral', 'mint', 'yellow', 'purple', 'lime'] as StickerColor[]);
+    const detailStickerRots = [-2, 1.5, -1.5, 2, -3, 1];
+
     return (
-        <div className="min-h-screen bg-[#FAFAF8] text-stone-800 selection:text-white" style={{ ['--theme-color' as any]: metadata.themeColor }}>
+        <div className="min-h-screen bg-[#FAFAF7] text-stone-800 selection:text-white" style={{ ['--theme-color' as any]: metadata.themeColor }}>
             <style>{`::selection { background-color: ${metadata.themeColor}; }`}</style>
 
-            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#FAFAF8]/90 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
+            {/* Nav — pill style matching home */}
+            <nav className="fixed top-0 left-0 right-0 z-50 py-4 bg-[#FAFAF7]/90 backdrop-blur-md border-b border-stone-100/80">
                 <div className="container mx-auto px-6 flex justify-between items-center">
-                    <button
-                        onClick={() => setActiveItemId(null)}
-                        className={`flex items-center gap-2 transition-colors ${scrolled ? 'text-stone-500 hover:text-stone-900' : 'text-stone-300 hover:text-white'}`}
-                    >
-                        <ArrowLeft size={20} />
-                        <span className="font-medium text-sm tracking-wide uppercase">Back</span>
+                    <button onClick={() => setActiveItemId(null)} className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors">
+                        <ArrowLeft size={16} />
+                        <span className="font-medium text-sm">Back</span>
                     </button>
-                    <div className="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
+                    <div className="hidden md:flex items-center gap-1 bg-white border border-stone-200 rounded-full px-2 py-1.5 shadow-sm">
                         {(['problem', 'innovation', 'impact'] as const).map(sec => (
-                            <a
-                                key={sec}
-                                href={`#${sec}`}
-                                onClick={scrollToSection(sec)}
-                                className={`uppercase transition-colors ${scrolled ? 'hover:opacity-70' : 'text-stone-300 hover:text-white'}`}
-                                style={scrolled ? { color: metadata.themeColor } : {}}
-                            >
+                            <a key={sec} href={`#${sec}`} onClick={scrollToSection(sec)}
+                                className="px-3 py-1 rounded-full text-sm capitalize text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-colors">
                                 {sec}
                             </a>
                         ))}
-                        {metadata.demoUrl && (
-                            <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer" className="px-5 py-2 text-white rounded-full hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2" style={{ backgroundColor: metadata.themeColor }}>
-                                <Globe size={14} /> Live Demo
-                            </a>
-                        )}
-                        {metadata.githubUrl && (
-                            <a href={metadata.githubUrl} target="_blank" rel="noopener noreferrer" className="px-5 py-2 text-white rounded-full hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2 bg-stone-900">
-                                <Github size={14} /> View Code
-                            </a>
-                        )}
-                        {metadata.link && (
-                            <a href={metadata.link} target="_blank" rel="noopener noreferrer" className="px-5 py-2 text-white rounded-full hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2" style={{ backgroundColor: metadata.themeColor }}>
-                                Read Paper <ExternalLink size={14} />
-                            </a>
-                        )}
                     </div>
-                    <button className={`md:hidden p-2 transition-colors ${scrolled ? 'text-stone-900' : 'text-white'}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
+                    <div className="hidden md:flex items-center gap-2">
+                        {metadata.githubUrl && <a href={metadata.githubUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-stone-900 text-white text-sm font-medium hover:bg-stone-700 transition-colors"><Github size={13} /> Code</a>}
+                        {metadata.demoUrl && <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-white text-sm font-medium hover:opacity-90 transition-opacity" style={{ backgroundColor: metadata.themeColor }}><Globe size={13} /> Demo</a>}
+                        {metadata.link && <a href={metadata.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-white text-sm font-medium hover:opacity-90 transition-opacity" style={{ backgroundColor: metadata.themeColor }}>Paper <ExternalLink size={13} /></a>}
+                    </div>
+                    <button className="md:hidden p-2 text-stone-600" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
                         {menuOpen ? <X /> : <Menu />}
                     </button>
                 </div>
             </nav>
 
             {menuOpen && (
-                <div className="fixed inset-0 z-40 bg-[#0D0D1A] flex flex-col items-center justify-center gap-8 text-xl font-serif animate-fade-in text-white">
-                    <button onClick={() => { setActiveItemId(null); setMenuOpen(false); }} className="text-stone-400 uppercase text-sm mb-4 flex items-center gap-2"><ArrowLeft size={16} /> Back to Portfolio</button>
-                    <a href="#problem" onClick={scrollToSection('problem')} className="uppercase text-stone-200 hover:text-white transition-colors">Problem</a>
-                    <a href="#innovation" onClick={scrollToSection('innovation')} className="uppercase text-stone-200 hover:text-white transition-colors">Innovation</a>
-                    <a href="#impact" onClick={scrollToSection('impact')} className="uppercase text-stone-200 hover:text-white transition-colors">Impact</a>
-                    {metadata.demoUrl && <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-white rounded-full shadow-lg flex items-center gap-2" style={{ backgroundColor: metadata.themeColor }}><Globe size={18} /> Live Demo</a>}
-                    {metadata.githubUrl && <a href={metadata.githubUrl} target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-white rounded-full shadow-lg flex items-center gap-2 bg-stone-700"><Github size={18} /> View Code</a>}
-                    {metadata.link && <a href={metadata.link} target="_blank" rel="noopener noreferrer" className="px-6 py-3 text-white rounded-full shadow-lg flex items-center gap-2" style={{ backgroundColor: metadata.themeColor }}>Read Paper <ExternalLink size={18} /></a>}
+                <div className="fixed inset-0 z-40 bg-[#FAFAF7]/95 backdrop-blur-sm flex flex-col items-center justify-center gap-6 animate-fade-in">
+                    <button onClick={() => { setActiveItemId(null); setMenuOpen(false); }} className="text-stone-400 text-sm mb-4 flex items-center gap-2"><ArrowLeft size={16} /> Back to Portfolio</button>
+                    {(['problem', 'innovation', 'impact'] as const).map(sec => (
+                        <a key={sec} href={`#${sec}`} onClick={scrollToSection(sec)} className="font-serif text-3xl text-stone-700 hover:text-stone-900 capitalize transition-colors">{sec}</a>
+                    ))}
+                    <div className="flex gap-3 mt-4 flex-wrap justify-center">
+                        {metadata.githubUrl && <a href={metadata.githubUrl} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-full bg-stone-900 text-white text-sm flex items-center gap-2"><Github size={15} /> Code</a>}
+                        {metadata.demoUrl && <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-full text-white text-sm flex items-center gap-2" style={{ backgroundColor: metadata.themeColor }}><Globe size={15} /> Demo</a>}
+                        {metadata.link && <a href={metadata.link} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-full text-white text-sm flex items-center gap-2" style={{ backgroundColor: metadata.themeColor }}>Paper <ExternalLink size={15} /></a>}
+                    </div>
                 </div>
             )}
 
-            <header className="relative h-screen flex items-center justify-center overflow-hidden bg-[#0D0D1A]">
-                <div className="absolute inset-0">
-                    <HeroScene themeColor={metadata.themeColor} />
-                </div>
-                <div className="absolute inset-0 bg-[#0D0D1A]/55 z-0" />
-                <div className="relative z-10 container mx-auto px-6 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border text-xs tracking-[0.18em] uppercase font-bold backdrop-blur-sm bg-white/10"
-                        style={{ borderColor: metadata.themeColor + '80', color: metadata.themeColor }}
-                    >
+            {/* Hero — light, no Three.js */}
+            <header className="relative min-h-screen flex items-center justify-center bg-[#FAFAF7] overflow-hidden">
+                <div className="relative z-10 container mx-auto px-6 text-center pt-24 pb-16">
+                    <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+                        className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-stone-200 bg-white text-xs font-mono tracking-widest uppercase text-stone-500 shadow-sm">
                         {metadata.venue} · {metadata.date}
                     </motion.div>
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7, delay: 0.1 }}
-                        className="font-serif text-4xl md:text-6xl lg:text-7xl font-medium leading-tight mb-8 text-white drop-shadow-lg max-w-5xl mx-auto"
-                    >
+                    <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
+                        className="font-serif text-4xl md:text-6xl lg:text-7xl font-medium leading-tight mb-6 text-stone-900 max-w-5xl mx-auto">
                         {metadata.title}
                     </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.25 }}
-                        className="max-w-2xl mx-auto text-lg md:text-xl text-stone-300 font-light leading-relaxed mb-12 italic"
-                    >
+                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.2 }}
+                        className="max-w-2xl mx-auto text-lg md:text-xl text-stone-400 font-light leading-relaxed mb-10 italic">
                         {metadata.subtitle}
                     </motion.p>
-                    <motion.a
-                        href="#problem"
-                        onClick={scrollToSection('problem')}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                        className="group inline-flex flex-col items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-400 hover:text-white transition-colors cursor-pointer"
-                    >
-                        <span>Discover</span>
-                        <span className="p-2 border border-stone-600 rounded-full group-hover:border-white transition-colors bg-white/5 animate-float-soft">
-                            <ArrowDown size={16} />
-                        </span>
+                    {/* Tech stickers */}
+                    {technical && (
+                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
+                            className="flex flex-wrap gap-2 justify-center mb-10">
+                            {technical.techStack.slice(0, 4).map((tech, i) => (
+                                <Sticker key={tech} color={detailStickerColors[i % detailStickerColors.length]} rotation={detailStickerRots[i % detailStickerRots.length]}>
+                                    {tech}
+                                </Sticker>
+                            ))}
+                        </motion.div>
+                    )}
+                    {/* Action buttons */}
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}
+                        className="flex flex-wrap justify-center gap-3 mb-12">
+                        {metadata.githubUrl && <a href={metadata.githubUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-stone-900 text-white text-sm font-semibold hover:bg-stone-700 hover:-translate-y-0.5 transition-all shadow-sm"><Github size={15} /> View Code</a>}
+                        {metadata.demoUrl && <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-white text-sm font-semibold hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-sm" style={{ backgroundColor: metadata.themeColor, boxShadow: `0 4px 0 0 ${metadata.themeColor}88, 0 8px 20px ${metadata.themeColor}33` }}><Globe size={15} /> Live Demo</a>}
+                        {metadata.link && <a href={metadata.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-white text-sm font-semibold hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-sm" style={{ backgroundColor: metadata.themeColor, boxShadow: `0 4px 0 0 ${metadata.themeColor}88, 0 8px 20px ${metadata.themeColor}33` }}>Read Paper <ExternalLink size={15} /></a>}
+                    </motion.div>
+                    <motion.a href="#problem" onClick={scrollToSection('problem')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }}
+                        className="inline-block text-stone-300 hover:text-stone-600 transition-colors animate-float-soft">
+                        <ArrowDown size={24} />
                     </motion.a>
                 </div>
             </header>
 
             <main id="main">
-                <section id="problem" className="py-24 bg-white">
+                <section id="problem" className="py-24 bg-white border-t border-stone-100">
                     <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
                         <div className="md:col-span-4">
-                            <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">The Challenge</div>
+                            <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-400 uppercase">The Challenge</div>
                             <h2 className="font-serif text-4xl mb-6 leading-tight text-stone-900">Identifying the Gap</h2>
-                            <div className="w-16 h-1 mb-6" style={{ backgroundColor: metadata.themeColor }} />
+                            <div className="w-12 h-1 rounded-full mb-6" style={{ backgroundColor: metadata.themeColor }} />
                         </div>
-                        <div className="md:col-span-8 text-lg text-stone-600 leading-relaxed">
-                            <p>{narrative.problem}</p>
-                        </div>
+                        <div className="md:col-span-8 text-lg text-stone-600 leading-relaxed"><p>{narrative.problem}</p></div>
                     </div>
                 </section>
 
-                <section id="innovation" className="py-24 bg-stone-50 border-t border-stone-100">
+                <section id="innovation" className="py-24 bg-[#FAFAF7] border-t border-stone-100">
                     <div className="container mx-auto px-6">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                             <div>
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white text-xs font-bold tracking-widest uppercase rounded-full border border-stone-200 shadow-sm" style={{ color: metadata.themeColor }}>
-                                        METHODOLOGY
-                                    </div>
+                                <div className="flex items-center gap-3 mb-6">
+                                    <span className="px-3 py-1 rounded-full border border-stone-200 bg-white text-xs font-bold tracking-widest uppercase shadow-sm" style={{ color: metadata.themeColor }}>Methodology</span>
                                     {technical && (
-                                        <button onClick={() => setShowTechnical(!showTechnical)} className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide hover:text-stone-900 transition-colors" style={{ color: showTechnical ? metadata.themeColor : '#78716c' }}>
-                                            <Layers size={14} />
-                                            {showTechnical ? 'Show Concept' : 'Show Code'}
+                                        <button onClick={() => setShowTechnical(!showTechnical)} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide hover:text-stone-900 transition-colors" style={{ color: showTechnical ? metadata.themeColor : '#a8a29e' }}>
+                                            <Layers size={13} />{showTechnical ? 'Show Concept' : 'Show Code'}
                                         </button>
                                     )}
                                 </div>
                                 <h2 className="font-serif text-4xl md:text-5xl mb-6 text-stone-900">The Approach</h2>
                                 <p className="text-lg text-stone-600 mb-6 leading-relaxed">{narrative.innovation}</p>
                                 {technical && (
-                                    <div className="mt-8">
-                                        <h4 className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3 flex items-center gap-2"><Cpu size={14} /> Tech Stack</h4>
+                                    <div className="mt-6">
+                                        <h4 className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3 flex items-center gap-2"><Cpu size={13} /> Tech Stack</h4>
                                         <div className="flex flex-wrap gap-2">
-                                            {technical.techStack.map(tech => (
-                                                <span key={tech} className="px-3 py-1 bg-white border border-stone-200 text-stone-600 text-sm rounded-md shadow-sm">{tech}</span>
+                                            {technical.techStack.map((tech, i) => (
+                                                <Sticker key={tech} color={detailStickerColors[i % detailStickerColors.length]} rotation={detailStickerRots[i % detailStickerRots.length]}>
+                                                    {tech}
+                                                </Sticker>
                                             ))}
                                         </div>
                                     </div>
@@ -1106,48 +1088,47 @@ const App: React.FC = () => {
                     </div>
                 </section>
 
-                <section id="impact" className="py-24 bg-white border-t border-stone-200">
+                <section id="impact" className="py-24 bg-white border-t border-stone-100">
                     <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12">
                         <div className="md:col-span-5 relative min-h-[400px]">
-                            <div className="absolute inset-0 bg-[#F5F4F0] rounded-xl overflow-hidden border border-stone-200 shadow-inner">
-                                <AbstractImpactScene themeColor={metadata.themeColor} />
+                            <div className="absolute inset-0 bg-[#F5F4F0] rounded-2xl overflow-hidden border border-stone-200">
+                                <AbstractImpactScene themeColor={metadata.themeColor} id={activeItem.id} />
                             </div>
                         </div>
                         <div className="md:col-span-7 flex flex-col justify-center">
-                            <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">REAL WORLD RESULTS</div>
+                            <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-400 uppercase">Real World Results</div>
                             <h2 className="font-serif text-4xl mb-6 text-stone-900">The Impact</h2>
                             <p className="text-lg text-stone-600 mb-8 leading-relaxed">{narrative.impact}</p>
-                            <div className="p-6 bg-stone-50 border border-stone-200 rounded-lg border-l-4" style={{ borderLeftColor: metadata.themeColor }}>
-                                <p className="font-serif italic text-xl text-stone-800 mb-4">"{metadata.title}"</p>
-                                <span className="text-sm font-bold text-stone-500 tracking-wider uppercase">— Published in {metadata.venue}</span>
+                            <div className="p-6 bg-[#FAFAF7] border border-stone-200 rounded-2xl border-l-4" style={{ borderLeftColor: metadata.themeColor }}>
+                                <p className="font-serif italic text-xl text-stone-800 mb-3">"{metadata.title}"</p>
+                                <span className="text-xs font-bold text-stone-400 tracking-widest uppercase">— Published in {metadata.venue}</span>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <section id="authors" className="py-24 bg-stone-100 border-t border-stone-200">
+                <section id="authors" className="py-24 bg-[#FAFAF7] border-t border-stone-100">
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-16">
-                            <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">CONTRIBUTORS</div>
+                            <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-400 uppercase">Contributors</div>
                             <h2 className="font-serif text-3xl md:text-5xl mb-4 text-stone-900">Team & Roles</h2>
                         </div>
-                        <div className="flex flex-wrap gap-8 justify-center">
-                            {authors.map((author, idx) => (
-                                <AuthorCard key={idx} name={author.name} role={author.role} delay={`${idx * 0.1}s`} themeColor={metadata.themeColor} />
-                            ))}
+                        <div className="flex flex-wrap gap-6 justify-center">
+                            {authors.map((author, idx) => <AuthorCard key={idx} name={author.name} role={author.role} delay={`${idx * 0.1}s`} themeColor={metadata.themeColor} />)}
                         </div>
                     </div>
                 </section>
             </main>
 
-            <footer className="bg-stone-900 text-stone-400 py-16">
-                <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <footer className="bg-white border-t border-stone-100 py-12">
+                <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
                     <div className="text-center md:text-left">
-                        <div className="text-white font-serif font-bold text-2xl mb-2">{metadata.title}</div>
-                        <p className="text-sm max-w-md">{metadata.subtitle}</p>
+                        <div className="font-serif text-xl text-stone-900 mb-1">{metadata.title}</div>
+                        <p className="text-sm text-stone-400 max-w-md">{metadata.subtitle}</p>
                     </div>
-                    <button onClick={() => setActiveItemId(null)} className="text-stone-500 hover:text-white transition-colors uppercase text-xs font-bold tracking-widest">
-                        Back to Portfolio
+                    <button onClick={() => setActiveItemId(null)}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-stone-200 text-sm font-medium text-stone-600 hover:bg-stone-50 hover:-translate-y-0.5 transition-all">
+                        <ArrowLeft size={14} /> Back to Portfolio
                     </button>
                 </div>
             </footer>

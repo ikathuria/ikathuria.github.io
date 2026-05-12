@@ -19,7 +19,7 @@ export const FeatureSelectionChart: React.FC<{ color: string }> = ({ color }) =>
   const maxVal = 0.6;
 
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-2xl">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-2xl">
       <h3 className="font-serif text-xl mb-4 text-stone-800">RMSE Performance (Lower is Better)</h3>
       <p className="text-sm text-stone-500 mb-8 text-center max-w-md">
         Comparing Neural Network Regression error rates across different feature selection methods.
@@ -57,7 +57,7 @@ export const FeatureSelectionChart: React.FC<{ color: string }> = ({ color }) =>
 // --- PAPER 2: AUTISM AI (Flow Chart) ---
 export const DualStreamPipeline: React.FC<{ color: string }> = ({ color }) => {
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-3xl">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-3xl">
       <h3 className="font-serif text-xl mb-6 text-stone-800">Dual-Stream Emotion Recognition</h3>
 
       <div className="relative w-full flex flex-col md:flex-row items-center justify-between gap-8 py-8">
@@ -174,7 +174,7 @@ export const FuzzyLogicCurves: React.FC<{ color: string }> = ({ color }) => {
   };
 
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-3xl overflow-hidden">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-3xl overflow-hidden">
       <h3 className="font-serif text-xl mb-2 text-stone-800">Fuzzy Logic Meal-Time</h3>
       <p className="text-sm text-stone-500 mb-6 text-center">
         Gaussian membership functions for time-of-day categories.
@@ -228,7 +228,7 @@ export const FuzzyLogicCurves: React.FC<{ color: string }> = ({ color }) => {
 // --- PAPER 4: HEALTHCARE DL (Venn Diagram) ---
 export const AIHierarchyVenn: React.FC<{ color: string }> = ({ color }) => {
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-2xl">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-2xl">
       <h3 className="font-serif text-xl mb-4 text-stone-800">The AI Healthcare Hierarchy</h3>
 
       <div className="relative w-80 h-80 flex items-center justify-center">
@@ -272,7 +272,7 @@ export const AIHierarchyVenn: React.FC<{ color: string }> = ({ color }) => {
 // --- PROJECT 1: AUTBOT (Audio Waveform) ---
 export const AudioWaveform: React.FC<{ color: string }> = ({ color }) => {
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-2xl">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-2xl">
       <h3 className="font-serif text-xl mb-6 text-stone-800">Multi-Modal Signal Processing</h3>
       <div className="flex items-center gap-2 h-32 w-full justify-center">
         {[...Array(20)].map((_, i) => (
@@ -316,7 +316,7 @@ export const NetworkGraph: React.FC<{ color: string }> = ({ color }) => {
   ];
 
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-2xl">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-2xl">
       <h3 className="font-serif text-xl mb-6 text-stone-800">Symptom-to-Condition Mapping</h3>
       <div className="relative w-full h-48 flex items-center justify-center">
         <svg className="absolute inset-0 w-full h-full">
@@ -358,7 +358,7 @@ export const NetworkGraph: React.FC<{ color: string }> = ({ color }) => {
 // --- PROJECT 3: SIGNATURE (Confidence Meter) ---
 export const ConfidenceMeter: React.FC<{ color: string }> = ({ color }) => {
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-2xl">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-2xl">
       <h3 className="font-serif text-xl mb-6 text-stone-800">Siamese Network Similarity</h3>
 
       <div className="flex gap-8 items-center w-full justify-center mb-8">
@@ -396,10 +396,10 @@ export const ConfidenceMeter: React.FC<{ color: string }> = ({ color }) => {
 // --- PROJECT 4: GESTURE (Depth Grid) ---
 export const DepthGrid: React.FC<{ color: string }> = ({ color }) => {
   return (
-    <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-sm border border-stone-200 my-8 w-full max-w-2xl">
+    <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-2xl">
       <h3 className="font-serif text-xl mb-6 text-stone-800">3D CNN Depth Estimation</h3>
 
-      <div className="grid grid-cols-6 gap-2 p-4 bg-stone-900 rounded-lg shadow-inner">
+      <div className="grid grid-cols-6 gap-2 p-4 bg-stone-100 rounded-2xl border border-stone-200">
         {[...Array(36)].map((_, i) => (
           <motion.div
             key={i}
