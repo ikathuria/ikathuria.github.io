@@ -229,7 +229,7 @@ const RepoCard = ({ repo, description }: { repo: Repo; description: string | nul
                         <button
                             onClick={handleLockIn}
                             title="Copy Claude Code command to clipboard"
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-900 text-white text-xs font-semibold rounded-full hover:bg-stone-700 transition-colors"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#3B5BDB] text-white text-xs font-semibold rounded-full hover:bg-[#2F4AC7] transition-colors"
                         >
                             {copied ? <Check size={12} /> : <Terminal size={12} />}
                             {copied ? 'Copied!' : 'Lock in'}
@@ -243,11 +243,15 @@ const RepoCard = ({ repo, description }: { repo: Repo; description: string | nul
 // --- SKELETON CARD ---
 
 const SkeletonCard = () => (
-    <div className="bg-white rounded-2xl p-8 border border-stone-200 animate-pulse space-y-3 h-56">
-        <div className="h-4 bg-stone-100 rounded w-2/3" />
+    <div className="bg-white rounded-2xl p-8 border border-stone-200 animate-pulse space-y-4 h-56">
+        <div className="flex items-start justify-between gap-3">
+            <div className="h-4 bg-stone-100 rounded w-2/3" />
+            <div className="h-5 bg-stone-100 rounded-full w-16" />
+        </div>
         <div className="h-3 bg-stone-100 rounded w-1/4" />
         <div className="h-3 bg-stone-100 rounded" />
         <div className="h-3 bg-stone-100 rounded w-4/5" />
+        <div className="h-3 bg-stone-100 rounded w-3/5" />
     </div>
 );
 
@@ -335,9 +339,9 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
     ];
 
     return (
-        <div className="min-h-screen bg-[#F9F8F4] text-stone-800">
+        <div className="min-h-screen bg-[#FAFAF8] text-stone-800">
             {/* Nav */}
-            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#F9F8F4]/90 backdrop-blur-md shadow-sm py-4' : 'bg-[#F9F8F4] py-6 border-b border-stone-100'}`}>
+            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#FAFAF8]/90 backdrop-blur-md shadow-sm py-4' : 'bg-[#FAFAF8] py-6 border-b border-stone-100'}`}>
                 <div className="container mx-auto px-6 flex items-center justify-between">
                     <button
                         onClick={onBack}
@@ -348,7 +352,7 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                     </button>
 
                     <span className="font-serif font-bold text-xl text-stone-900 tracking-tight">
-                        Project Dashboard
+                        Ishani<span className="text-stone-400">.build</span>
                     </span>
 
                     <a
@@ -371,12 +375,12 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">
+                    <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-400 uppercase">
                         GitHub · ikathuria
                     </div>
                     <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-3">Project Tracker</h1>
                     <p className="text-stone-500 max-w-xl leading-relaxed">
-                        Live view of all public repos with push-date status and PLAN.md milestone progress.
+                        Live view of all public repos — push-date status and PLAN.md milestone progress.
                     </p>
                 </motion.div>
 
@@ -394,7 +398,7 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                             placeholder="Search repos…"
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-full text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 transition-all"
+                            className="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-full text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 transition-all"
                         />
                     </div>
 
@@ -405,12 +409,12 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                                 onClick={() => setFilter(f.key)}
                                 className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                                     filter === f.key
-                                        ? 'bg-stone-900 text-white shadow-sm'
+                                        ? 'bg-[#3B5BDB] text-white shadow-sm'
                                         : 'bg-white border border-stone-200 text-stone-500 hover:border-stone-400 hover:text-stone-700'
                                 }`}
                             >
                                 {f.label}
-                                <span className={`ml-1.5 text-xs ${filter === f.key ? 'text-stone-300' : 'text-stone-400'}`}>
+                                <span className={`ml-1.5 text-xs ${filter === f.key ? 'text-indigo-200' : 'text-stone-400'}`}>
                                     {counts[f.key]}
                                 </span>
                             </button>

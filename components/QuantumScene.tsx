@@ -36,7 +36,7 @@ declare module 'react' {
 
 const QuantumParticle = ({ position, color, scale = 1 }: { position: [number, number, number]; color: string; scale?: number }) => {
   const ref = useRef<THREE.Mesh>(null);
-  
+
   useFrame((state) => {
     if (ref.current) {
       const t = state.clock.getElapsedTime();
@@ -63,7 +63,7 @@ const QuantumParticle = ({ position, color, scale = 1 }: { position: [number, nu
 
 const MacroscopicWave = ({ color }: { color: string }) => {
   const ref = useRef<THREE.Mesh>(null);
-  
+
   useFrame((state) => {
     if (ref.current) {
        const t = state.clock.getElapsedTime();
@@ -90,7 +90,7 @@ export const HeroScene: React.FC<{ themeColor: string }> = ({ themeColor }) => {
           <QuantumParticle position={[0, 0, 0]} color={themeColor} scale={1.2} />
           <MacroscopicWave color={themeColor} />
         </Float>
-        
+
         <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
            {/* Secondary Accent Particles - darker/lighter variants */}
            <QuantumParticle position={[-3, 1, -2]} color="#333" scale={0.5} />
@@ -111,7 +111,7 @@ export const AbstractImpactScene: React.FC<{ themeColor: string }> = ({ themeCol
         <ambientLight intensity={0.8} />
         <spotLight position={[5, 5, 5]} angle={0.3} penumbra={1} intensity={1} color={themeColor} />
         <Environment preset="studio" />
-        
+
         <Float rotationIntensity={0.6} floatIntensity={0.4} speed={0.5}>
             <group>
                 <Torus args={[1.5, 0.4, 16, 100]} rotation={[Math.PI / 3, Math.PI / 4, 0]}>

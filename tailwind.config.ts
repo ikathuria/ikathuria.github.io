@@ -9,10 +9,10 @@ export default {
         sans: ['"Inter"', 'sans-serif'],
       },
       colors: {
-        nobel: {
-          gold: '#C5A059',
-          dark: '#1a1a1a',
-          cream: '#F9F8F4',
+        brand: {
+          indigo: '#3B5BDB',
+          light: '#EEF2FF',
+          dark: '#2F4AC7',
         },
       },
       keyframes: {
