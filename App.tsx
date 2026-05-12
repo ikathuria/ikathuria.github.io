@@ -10,6 +10,7 @@ import { HeroScene, AbstractImpactScene } from './components/QuantumScene';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
 import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ExternalLink, GraduationCap, Briefcase, Code, Terminal, Database, Cloud, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe } from 'lucide-react';
 import { papers, projects, resume, PortfolioItem } from './data';
+import Dashboard from './components/Dashboard';
 
 // --- COMPONENTS ---
 
@@ -217,6 +218,7 @@ const ResumeSection = () => {
 
 const App: React.FC = () => {
     const [activeItemId, setActiveItemId] = useState<string | null>(null);
+    const [showDashboard, setShowDashboard] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [showTechnical, setShowTechnical] = useState(false);
@@ -236,7 +238,9 @@ const App: React.FC = () => {
         const currentHash = window.location.hash;
         let desiredHash = '';
 
-        if (activeItemId) {
+        if (showDashboard) {
+            desiredHash = '#dashboard';
+        } else if (activeItemId) {
             desiredHash = `#project=${activeItemId}`;
         }
 
@@ -244,30 +248,31 @@ const App: React.FC = () => {
             if (desiredHash) {
                 window.location.hash = desiredHash;
             } else {
-                // Remove hash without reloading (Home view)
-                // We use pushState to add a history entry for "Home" if coming from a project
-                // effectively allowing "Forward" to work too.
-                // However, strictly clearing hash might simply be:
                 if (currentHash) {
                     history.pushState(null, '', window.location.pathname);
                 }
             }
         }
-    }, [activeItemId]);
+    }, [activeItemId, showDashboard]);
 
     // 2. Sync Hash -> State (When URL/Hash Changes, Update State)
     useEffect(() => {
         const handleHashChange = () => {
             const hash = window.location.hash;
 
-            if (hash.startsWith('#project=')) {
+            if (hash === '#dashboard') {
+                setShowDashboard(true);
+                setActiveItemId(null);
+            } else if (hash.startsWith('#project=')) {
                 const id = hash.replace('#project=', '');
                 // Validate ID
                 if (allItems.find(p => p.id === id)) {
+                    setShowDashboard(false);
                     setActiveItemId(id);
                 }
             } else {
                 // Default / Home
+                setShowDashboard(false);
                 setActiveItemId(null);
             }
         };
@@ -283,12 +288,17 @@ const App: React.FC = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         setShowTechnical(false);
-    }, [activeItemId]);
+    }, [activeItemId, showDashboard]);
 
 
     const activeItem = allItems.find(p => p.id === activeItemId);
 
 
+
+    // --- DASHBOARD VIEW ---
+    if (showDashboard) {
+        return <Dashboard onBack={() => setShowDashboard(false)} />;
+    }
 
     // --- HOME VIEW (PORTFOLIO) ---
     if (!activeItem) {
@@ -309,6 +319,12 @@ const App: React.FC = () => {
                             <a href="#projects" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Projects</a>
                             <a href="#research" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Research</a>
                             <a href="#resume" className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}>Resume</a>
+                            <button
+                                onClick={() => setShowDashboard(true)}
+                                className={`hover:text-stone-900 transition-colors ${!scrolled && 'hover:text-white'}`}
+                            >
+                                Dashboard
+                            </button>
                         </div>
                         <button
                             className={`${scrolled ? 'text-stone-900' : 'text-white'} md:hidden`}
@@ -333,6 +349,7 @@ const App: React.FC = () => {
                         <a href="#projects" onClick={() => setMenuOpen(false)}>Projects</a>
                         <a href="#research" onClick={() => setMenuOpen(false)}>Research</a>
                         <a href="#resume" onClick={() => setMenuOpen(false)}>Resume</a>
+                        <button onClick={() => { setMenuOpen(false); setShowDashboard(true); }}>Dashboard</button>
                     </div>
                 )}
 
