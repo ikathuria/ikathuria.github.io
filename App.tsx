@@ -889,8 +889,10 @@ const App: React.FC = () => {
                         </div>
                     </motion.section>
 
+                    <ResumeSection />
+
                     {/* CTA / Contact */}
-                    <section id="resume" className="py-24 border-t border-stone-100 bg-white">
+                    <section id="contact" className="py-24 border-t border-stone-100 bg-white">
                         <div className="container mx-auto px-6">
                             <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-12 items-end">
                                 <motion.h2
