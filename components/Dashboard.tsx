@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     ArrowLeft, Github, Star, GitFork, AlertCircle,
-    Search, Clock, Check, Terminal
+    Search, Clock, Check, Terminal, ChevronDown, X, ListChecks, RefreshCw
 } from 'lucide-react';
 import repoDescriptions from '../public/repo-descriptions.json';
 
 // --- TYPES ---
 
+interface Task {
+    text: string;
+    done: boolean;
+}
+
 interface Milestone {
     title: string;
     done: number;
     total: number;
+    tasks: Task[];
 }
 
 interface PlanData {
@@ -28,27 +34,55 @@ interface Repo {
     name: string;
     description: string | null;
     language: string | null;
+    topics?: string[];
     stargazers_count: number;
     forks_count: number;
     open_issues_count: number;
     pushed_at: string;
     archived: boolean;
     html_url: string;
+    default_branch: string;
     planData?: PlanData | null;
     planLoading?: boolean;
+}
+
+interface PlanSidebarProps {
+    repo: Repo;
+    plan: PlanData;
+    onClose: () => void;
 }
 
 // --- HELPERS ---
 
 function parsePlan(content: string): PlanData {
-    const sections = content.split(/^## Milestone/m).slice(1);
-    const milestones: Milestone[] = sections.map(section => {
-        const titleMatch = section.match(/^[^\n]*/);
-        const title = titleMatch ? titleMatch[0].replace(/^#+\s*/, '').trim() : 'Milestone';
-        const done = (section.match(/- \[x\]/gi) ?? []).length;
-        const todo = (section.match(/- \[ \]/g) ?? []).length;
-        return { title, done, total: done + todo };
-    });
+    const extractTasks = (section: string): Task[] =>
+        (section.match(/- \[[ xX]\] .+/g) ?? []).map(line => ({
+            done: /^- \[[xX]\]/.test(line),
+            text: line.replace(/^- \[[ xX]\] /, '').trim(),
+        }));
+
+    const buildMilestones = (sections: string[]): Milestone[] =>
+        sections
+            .map(section => {
+                const titleMatch = section.match(/^[^\n]*/);
+                const title = titleMatch ? titleMatch[0].replace(/^#+\s*/, '').trim() : 'Milestone';
+                const tasks = extractTasks(section);
+                return { title, done: tasks.filter(t => t.done).length, total: tasks.length, tasks };
+            })
+            .filter(m => m.total > 0);
+
+    // Try ### headings first (e.g. "## Milestones / ### Milestone 1: ...")
+    const h3Sections = content.split(/^### /m).slice(1);
+    const h3Milestones = buildMilestones(h3Sections);
+    if (h3Milestones.length > 0) {
+        const totalDone = h3Milestones.reduce((s, m) => s + m.done, 0);
+        const totalTasks = h3Milestones.reduce((s, m) => s + m.total, 0);
+        return { milestones: h3Milestones, totalDone, totalTasks };
+    }
+
+    // Fall back to ## Milestone sections (exact word, avoids "## Milestones")
+    const h2Sections = content.split(/^## Milestone\b/m).slice(1);
+    const milestones = buildMilestones(h2Sections);
     const totalDone = milestones.reduce((s, m) => s + m.done, 0);
     const totalTasks = milestones.reduce((s, m) => s + m.total, 0);
     return { milestones, totalDone, totalTasks };
@@ -82,16 +116,206 @@ const STATUS_CONFIG: Record<RepoStatus, { label: string; color: string; bg: stri
 
 const LOCK_IN_CMD = `claude "Read PLAN.md, find the first incomplete task, and continue. Mark tasks done as you go. Commit when a milestone is complete."`;
 
+// --- PLAN SIDEBAR ---
+
+const PlanSidebar = ({ repo, plan, onClose }: PlanSidebarProps) => {
+    const status = getStatus(repo);
+    const cfg = STATUS_CONFIG[status];
+    const progress = plan.totalTasks > 0 ? (plan.totalDone / plan.totalTasks) * 100 : 0;
+    const panelRef = useRef<HTMLDivElement>(null);
+
+    // Close on Escape
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [onClose]);
+
+    // Prevent body scroll
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = ''; };
+    }, []);
+
+    return (
+        <>
+            {/* Backdrop */}
+            <motion.div
+                className="fixed inset-0 bg-black/30 backdrop-blur-[2px] z-[60]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={onClose}
+            />
+
+            {/* Sidebar panel */}
+            <motion.div
+                ref={panelRef}
+                className="fixed top-0 right-0 h-full w-full max-w-md bg-[#FAFAF8] z-[70] flex flex-col shadow-2xl"
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+            >
+                {/* Sidebar header */}
+                <div className="flex-shrink-0 px-6 pt-6 pb-4 border-b border-stone-200">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="min-w-0">
+                            <a
+                                href={repo.html_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-serif text-xl text-stone-900 hover:underline underline-offset-4 decoration-stone-300 truncate block"
+                            >
+                                {repo.name}
+                            </a>
+                            <div className="flex items-center gap-2 mt-1">
+                                <span
+                                    className="px-2 py-0.5 text-xs font-bold rounded-full uppercase tracking-wider"
+                                    style={{ backgroundColor: cfg.bg, color: cfg.text }}
+                                >
+                                    {cfg.label}
+                                </span>
+                                {repo.language && (
+                                    <span className="text-xs font-mono text-stone-400">{repo.language}</span>
+                                )}
+                            </div>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="flex-shrink-0 p-2 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-all"
+                            aria-label="Close"
+                        >
+                            <X size={18} />
+                        </button>
+                    </div>
+
+                    {/* Overall progress bar */}
+                    <div className="space-y-1.5">
+                        <div className="flex items-center justify-between text-xs text-stone-500">
+                            <span className="font-bold uppercase tracking-wider">Overall progress</span>
+                            <span>{plan.totalDone} / {plan.totalTasks} tasks</span>
+                        </div>
+                        <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                            <div
+                                className="h-full rounded-full transition-all duration-700"
+                                style={{ width: `${progress}%`, backgroundColor: cfg.color }}
+                            />
+                        </div>
+                        <div className="text-xs text-stone-400 text-right">
+                            {Math.round(progress)}% complete
+                        </div>
+                    </div>
+                </div>
+
+                {/* Milestone + task list */}
+                <div className="flex-1 overflow-y-auto py-4 space-y-2">
+                    {plan.milestones.map((milestone, mi) => {
+                        const milestoneComplete = milestone.total > 0 && milestone.done === milestone.total;
+                        const milestoneColor = milestoneComplete ? '#22c55e' : cfg.color;
+                        const milestoneProgress = milestone.total > 0 ? (milestone.done / milestone.total) * 100 : 0;
+                        // Strip leading "Milestone N: " for cleaner display
+                        const displayTitle = milestone.title.replace(/^Milestone\s+\d+[:\s]*/i, '').trim() || milestone.title;
+
+                        return (
+                            <div key={mi} className="border-b border-stone-100 last:border-b-0">
+                                {/* Milestone header — solid colored band */}
+                                <div
+                                    className="flex items-center justify-between px-6 py-3 gap-3"
+                                    style={{ backgroundColor: milestoneColor + '18' }}
+                                >
+                                    <div className="flex items-center gap-2.5 min-w-0">
+                                        <span
+                                            className="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded text-white"
+                                            style={{ backgroundColor: milestoneColor }}
+                                        >
+                                            M{mi + 1}
+                                        </span>
+                                        <span className="text-sm font-semibold text-stone-800 leading-snug truncate">
+                                            {displayTitle}
+                                        </span>
+                                    </div>
+                                    <span className="flex-shrink-0 text-xs font-mono text-stone-500">
+                                        {milestone.done}/{milestone.total}
+                                    </span>
+                                </div>
+
+                                {/* Milestone progress bar — full width, thin */}
+                                <div className="h-0.5 bg-stone-100">
+                                    <div
+                                        className="h-full transition-all duration-500"
+                                        style={{ width: `${milestoneProgress}%`, backgroundColor: milestoneColor }}
+                                    />
+                                </div>
+
+                                {/* Tasks */}
+                                <ul className="px-6 py-3 space-y-2.5">
+                                    {milestone.tasks.map((task, ti) => (
+                                        <li key={ti} className="flex items-start gap-2.5">
+                                            <span
+                                                className="mt-0.5 w-4 h-4 rounded flex-shrink-0 flex items-center justify-center border"
+                                                style={
+                                                    task.done
+                                                        ? { backgroundColor: milestoneColor, borderColor: milestoneColor }
+                                                        : { borderColor: '#d6d3d1', backgroundColor: '#fff' }
+                                                }
+                                            >
+                                                {task.done && <Check size={9} className="text-white" strokeWidth={3} />}
+                                            </span>
+                                            <span className={`text-sm leading-relaxed ${task.done ? 'text-stone-400 line-through' : 'text-stone-700'}`}>
+                                                {task.text}
+                                            </span>
+                                        </li>
+                                    ))}
+                                    {milestone.tasks.length === 0 && (
+                                        <li className="text-xs text-stone-300 italic">No tasks listed</li>
+                                    )}
+                                </ul>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Footer */}
+                <div className="flex-shrink-0 px-6 py-4 border-t border-stone-100 flex items-center justify-between">
+                    <a
+                        href={`${repo.html_url}/blob/main/PLAN.md`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-stone-400 hover:text-stone-700 underline underline-offset-2 transition-colors"
+                    >
+                        View PLAN.md on GitHub
+                    </a>
+                    <button
+                        onClick={onClose}
+                        className="text-xs text-stone-400 hover:text-stone-700 transition-colors"
+                    >
+                        Close
+                    </button>
+                </div>
+            </motion.div>
+        </>
+    );
+};
+
 // --- REPO CARD ---
 
-const RepoCard = ({ repo, description }: { repo: Repo; description: string | null }) => {
+const RepoCard = ({
+    repo,
+    description,
+    onShowPlan,
+}: {
+    repo: Repo;
+    description: string | null;
+    onShowPlan: (repo: Repo, plan: PlanData) => void;
+}) => {
     const [copied, setCopied] = useState(false);
     const status = getStatus(repo);
     const cfg = STATUS_CONFIG[status];
     const plan = repo.planData;
     const progress = plan && plan.totalTasks > 0 ? (plan.totalDone / plan.totalTasks) * 100 : 0;
 
-    // Strip trailing "[needs review]" for display; keep flag for badge
     const needsReview = description?.endsWith('[needs review]') ?? false;
     const descText = needsReview ? description!.replace(' [needs review]', '') : description;
 
@@ -136,16 +360,25 @@ const RepoCard = ({ repo, description }: { repo: Repo; description: string | nul
                     </span>
                 </div>
 
-                {/* Language + time */}
-                <div className="flex items-center gap-3 text-xs text-stone-400 mb-3">
+                {/* Language + time + topic pills */}
+                <div className="flex items-center gap-3 text-xs text-stone-400 mb-3 flex-wrap">
                     {repo.language && <span className="font-mono">{repo.language}</span>}
                     <span className="flex items-center gap-1">
                         <Clock size={11} />
                         {relativeTime(repo.pushed_at)}
                     </span>
+                    {repo.topics && repo.topics.length > 0 && (
+                        <>
+                            {repo.topics.slice(0, 2).map(t => (
+                                <span key={t} className="px-1.5 py-0 bg-stone-100 text-stone-400 rounded text-[10px] font-mono">
+                                    {t}
+                                </span>
+                            ))}
+                        </>
+                    )}
                 </div>
 
-                {/* Description — custom text shown inline; needs-review badge when flagged */}
+                {/* Description */}
                 {descText && (
                     <div className="mb-4 flex-grow">
                         <p className="text-stone-600 text-sm leading-relaxed">{descText}</p>
@@ -157,86 +390,95 @@ const RepoCard = ({ repo, description }: { repo: Repo; description: string | nul
                     </div>
                 )}
 
-                    {/* Stats */}
-                    {(repo.stargazers_count > 0 || repo.forks_count > 0 || repo.open_issues_count > 0) && (
-                        <div className="flex items-center gap-4 text-xs text-stone-400 mb-4">
-                            {repo.stargazers_count > 0 && (
-                                <span className="flex items-center gap-1"><Star size={12} />{repo.stargazers_count}</span>
-                            )}
-                            {repo.forks_count > 0 && (
-                                <span className="flex items-center gap-1"><GitFork size={12} />{repo.forks_count}</span>
-                            )}
-                            {repo.open_issues_count > 0 && (
-                                <span className="flex items-center gap-1"><AlertCircle size={12} />{repo.open_issues_count}</span>
-                            )}
-                        </div>
-                    )}
+                {/* Stats */}
+                {(repo.stargazers_count > 0 || repo.forks_count > 0 || repo.open_issues_count > 0) && (
+                    <div className="flex items-center gap-4 text-xs text-stone-400 mb-4">
+                        {repo.stargazers_count > 0 && (
+                            <span className="flex items-center gap-1"><Star size={12} />{repo.stargazers_count}</span>
+                        )}
+                        {repo.forks_count > 0 && (
+                            <span className="flex items-center gap-1"><GitFork size={12} />{repo.forks_count}</span>
+                        )}
+                        {repo.open_issues_count > 0 && (
+                            <span className="flex items-center gap-1"><AlertCircle size={12} />{repo.open_issues_count}</span>
+                        )}
+                    </div>
+                )}
 
-                    {/* PLAN.md loading skeleton */}
-                    {repo.planLoading && (
-                        <div className="mb-4 space-y-2">
-                            <div className="h-2 bg-stone-100 rounded-full animate-pulse w-24" />
-                            <div className="h-1.5 bg-stone-100 rounded-full animate-pulse" />
-                        </div>
-                    )}
+                {/* PLAN.md loading skeleton */}
+                {repo.planLoading && (
+                    <div className="mb-4 space-y-2">
+                        <div className="h-2 bg-stone-100 rounded-full animate-pulse w-24" />
+                        <div className="h-1.5 bg-stone-100 rounded-full animate-pulse" />
+                    </div>
+                )}
 
-                    {/* PLAN.md progress */}
-                    {!repo.planLoading && plan && plan.totalTasks > 0 && (
-                        <div className="mb-4 space-y-2">
-                            <div className="flex items-center justify-between text-xs text-stone-500">
-                                <span className="font-bold uppercase tracking-wider">Plan</span>
-                                <span>{plan.totalDone}/{plan.totalTasks} tasks</span>
-                            </div>
-                            <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full rounded-full transition-all duration-700"
-                                    style={{ width: `${progress}%`, backgroundColor: cfg.color }}
-                                />
-                            </div>
-                            <div className="flex flex-wrap gap-1.5">
-                                {plan.milestones.map((m, i) => (
+                {/* PLAN.md progress */}
+                {!repo.planLoading && plan && plan.totalTasks > 0 && (
+                    <div className="mb-4 space-y-2">
+                        <div className="flex items-center justify-between text-xs text-stone-500">
+                            <span className="font-bold uppercase tracking-wider">Plan</span>
+                            <span>{plan.totalDone}/{plan.totalTasks} tasks</span>
+                        </div>
+                        <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                            <div
+                                className="h-full rounded-full transition-all duration-700"
+                                style={{ width: `${progress}%`, backgroundColor: cfg.color }}
+                            />
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {plan.milestones.map((m, i) => (
+                                <span
+                                    key={i}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-stone-50 border border-stone-200 text-stone-500 text-xs rounded-md"
+                                >
                                     <span
-                                        key={i}
-                                        className="inline-flex items-center gap-1 px-2 py-0.5 bg-stone-50 border border-stone-200 text-stone-500 text-xs rounded-md"
-                                    >
-                                        <span
-                                            className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                                            style={{ backgroundColor: m.total > 0 && m.done === m.total ? '#22c55e' : cfg.color }}
-                                        />
-                                        <span className="truncate max-w-[100px]">{m.title}</span>
-                                        <span className="text-stone-300">·</span>
-                                        {m.done}/{m.total}
-                                    </span>
-                                ))}
-                            </div>
+                                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                                        style={{ backgroundColor: m.total > 0 && m.done === m.total ? '#22c55e' : cfg.color }}
+                                    />
+                                    <span className="truncate max-w-[100px]">{m.title}</span>
+                                    <span className="text-stone-300">·</span>
+                                    {m.done}/{m.total}
+                                </span>
+                            ))}
                         </div>
-                    )}
 
-                    {!repo.planLoading && plan === null && (
-                        <p className="mb-4 text-xs text-stone-300 italic">no plan yet</p>
-                    )}
-
-                    {/* Footer */}
-                    <div className="mt-auto flex items-center justify-between pt-3 border-t border-stone-100">
-                        <a
-                            href={repo.html_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-700 transition-colors"
-                        >
-                            <Github size={13} /> GitHub
-                        </a>
+                        {/* Open sidebar button */}
                         <button
-                            onClick={handleLockIn}
-                            title="Copy Claude Code command to clipboard"
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#3B5BDB] text-white text-xs font-semibold rounded-full hover:bg-[#2F4AC7] transition-colors"
+                            onClick={() => onShowPlan(repo, plan)}
+                            className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-[#3B5BDB] transition-colors mt-1 group/plan"
                         >
-                            {copied ? <Check size={12} /> : <Terminal size={12} />}
-                            {copied ? 'Copied!' : 'Lock in'}
+                            <ListChecks size={13} className="group-hover/plan:scale-110 transition-transform" />
+                            View all steps
                         </button>
                     </div>
+                )}
+
+                {!repo.planLoading && plan === null && (
+                    <p className="mb-4 text-xs text-stone-300 italic">no plan yet</p>
+                )}
+
+                {/* Footer */}
+                <div className="mt-auto flex items-center justify-between pt-3 border-t border-stone-100">
+                    <a
+                        href={repo.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-700 transition-colors"
+                    >
+                        <Github size={13} /> GitHub
+                    </a>
+                    <button
+                        onClick={handleLockIn}
+                        title="Copy Claude Code command to clipboard"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#3B5BDB] text-white text-xs font-semibold rounded-full hover:bg-[#2F4AC7] transition-colors"
+                    >
+                        {copied ? <Check size={12} /> : <Terminal size={12} />}
+                        {copied ? 'Copied!' : 'Lock in'}
+                    </button>
                 </div>
-            </motion.article>
+            </div>
+        </motion.article>
     );
 };
 
@@ -262,8 +504,12 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filter, setFilter] = useState<FilterTab>('all');
+    const [langFilter, setLangFilter] = useState('');
+    const [topicFilter, setTopicFilter] = useState('');
     const [search, setSearch] = useState('');
     const [scrolled, setScrolled] = useState(false);
+    const [activePlan, setActivePlan] = useState<{ repo: Repo; plan: PlanData } | null>(null);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 50);
@@ -271,44 +517,62 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    useEffect(() => {
-        const fetchAll = async () => {
-            try {
-                const res = await fetch(
-                    'https://api.github.com/users/ikathuria/repos?type=public&per_page=100&sort=pushed'
-                );
-                if (!res.ok) throw new Error(`GitHub API responded with ${res.status}`);
-                const data: Repo[] = await res.json();
-
-                setRepos(data.map(r => ({ ...r, planData: undefined, planLoading: true })));
-                setLoading(false);
-
-                // Fan out PLAN.md fetches in parallel
-                await Promise.allSettled(
-                    data.map(async repo => {
-                        try {
-                            const pr = await fetch(
-                                `https://raw.githubusercontent.com/ikathuria/${repo.name}/main/PLAN.md`
-                            );
-                            const planData = pr.ok ? parsePlan(await pr.text()) : null;
-                            setRepos(prev =>
-                                prev.map(r => r.id === repo.id ? { ...r, planData, planLoading: false } : r)
-                            );
-                        } catch {
-                            setRepos(prev =>
-                                prev.map(r => r.id === repo.id ? { ...r, planData: null, planLoading: false } : r)
-                            );
-                        }
-                    })
-                );
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to load repositories');
-                setLoading(false);
+    const fetchAll = async (isRefresh = false) => {
+        try {
+            if (isRefresh) {
+                setRefreshing(true);
+                setActivePlan(null);
+            } else {
+                setLoading(true);
             }
-        };
+            setError(null);
 
-        fetchAll();
-    }, []);
+            const res = await fetch(
+                'https://api.github.com/users/ikathuria/repos?type=public&per_page=100&sort=pushed',
+                { headers: { Accept: 'application/vnd.github+json' } }
+            );
+            if (!res.ok) throw new Error(`GitHub API responded with ${res.status}`);
+            const data: Repo[] = await res.json();
+
+            setRepos(data.map(r => ({ ...r, planData: undefined, planLoading: true })));
+            setLoading(false);
+
+            await Promise.allSettled(
+                data.map(async repo => {
+                    try {
+                        const branch = repo.default_branch || 'main';
+                        const pr = await fetch(
+                            `https://raw.githubusercontent.com/ikathuria/${repo.name}/${branch}/PLAN.md`,
+                            { cache: 'no-store' }
+                        );
+                        const planData = pr.ok ? parsePlan(await pr.text()) : null;
+                        setRepos(prev =>
+                            prev.map(r => r.id === repo.id ? { ...r, planData, planLoading: false } : r)
+                        );
+                    } catch {
+                        setRepos(prev =>
+                            prev.map(r => r.id === repo.id ? { ...r, planData: null, planLoading: false } : r)
+                        );
+                    }
+                })
+            );
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load repositories');
+            setLoading(false);
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
+    useEffect(() => { fetchAll(); }, []);
+
+    const uniqueLangs = Array.from(
+        new Set(repos.map(r => r.language).filter(Boolean) as string[])
+    ).sort();
+
+    const uniqueTopics = Array.from(
+        new Set(repos.flatMap(r => r.topics ?? []))
+    ).sort();
 
     const filtered = repos.filter(repo => {
         const status = getStatus(repo);
@@ -316,12 +580,14 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
             filter === 'all' ||
             filter === status ||
             (filter === 'archived' && repo.archived);
+        const matchesLang = !langFilter || repo.language === langFilter;
+        const matchesTopic = !topicFilter || (repo.topics ?? []).includes(topicFilter);
         const q = search.toLowerCase();
         const matchesSearch =
             !q ||
             repo.name.toLowerCase().includes(q) ||
             (repo.description?.toLowerCase().includes(q) ?? false);
-        return matchesFilter && matchesSearch;
+        return matchesFilter && matchesLang && matchesTopic && matchesSearch;
     });
 
     const counts: Record<FilterTab, number> = {
@@ -337,6 +603,8 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
         { key: 'stale',    label: 'Stale' },
         { key: 'archived', label: 'Archived' },
     ];
+
+    const selectClass = "h-9 pl-3 pr-8 bg-white border border-stone-200 rounded-full text-sm text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 appearance-none cursor-pointer hover:border-stone-400 transition-all";
 
     return (
         <div className="min-h-screen bg-[#FAFAF8] text-stone-800">
@@ -355,15 +623,25 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                         Ishani<span className="text-stone-400">.build</span>
                     </span>
 
-                    <a
-                        href="https://github.com/ikathuria"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="GitHub profile"
-                        className="p-2 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-all"
-                    >
-                        <Github size={20} />
-                    </a>
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => fetchAll(true)}
+                            disabled={refreshing || loading}
+                            title="Refresh repos and plans"
+                            className="p-2 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-all disabled:opacity-40"
+                        >
+                            <RefreshCw size={18} className={refreshing ? 'animate-spin' : ''} />
+                        </button>
+                        <a
+                            href="https://github.com/ikathuria"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="GitHub profile"
+                            className="p-2 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-all"
+                        >
+                            <Github size={20} />
+                        </a>
+                    </div>
                 </div>
             </nav>
 
@@ -386,22 +664,67 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
 
                 {/* Search + filters */}
                 <motion.div
-                    className="flex flex-col sm:flex-row gap-3 mb-8"
+                    className="flex flex-col gap-3 mb-8"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                    <div className="relative max-w-xs w-full">
-                        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
-                        <input
-                            type="text"
-                            placeholder="Search repos…"
-                            value={search}
-                            onChange={e => setSearch(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-full text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 transition-all"
-                        />
+                    {/* Row 1: search + language + topic dropdowns */}
+                    <div className="flex flex-wrap gap-3 items-center">
+                        <div className="relative">
+                            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
+                            <input
+                                type="text"
+                                placeholder="Search repos…"
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                                className="h-9 pl-9 pr-4 bg-white border border-stone-200 rounded-full text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 transition-all w-48"
+                            />
+                        </div>
+
+                        {uniqueLangs.length > 0 && (
+                            <div className="relative">
+                                <select
+                                    value={langFilter}
+                                    onChange={e => setLangFilter(e.target.value)}
+                                    className={selectClass}
+                                >
+                                    <option value="">All languages</option>
+                                    {uniqueLangs.map(l => (
+                                        <option key={l} value={l}>{l}</option>
+                                    ))}
+                                </select>
+                                <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
+                            </div>
+                        )}
+
+                        {uniqueTopics.length > 0 && (
+                            <div className="relative">
+                                <select
+                                    value={topicFilter}
+                                    onChange={e => setTopicFilter(e.target.value)}
+                                    className={selectClass}
+                                >
+                                    <option value="">All topics</option>
+                                    {uniqueTopics.map(t => (
+                                        <option key={t} value={t}>{t}</option>
+                                    ))}
+                                </select>
+                                <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
+                            </div>
+                        )}
+
+                        {(langFilter || topicFilter) && (
+                            <button
+                                onClick={() => { setLangFilter(''); setTopicFilter(''); }}
+                                className="text-xs text-stone-400 hover:text-stone-700 underline underline-offset-2 transition-colors"
+                            >
+                                Clear filters
+                            </button>
+                        )}
                     </div>
 
+                    {/* Row 2: status pills */}
                     <div className="flex gap-2 flex-wrap">
                         {filterTabs.map(f => (
                             <button
@@ -443,7 +766,7 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
 
                 {!loading && !error && filtered.length === 0 && (
                     <div className="text-center py-20 text-stone-400 font-serif text-xl">
-                        No repositories match your search.
+                        No repositories match your filters.
                     </div>
                 )}
 
@@ -463,11 +786,23 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                                     ?? repo.description
                                     ?? null
                                 }
+                                onShowPlan={(r, p) => setActivePlan({ repo: r, plan: p })}
                             />
                         ))}
                     </motion.div>
                 )}
             </main>
+
+            {/* Plan sidebar portal */}
+            <AnimatePresence>
+                {activePlan && (
+                    <PlanSidebar
+                        repo={activePlan.repo}
+                        plan={activePlan.plan}
+                        onClose={() => setActivePlan(null)}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 };
