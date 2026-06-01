@@ -8,8 +8,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { AbstractImpactScene } from './components/QuantumScene';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
-import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, GraduationCap, Briefcase, Code, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe, User, Bot, Copy, Check, Sparkles } from 'lucide-react';
-import { papers, projects, resume, PortfolioItem } from './data';
+import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, GraduationCap, Briefcase, Code, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe, User, Bot, Copy, Check, Sparkles, Trophy, Users, MapPin, PlayCircle } from 'lucide-react';
+import { papers, projects, hackathons, resume, PortfolioItem } from './data';
 import Dashboard from './components/Dashboard';
 
 const BRAND = '#3B5BDB';
@@ -86,6 +86,7 @@ const IMPACT_STATS: Array<{
     { displayValue: null, numericEnd: 172, prefix: '', suffix: 'K+', label: 'lines of code shipped' },
     { displayValue: null, numericEnd: 200, prefix: '', suffix: '+', label: 'students mentored into AI' },
     { displayValue: null, numericEnd: 4, prefix: '', suffix: '', label: 'peer-reviewed papers' },
+    { displayValue: null, numericEnd: 6, prefix: '', suffix: '', label: 'hackathons built & led' },
     { displayValue: '4.0 GPA', numericEnd: null, prefix: '', suffix: '', label: 'at Purdue University' },
 ];
 
@@ -108,6 +109,7 @@ $50K/mo      infrastructure costs saved
 172K+        lines of code shipped to production
 200+         students mentored into AI careers
 4            peer-reviewed papers (IEEE + Springer)
+6            hackathons built & led
 4.0 GPA      at Purdue University
 
 ---
@@ -139,6 +141,41 @@ GitHub: https://github.com/ikathuria/AutoRedTeam
 Project · 2026
 Client-side Edge AI forensic tool for synthetic audio detection.
 Built a client-side AI forensic tool using Transformers.js to detect synthetic audio directly in-browser, preserving user privacy. Sub-second latency, fully client-side.
+
+---
+
+## Hackathons
+
+### How Cooked Am I? — Vibe-Coded Creator Hackathon
+May 31, 2026 · Chicago (hosted by Play)
+An AI tool that roasts then rebuilds content creators — returns a 'cookedScore', a diagnosis, and a three-phase growth plan. Team of 3, built end-to-end with Replit Agent in ~1 hour.
+GitHub: https://github.com/ikathuria/HowCookedAmI
+Demo: https://how-cooked-am-i.replit.app/
+
+### GROUNDWORK — Hack-Nation Global AI Hackathon
+Apr 25–26, 2026 · San Francisco
+Literature-synthesis engine turning a research question into a traceable, experiment-ready brief across arXiv, Semantic Scholar & more.
+GitHub: https://github.com/ikathuria/groundwork
+
+### GlobalBuddy — HackwithChicago 3.0
+Apr 2, 2026 · Microsoft, Chicago
+Graph-powered support platform helping international students navigate a new US city. Neo4j + FastAPI + Vue.
+GitHub: https://github.com/ikathuria/GlobalBuddy
+
+### VibeCut — Google Hackathon
+Mar 14, 2026 · Drive Capital, Chicago
+AI-native video editor with semantic search, transcription-aware cuts, and generative media. Gemini + Next.js.
+GitHub: https://github.com/slab10000/Google-Hackathon
+
+### RealityShift — Mistral AI Hackathon
+Feb 28 – Mar 1, 2026 · San Francisco
+Voice-controlled RPG where an 'Architect' AI rewrites the game's source code in real time. Mistral devstral + ElevenLabs.
+GitHub: https://github.com/ikathuria/RealityShift
+Demo: https://www.youtube.com/watch?v=jj_8OoTdjRQ
+
+### SIREN One-Day App Challenge — Founder & President, Purdue Northwest
+Apr 3, 2026
+Founded and ran a one-day build challenge — 70+ registrants, 7 final teams, $200 in prizes.
 
 ---
 
@@ -261,6 +298,79 @@ const PaperCard = ({ item }: { item: PortfolioItem }) => (
     </motion.article>
 );
 
+const HackathonCard = ({ item }: { item: typeof hackathons[number] }) => {
+    const isOrganizer = item.role === 'organizer';
+    return (
+        <motion.article
+            className="group bg-white rounded-3xl p-7 border border-stone-200/80 relative overflow-hidden h-full flex flex-col"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -6, rotate: -0.4, boxShadow: '0 20px 48px rgba(15,23,42,0.10), 0 4px 0 rgba(15,23,42,0.04)' }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            viewport={{ once: true, amount: 0.3 }}
+            style={{ boxShadow: '0 2px 8px rgba(15,23,42,0.05), 0 0 0 1px rgba(15,23,42,0.04)' }}
+        >
+            <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{ background: `linear-gradient(135deg, ${item.themeColor}10 0%, transparent 60%)` }} />
+            <div className="flex flex-col flex-grow relative z-10">
+                <div className="flex items-start justify-between gap-2 mb-4">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold w-fit"
+                        style={{ background: item.themeColor + '18', color: item.themeColor }}>
+                        {item.hackathon} · {item.date}
+                    </div>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md flex-shrink-0"
+                        style={isOrganizer ? { background: item.themeColor + '18', color: item.themeColor } : { background: '#f5f5f4', color: '#a8a29e' }}>
+                        {isOrganizer ? <><Trophy size={11} /> Organizer</> : <><Code size={11} /> Builder</>}
+                    </span>
+                </div>
+                <h3 className="font-serif text-xl text-stone-900 mb-2 leading-snug">{item.project}</h3>
+                {(item.location || (item.team && item.team.length > 0)) && (
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-stone-400 mb-3">
+                        {item.location && <span className="inline-flex items-center gap-1"><MapPin size={11} /> {item.location}</span>}
+                        {item.team && item.team.length > 0 && <span className="inline-flex items-center gap-1"><Users size={11} /> with {item.team.join(', ')}</span>}
+                    </div>
+                )}
+                <p className="text-stone-500 text-sm leading-relaxed mb-5 flex-grow">{item.tagline}</p>
+            </div>
+            <div className="relative z-10 flex items-center justify-between gap-3 pt-4 border-t border-stone-100 mt-auto">
+                <div className="flex flex-wrap gap-1.5">
+                    {item.techStack?.slice(0, 3).map(t => (
+                        <span key={t} className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-stone-100 text-stone-500">{t}</span>
+                    ))}
+                </div>
+                <div className="flex gap-1.5 flex-shrink-0">
+                    {item.links.github && (
+                        <a href={item.links.github} target="_blank" rel="noopener noreferrer"
+                            className="w-7 h-7 rounded-full bg-stone-900 text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="GitHub">
+                            <Github size={12} />
+                        </a>
+                    )}
+                    {item.links.video && (
+                        <a href={item.links.video} target="_blank" rel="noopener noreferrer"
+                            className="w-7 h-7 rounded-full bg-red-600 text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="Demo video">
+                            <PlayCircle size={12} />
+                        </a>
+                    )}
+                    {item.links.demo && (
+                        <a href={item.links.demo} target="_blank" rel="noopener noreferrer"
+                            className="w-7 h-7 rounded-full text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="Demo"
+                            style={{ backgroundColor: item.themeColor }}>
+                            <ArrowUpRight size={12} />
+                        </a>
+                    )}
+                    {item.links.linkedin && (
+                        <a href={item.links.linkedin} target="_blank" rel="noopener noreferrer"
+                            className="w-7 h-7 rounded-full text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="LinkedIn write-up"
+                            style={{ backgroundColor: '#0A66C2' }}>
+                            <Linkedin size={12} />
+                        </a>
+                    )}
+                </div>
+            </div>
+        </motion.article>
+    );
+};
+
 const CodeTerminal = ({ code, color }: { code: string; color: string }) => (
     <div className="w-full max-w-2xl bg-stone-900 rounded-lg shadow-2xl overflow-hidden border border-stone-800 font-mono text-xs md:text-sm my-8">
         <div className="bg-stone-800 px-4 py-2 flex items-center gap-2 border-b border-stone-700">
@@ -319,7 +429,7 @@ const StatCard = ({ stat, index }: { stat: typeof IMPACT_STATS[0]; index: number
 const ImpactStrip = () => (
     <section className="border-y border-stone-100 bg-white py-4">
         <div className="container mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
                 {IMPACT_STATS.map((stat, i) => <StatCard key={i} stat={stat} index={i} />)}
             </div>
         </div>
@@ -455,6 +565,22 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                             {project.metadata.githubUrl && <MLink href={project.metadata.githubUrl}>View Code →</MLink>}
                             {project.metadata.demoUrl && <MLink href={project.metadata.demoUrl}>Live Demo →</MLink>}
                             {project.metadata.link && <MLink href={project.metadata.link}>Read More →</MLink>}
+                        </div>
+                    </div>
+                ))}
+                <Hr />
+                <H2>Hackathons</H2>
+                {hackathons.map(h => (
+                    <div key={h.id}>
+                        <H3>{h.project}</H3>
+                        <div className="text-stone-600 mb-1">{h.hackathon} · {h.date}{h.location ? ` · ${h.location}` : ''}</div>
+                        <p className="text-stone-400 italic mb-2">{h.tagline}</p>
+                        {h.techStack && <p className="text-stone-600 mb-2">Tech Stack: {h.techStack.join(', ')}</p>}
+                        <div className="flex flex-wrap gap-4 mb-2">
+                            {h.links.github && <MLink href={h.links.github}>View Code →</MLink>}
+                            {h.links.video && <MLink href={h.links.video}>Watch Demo →</MLink>}
+                            {h.links.demo && <MLink href={h.links.demo}>Live Demo →</MLink>}
+                            {h.links.linkedin && <MLink href={h.links.linkedin}>Write-up →</MLink>}
                         </div>
                     </div>
                 ))}
@@ -686,7 +812,7 @@ const App: React.FC = () => {
     useEffect(() => { window.scrollTo(0, 0); setShowTechnical(false); }, [activeItemId, showDashboard]);
 
     const activeItem = allItems.find(p => p.id === activeItemId);
-    const activeSection = useActiveSection(['work', 'research', 'resume']);
+    const activeSection = useActiveSection(['work', 'hackathons', 'research', 'resume']);
 
     if (showDashboard) return <Dashboard onBack={() => setShowDashboard(false)} />;
     if (!activeItem && machineMode) return <MachineMode onToggle={() => setMachineMode(false)} />;
@@ -708,7 +834,7 @@ const App: React.FC = () => {
                     <span className="font-serif font-bold px-2 mr-1 text-stone-900">
                         Ishani<span className="text-stone-400">.ai</span>
                     </span>
-                    {([['work', 'Projects'], ['research', 'Research'], ['resume', 'Resume']] as [string, string][]).map(([id, label]) => (
+                    {([['work', 'Projects'], ['hackathons', 'Hackathons'], ['research', 'Research'], ['resume', 'Resume']] as [string, string][]).map(([id, label]) => (
                         <a key={id} href={`#${id}`}
                             className={`px-3 py-1.5 rounded-full transition-colors text-sm ${activeSection === id ? 'bg-stone-900 text-white' : 'text-stone-500 hover:text-stone-900 hover:bg-stone-100'}`}>
                             {label}
@@ -735,7 +861,8 @@ const App: React.FC = () => {
 
                 {menuOpen && (
                     <div className="fixed inset-0 z-40 bg-[#FAFAF8] flex flex-col items-center justify-center gap-8 text-xl font-serif animate-fade-in text-stone-900">
-                        <a href="#projects" onClick={() => setMenuOpen(false)}>Projects</a>
+                        <a href="#work" onClick={() => setMenuOpen(false)}>Projects</a>
+                        <a href="#hackathons" onClick={() => setMenuOpen(false)}>Hackathons</a>
                         <a href="#research" onClick={() => setMenuOpen(false)}>Research</a>
                         <a href="#resume" onClick={() => setMenuOpen(false)}>Resume</a>
                         <button onClick={() => { setMenuOpen(false); setShowDashboard(true); }}>Dashboard</button>
@@ -848,6 +975,23 @@ const App: React.FC = () => {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                                 {projects.map(project => <PaperCard key={project.id} item={project} />)}
+                            </div>
+                        </div>
+                    </motion.section>
+
+                    {/* Hackathons — card grid, link-out */}
+                    <motion.section id="hackathons" className="py-24 bg-[#FAFAF7] border-t border-stone-100"
+                        initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true, amount: 0.15 }}>
+                        <div className="container mx-auto px-6">
+                            <div className="mb-10">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 border border-stone-200 text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">
+                                    <Trophy size={12} /> Hackathons
+                                </div>
+                                <h2 className="font-serif text-4xl text-stone-900 mb-3">Built in a Weekend</h2>
+                                <p className="text-stone-400 max-w-xl text-sm leading-relaxed">Rapid prototypes from AI hackathons across the country — plus one I founded and ran at Purdue Northwest.</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                                {hackathons.map(h => <HackathonCard key={h.id} item={h} />)}
                             </div>
                         </div>
                     </motion.section>

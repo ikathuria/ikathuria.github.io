@@ -403,6 +403,122 @@ def build_dual_model():
   }
 ];
 
+export interface Hackathon {
+  id: string;
+  project: string;
+  hackathon: string;
+  date: string;
+  location?: string;
+  role: 'builder' | 'organizer';
+  tagline: string;
+  techStack?: string[];
+  team?: string[];
+  themeColor: string;
+  links: {
+    github?: string;
+    demo?: string;
+    video?: string;
+    linkedin?: string;
+  };
+}
+
+export const hackathons: Hackathon[] = [
+  {
+    id: 'howcookedami',
+    project: 'How Cooked Am I?',
+    hackathon: 'Vibe-Coded Creator Hackathon',
+    date: 'May 31, 2026',
+    location: 'Chicago · hosted by Play',
+    role: 'builder',
+    team: ["Yasaa Usman", "Shreya Naresh Manjucha"],
+    tagline: "An AI tool that roasts then rebuilds content creators — feed it your niche, platform & stats and it returns a brutally honest 'cookedScore', a diagnosis of what's holding you back, and a three-phase growth plan. Built end-to-end with Replit Agent in ~1 hour.",
+    techStack: ["Replit Agent", "Gemini", "React 19", "Expo"],
+    themeColor: "#EC4899", // Pink
+    links: {
+      github: "https://github.com/ikathuria/HowCookedAmI",
+      demo: "https://how-cooked-am-i.replit.app/",
+      linkedin: "https://www.linkedin.com/posts/ishani-kathuria_ai-hackathon-replitagent-ugcPost-7467322741529026560-iCK4",
+    },
+  },
+  {
+    id: 'groundwork',
+    project: 'GROUNDWORK',
+    hackathon: 'Hack-Nation Global AI Hackathon',
+    date: 'Apr 25–26, 2026',
+    location: 'San Francisco',
+    role: 'builder',
+    team: ["Blas Moreno Laguna"],
+    tagline: "A literature-synthesis engine that turns a research question into a traceable, experiment-ready brief — deep search across arXiv, Semantic Scholar, OpenReview & Papers With Code.",
+    techStack: ["Claude Code", "Next.js", "arXiv API", "Semantic Scholar"],
+    themeColor: "#8B5CF6", // Violet
+    links: {
+      github: "https://github.com/ikathuria/groundwork",
+      demo: "https://hack-nation.ai/",
+      linkedin: "https://www.linkedin.com/posts/ishani-kathuria_hacknation-buildinpublic-ai-activity-7455632096628424704-TnI_",
+    },
+  },
+  {
+    id: 'globalbuddy',
+    project: 'GlobalBuddy · Globalदोस्त',
+    hackathon: 'HackwithChicago 3.0',
+    date: 'Apr 2, 2026',
+    location: 'Microsoft, Chicago',
+    role: 'builder',
+    team: ["Yasaa Usman", "Jinen Modi"],
+    tagline: "A graph-powered support platform that helps international students navigate life in a new US city — turning a profile into a 30-day plan and a network of people, places & tasks in three steps.",
+    techStack: ["Neo4j", "FastAPI", "Vue.js", "Gemini"],
+    themeColor: "#14B8A6", // Teal
+    links: {
+      github: "https://github.com/ikathuria/GlobalBuddy",
+      linkedin: "https://www.linkedin.com/posts/ishani-kathuria_hackathon-buildinpublic-neo4j-activity-7447051822684585984-Cc52",
+    },
+  },
+  {
+    id: 'vibecut',
+    project: 'VibeCut',
+    hackathon: 'Google Hackathon',
+    date: 'Mar 14, 2026',
+    location: 'Drive Capital, Chicago',
+    role: 'builder',
+    team: ["Blas Moreno Laguna"],
+    tagline: "An AI-native video editor — semantic clip search, transcription-aware word-level cuts, natural-language editing, and generative image/video media, all in the browser.",
+    techStack: ["Gemini", "Next.js", "React", "ffmpeg"],
+    themeColor: "#4285F4", // Google Blue
+    links: {
+      github: "https://github.com/slab10000/Google-Hackathon",
+    },
+  },
+  {
+    id: 'realityshift',
+    project: 'RealityShift',
+    hackathon: 'Mistral AI Hackathon',
+    date: 'Feb 28 – Mar 1, 2026',
+    location: 'San Francisco',
+    role: 'builder',
+    tagline: "A voice-controlled RPG where an omnipresent 'Architect' AI rewrites the game's source code in real time — turning live coding into gameplay. Sponsored stack from NVIDIA, Hugging Face & W&B.",
+    techStack: ["Mistral devstral", "ElevenLabs", "React", "TypeScript", "Supabase"],
+    themeColor: "#F97316", // Mistral Orange
+    links: {
+      github: "https://github.com/ikathuria/RealityShift",
+      video: "https://www.youtube.com/watch?v=jj_8OoTdjRQ",
+      linkedin: "https://www.linkedin.com/posts/ishani-kathuria_mistralhack-the-reality-shift-rpg-activity-7434398396876107776-GnBP",
+    },
+  },
+  {
+    id: 'siren',
+    project: 'SIREN One-Day App Challenge',
+    hackathon: 'Founder & President · Purdue Northwest',
+    date: 'Apr 3, 2026',
+    location: 'Purdue University Northwest',
+    role: 'organizer',
+    tagline: "Founded and ran a one-day build challenge to lower the barrier between an idea and a working prototype — 70+ registrants, 7 final teams, and $200 in prizes, backed by PNW faculty mentors.",
+    themeColor: "#F59E0B", // Amber
+    links: {
+      linkedin: "https://www.linkedin.com/posts/ishani-kathuria_studentleadership-techcommunity-siren-activity-7447267037174824960-dk3P",
+    },
+  },
+];
+
 export const resume = {
   education: [
     {
