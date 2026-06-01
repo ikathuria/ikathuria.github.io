@@ -176,6 +176,7 @@ Demo: https://www.youtube.com/watch?v=jj_8OoTdjRQ
 ### SIREN One-Day App Challenge — Founder & President, Purdue Northwest
 Apr 3, 2026
 Founded and ran a one-day build challenge — 70+ registrants, 7 final teams, $200 in prizes.
+Event: https://ishani.kathuria.net/siren-student-research-pnw/odadc/2026
 
 ---
 

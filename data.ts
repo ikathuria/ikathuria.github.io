@@ -514,6 +514,7 @@ export const hackathons: Hackathon[] = [
     tagline: "Founded and ran a one-day build challenge to lower the barrier between an idea and a working prototype — 70+ registrants, 7 final teams, and $200 in prizes, backed by PNW faculty mentors.",
     themeColor: "#F59E0B", // Amber
     links: {
+      demo: "https://ishani.kathuria.net/siren-student-research-pnw/odadc/2026",
       linkedin: "https://www.linkedin.com/posts/ishani-kathuria_studentleadership-techcommunity-siren-activity-7447267037174824960-dk3P",
     },
   },
