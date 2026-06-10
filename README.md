@@ -10,12 +10,12 @@ Built with a modern frontend stack focusing on performance and interactivity:
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **3D Visualization**: [Three.js](https://threejs.org/) via [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
 - **Icons**: [Lucide React](https://lucide.dev/)
 
 ## Features
 
-- **Interactive 3D Backgrounds**: Custom shaders and particle systems for unique visual identities per project.
+- **Animated SVG Illustrations**: Hand-built diagrams and draw-in illustrations giving each project a unique visual identity.
+- **Human/Machine Toggle**: A markdown-style "machine mode" resume view with one-click copy as plain text.
 - **Dynamic Content Rendering**: Data-driven components for papers, projects, and resume sections.
 - **Responsive Design**: Fully optimized for mobile and desktop viewing.
 

@@ -434,7 +434,7 @@ const StatCard = ({ stat, index }: { stat: typeof IMPACT_STATS[0]; index: number
 const ImpactStrip = () => (
     <section className="border-y border-stone-100 bg-white py-4">
         <div className="container mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-2">
                 {IMPACT_STATS.map((stat, i) => <StatCard key={i} stat={stat} index={i} />)}
             </div>
         </div>
@@ -447,7 +447,7 @@ const AboutSection = () => (
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.1 }}
     >
         <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
@@ -503,18 +503,18 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
 
     return (
         <div className="min-h-screen bg-[#0D0D0F] font-mono text-sm">
-            <div className="sticky top-0 z-50 bg-[#0D0D0F]/95 backdrop-blur-sm border-b border-stone-800 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
+            <div className="sticky top-0 z-50 bg-[#0D0D0F]/95 backdrop-blur-sm border-b border-stone-800 px-4 sm:px-6 py-4 flex items-center justify-between gap-2">
+                <div className="hidden sm:flex items-center gap-3">
                     <div className="flex gap-1.5">
                         <div className="w-3 h-3 rounded-full bg-red-500/80" />
                         <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                         <div className="w-3 h-3 rounded-full bg-green-500/80" />
                     </div>
-                    <span className="text-xs text-stone-500 ml-2">ishani.kathuria.net</span>
+                    <span className="text-xs text-stone-500 ml-2 hidden md:inline">ishani.kathuria.net</span>
                 </div>
-                <div className="flex items-center gap-3">
-                    <button onClick={handleCopy} className="flex items-center gap-2 text-xs px-3 py-1.5 rounded border border-stone-700 hover:border-indigo-500 hover:text-indigo-400 transition-colors text-stone-400">
-                        {copied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy as Text</>}
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink min-w-0">
+                    <button onClick={handleCopy} className="flex items-center gap-2 text-xs px-3 py-1.5 rounded border border-stone-700 hover:border-indigo-500 hover:text-indigo-400 transition-colors text-stone-400 whitespace-nowrap">
+                        {copied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> <span className="hidden sm:inline">Copy as Text</span><span className="sm:hidden">Copy</span></>}
                     </button>
                     <div className="flex items-center gap-0.5 bg-stone-900 rounded-full p-1 border border-stone-800">
                         <button onClick={onToggle} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-stone-500 hover:text-stone-300 transition-colors text-xs"><User size={11} /> Human</button>
@@ -540,7 +540,7 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                 <div className="flex flex-wrap gap-4 mb-2">
                     <MLink href="#projects">View Projects</MLink>
                     <MLink href="#research">View Publications</MLink>
-                    <MLink href="mailto:ishani@kathuria.net?subject=Resume%20Request">Request Resume</MLink>
+                    <MLink href="/resume.pdf">Download Resume</MLink>
                 </div>
                 <Hr />
                 <H2>Impact</H2>
@@ -671,15 +671,18 @@ const ResumeSection = () => (
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
-        viewport={{ once: true, amount: 0.25 }}
+        viewport={{ once: true, amount: 0.1 }}
     >
         <div className="container mx-auto px-6">
             <div className="text-center mb-16">
                 <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-500 uppercase">EXPERIENCE & EDUCATION</div>
                 <h2 className="font-serif text-4xl md:text-5xl mb-4 text-stone-900">Resume</h2>
-                <div className="flex justify-center mt-6">
-                    <a href="mailto:ishani@kathuria.net?subject=Resume%20Request" className="px-8 py-3 rounded-full text-white text-sm font-medium hover:opacity-90 transition-all inline-flex items-center gap-2 shadow-lg hover:-translate-y-0.5" style={{ backgroundColor: BRAND }}>
-                        <FileText size={18} /> Request Full Resume
+                <div className="flex flex-col items-center gap-3 mt-6">
+                    <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="px-8 py-3 rounded-full text-white text-sm font-medium hover:opacity-90 transition-all inline-flex items-center gap-2 shadow-lg hover:-translate-y-0.5" style={{ backgroundColor: BRAND }}>
+                        <FileText size={18} /> Download Resume (PDF)
+                    </a>
+                    <a href="mailto:ishani@kathuria.net?subject=Resume%20Request" className="text-xs text-stone-400 hover:text-stone-600 underline underline-offset-2 transition-colors">
+                        or email me for the latest version
                     </a>
                 </div>
             </div>
@@ -874,7 +877,7 @@ const App: React.FC = () => {
                 <header className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#FAFAF7]">
                     {/* Decorative sticker cluster — desktop only */}
                     {/* Stickers live ABOVE the name (top ≤ 28%) and BELOW the CTAs (bottom ≤ 24%) */}
-                    <div className="hidden lg:block absolute inset-0 pointer-events-none select-none">
+                    <div className="hidden xl:block absolute inset-0 pointer-events-none select-none">
                         {/* Above-name row */}
                         <div className="absolute left-[5%] top-[20%]">
                             <Sticker color="indigo" rotation={-2}><Layers size={14} /> Multi-Agent AI</Sticker>
@@ -911,13 +914,13 @@ const App: React.FC = () => {
                         <div className="h-8 mb-8 overflow-hidden flex items-center justify-center">
                             <AnimatePresence mode="wait">
                                 <motion.p key={subtitleIndex} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.45 }}
-                                    className="text-stone-400 text-base md:text-xl italic font-light">
+                                    className="text-stone-500 text-base md:text-xl italic font-light">
                                     {SUBTITLES[subtitleIndex]}
                                 </motion.p>
                             </AnimatePresence>
                         </div>
                         {/* Sticker chips — inline below name on non-lg screens */}
-                        <div className="flex lg:hidden flex-wrap gap-2 justify-center mb-8 px-4">
+                        <div className="flex xl:hidden flex-wrap gap-2 justify-center mb-8 px-4">
                             <Sticker color="yellow" rotation={-2}><Briefcase size={13} /> Ex-AWS</Sticker>
                             <Sticker color="mint" rotation={1.5}><GraduationCap size={13} /> Purdue · 4.0</Sticker>
                             <Sticker color="purple" rotation={-1.5}><FileText size={13} /> 4× Published</Sticker>
@@ -1250,7 +1253,9 @@ const App: React.FC = () => {
                             <p className="text-lg text-stone-600 mb-8 leading-relaxed">{narrative.impact}</p>
                             <div className="p-6 bg-[#FAFAF7] border border-stone-200 rounded-2xl border-l-4" style={{ borderLeftColor: metadata.themeColor }}>
                                 <p className="font-serif italic text-xl text-stone-800 mb-3">"{metadata.title}"</p>
-                                <span className="text-xs font-bold text-stone-400 tracking-widest uppercase">— Published in {metadata.venue}</span>
+                                <span className="text-xs font-bold text-stone-400 tracking-widest uppercase">
+                                    {metadata.venue === 'Project' ? `— Independent Project · ${metadata.date}` : `— Published in ${metadata.venue}`}
+                                </span>
                             </div>
                         </div>
                     </div>
