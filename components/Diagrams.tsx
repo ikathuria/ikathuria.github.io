@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BarChart2, Activity, Brain, Database, Mic, MessageSquare, Cloud, Sun, Moon, CheckCircle, Lock, ShieldCheck } from 'lucide-react';
+import { Activity, Brain, Database, Mic, MessageSquare, Sun, Moon, CheckCircle, ShieldCheck } from 'lucide-react';
 
 // --- PAPER 1: PM2.5 PREDICTION (Bar Chart) ---
 export const FeatureSelectionChart: React.FC<{ color: string }> = ({ color }) => {
@@ -86,7 +86,7 @@ export const DualStreamPipeline: React.FC<{ color: string }> = ({ color }) => {
         {/* Middle Processing */}
         <div className="flex flex-col gap-4 flex-1 relative min-h-[200px] justify-center">
           {/* Connecting Lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ color: color }}>
+          <svg aria-hidden="true" className="absolute inset-0 w-full h-full pointer-events-none" style={{ color: color }}>
             <path d="M0 40 C 50 40, 50 100, 100 100" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="animate-pulse" />
             <path d="M0 160 C 50 160, 50 100, 100 100" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="animate-pulse" />
             <path d="M220 100 L 280 100" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -183,6 +183,8 @@ export const FuzzyLogicCurves: React.FC<{ color: string }> = ({ color }) => {
       <div className="relative w-full h-56 border-b border-stone-300 mb-6">
         {/* Curves */}
         <svg
+          role="img"
+          aria-label="Gaussian membership curves for time-of-day categories"
           className="absolute inset-0 w-full h-full"
           viewBox="0 0 1000 200"
           preserveAspectRatio="none"
@@ -211,6 +213,7 @@ export const FuzzyLogicCurves: React.FC<{ color: string }> = ({ color }) => {
         min="0"
         max="24"
         step="0.1"
+        aria-label="Time of day"
         value={time}
         onChange={(e) => setTime(parseFloat(e.target.value))}
         className="w-full accent-stone-800 cursor-pointer"
@@ -281,7 +284,7 @@ export const AudioWaveform: React.FC<{ color: string }> = ({ color }) => {
             className="w-3 rounded-full"
             style={{ backgroundColor: color }}
             animate={{
-              height: [20, Math.random() * 100 + 20, 20],
+              height: [20, 30 + ((i * 53) % 90), 20],
             }}
             transition={{
               duration: 0.8,
@@ -308,18 +311,11 @@ export const AudioWaveform: React.FC<{ color: string }> = ({ color }) => {
 
 // --- PROJECT 2: SELFMED (Network Graph) ---
 export const NetworkGraph: React.FC<{ color: string }> = ({ color }) => {
-  const nodes = [
-    { x: 50, y: 50, label: "Symptom" },
-    { x: 150, y: 20, label: "BERT" },
-    { x: 150, y: 80, label: "Flask" },
-    { x: 250, y: 50, label: "Diagnosis" },
-  ];
-
   return (
     <div className="flex flex-col items-center p-8 bg-[#FAFAF7] rounded-2xl border border-stone-100 my-8 w-full max-w-2xl">
       <h3 className="font-serif text-xl mb-6 text-stone-800">Symptom-to-Condition Mapping</h3>
       <div className="relative w-full h-48 flex items-center justify-center">
-        <svg className="absolute inset-0 w-full h-full">
+        <svg aria-hidden="true" className="absolute inset-0 w-full h-full">
           <line x1="20%" y1="50%" x2="50%" y2="20%" stroke={color} strokeWidth="2" strokeOpacity="0.3" />
           <line x1="20%" y1="50%" x2="50%" y2="80%" stroke={color} strokeWidth="2" strokeOpacity="0.3" />
           <line x1="50%" y1="20%" x2="80%" y2="50%" stroke={color} strokeWidth="2" strokeOpacity="0.3" />

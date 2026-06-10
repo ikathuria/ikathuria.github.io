@@ -267,7 +267,7 @@ export const projects: PortfolioItem[] = [
       themeColor: "#ef4444", // Red
       secondaryColor: "#fef2f2",
       githubUrl: "https://github.com/ikathuria/AutoRedTeam/",
-      demoUrl: "http://ishani.kathuria.net/AutoRedTeam/",
+      demoUrl: "https://ishani.kathuria.net/AutoRedTeam/",
     },
     narrative: {
       problem: "Manual red-teaming of LLMs is unscalable and inconsistent. Ensuring safety against prompt injections and jailbreaks requires continuous, adaptive adversarial testing.",

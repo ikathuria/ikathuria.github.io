@@ -11,10 +11,3 @@ export interface SectionProps {
   children: React.ReactNode;
   className?: string;
 }
-
-export interface Laureate {
-  name: string;
-  image: string; // placeholder url
-  role: string;
-  desc: string;
-}

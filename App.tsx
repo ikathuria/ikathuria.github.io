@@ -4,13 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { AbstractImpactScene } from './components/QuantumScene';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
-import { ArrowDown, Menu, X, ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, GraduationCap, Briefcase, Code, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe, User, Bot, Copy, Check, Sparkles, Trophy, Users, MapPin, PlayCircle } from 'lucide-react';
+import { ArrowDown, Menu, X, ArrowLeft, ArrowUpRight, ExternalLink, GraduationCap, Briefcase, Code, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe, User, Bot, Copy, Check, Trophy, Users, MapPin, PlayCircle } from 'lucide-react';
 import { papers, projects, hackathons, resume, PortfolioItem } from './data';
-import Dashboard from './components/Dashboard';
+
+// Lazy-loaded so these chunks are only fetched when actually rendered.
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const AbstractImpactScene = lazy(() =>
+    import('./components/QuantumScene').then(m => ({ default: m.AbstractImpactScene }))
+);
 
 const BRAND = '#3B5BDB';
 
@@ -476,6 +480,18 @@ const AboutSection = () => (
 
 // ─── MACHINE MODE ─────────────────────────────────────────────────────────────
 
+const MLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+    <>
+        <span className="text-stone-600 select-none">[</span>
+        <a href={href} target={href.startsWith('http') || href.startsWith('mailto') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-indigo-400 hover:underline underline-offset-2">{children}</a>
+        <span className="text-stone-600 select-none">]</span>
+    </>
+);
+const H1 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-1"><span className="text-stone-700 select-none mr-1">#</span><span className="text-white font-semibold">{children}</span></div>;
+const H2 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-8"><span className="text-stone-700 select-none mr-1">##</span><span className="text-indigo-400 font-semibold">{children}</span></div>;
+const H3 = ({ children }: { children: React.ReactNode }) => <div className="mb-1 mt-5"><span className="text-stone-700 select-none mr-1">###</span><span className="text-stone-200 font-semibold">{children}</span></div>;
+const Hr = () => <div className="border-t border-stone-800 my-8" />;
+
 const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
     const [copied, setCopied] = useState(false);
 
@@ -484,18 +500,6 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
-
-    const MLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-        <>
-            <span className="text-stone-600 select-none">[</span>
-            <a href={href} target={href.startsWith('http') || href.startsWith('mailto') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-indigo-400 hover:underline underline-offset-2">{children}</a>
-            <span className="text-stone-600 select-none">]</span>
-        </>
-    );
-    const H1 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-1"><span className="text-stone-700 select-none mr-1">#</span><span className="text-white font-semibold">{children}</span></div>;
-    const H2 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-8"><span className="text-stone-700 select-none mr-1">##</span><span className="text-indigo-400 font-semibold">{children}</span></div>;
-    const H3 = ({ children }: { children: React.ReactNode }) => <div className="mb-1 mt-5"><span className="text-stone-700 select-none mr-1">###</span><span className="text-stone-200 font-semibold">{children}</span></div>;
-    const Hr = () => <div className="border-t border-stone-800 my-8" />;
 
     return (
         <div className="min-h-screen bg-[#0D0D0F] font-mono text-sm">
@@ -646,17 +650,6 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
 };
 
 // ─── MODE PILL ────────────────────────────────────────────────────────────────
-
-const ModePill = ({ machineMode, onToggle }: { machineMode: boolean; onToggle: () => void }) => (
-    <div className={`flex items-center gap-0.5 rounded-full p-1 text-xs border transition-colors ${machineMode ? 'bg-stone-900 border-stone-700' : 'bg-white/20 border-white/20'}`}>
-        <button onClick={() => machineMode && onToggle()} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${!machineMode ? 'bg-white shadow text-stone-900 font-semibold' : 'text-stone-400 hover:text-stone-200'}`}>
-            <User size={11} /> Human
-        </button>
-        <button onClick={() => !machineMode && onToggle()} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all ${machineMode ? 'bg-indigo-600 text-white font-semibold' : 'text-stone-300 hover:text-white'}`}>
-            <Bot size={11} /> Machine
-        </button>
-    </div>
-);
 
 const ModePillLight = ({ machineMode, onToggle }: { machineMode: boolean; onToggle: () => void }) => (
     <div className={`flex items-center gap-0.5 rounded-full p-1 text-xs border transition-colors ${machineMode ? 'bg-stone-900 border-stone-700' : 'bg-stone-100 border-stone-200'}`}>
@@ -815,7 +808,13 @@ const App: React.FC = () => {
     const activeItem = allItems.find(p => p.id === activeItemId);
     const activeSection = useActiveSection(['work', 'hackathons', 'research', 'resume']);
 
-    if (showDashboard) return <Dashboard onBack={() => setShowDashboard(false)} />;
+    if (showDashboard) {
+        return (
+            <Suspense fallback={<div className="min-h-screen bg-[#FAFAF8]" />}>
+                <Dashboard onBack={() => setShowDashboard(false)} />
+            </Suspense>
+        );
+    }
     if (!activeItem && machineMode) return <MachineMode onToggle={() => setMachineMode(false)} />;
 
     if (!activeItem) {
@@ -955,7 +954,7 @@ const App: React.FC = () => {
                                 </a>
                             ))}
                         </motion.div>
-                        <a href="#about" className="animate-float-soft inline-block text-stone-300 hover:text-stone-600 transition-colors"><ArrowDown size={26} /></a>
+                        <a href="#about" aria-label="Scroll to about section" className="animate-float-soft inline-block text-stone-300 hover:text-stone-600 transition-colors"><ArrowDown size={26} /></a>
                     </div>
                 </header>
 
@@ -1183,6 +1182,7 @@ const App: React.FC = () => {
                         {metadata.link && <a href={metadata.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-white text-sm font-semibold hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-sm" style={{ backgroundColor: metadata.themeColor, boxShadow: `0 4px 0 0 ${metadata.themeColor}88, 0 8px 20px ${metadata.themeColor}33` }}>Read Paper <ExternalLink size={15} /></a>}
                     </motion.div>
                     <motion.a href="#problem" onClick={scrollToSection('problem')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.5 }}
+                        aria-label="Scroll to project details"
                         className="inline-block text-stone-300 hover:text-stone-600 transition-colors animate-float-soft">
                         <ArrowDown size={24} />
                     </motion.a>
@@ -1239,7 +1239,9 @@ const App: React.FC = () => {
                     <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12">
                         <div className="md:col-span-5 relative min-h-[400px]">
                             <div className="absolute inset-0 bg-[#F5F4F0] rounded-2xl overflow-hidden border border-stone-200">
-                                <AbstractImpactScene themeColor={metadata.themeColor} id={activeItem.id} />
+                                <Suspense fallback={null}>
+                                    <AbstractImpactScene themeColor={metadata.themeColor} id={activeItem.id} />
+                                </Suspense>
                             </div>
                         </div>
                         <div className="md:col-span-7 flex flex-col justify-center">

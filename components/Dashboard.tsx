@@ -628,6 +628,7 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                             onClick={() => fetchAll(true)}
                             disabled={refreshing || loading}
                             title="Refresh repos and plans"
+                            aria-label="Refresh repos and plans"
                             className="p-2 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-all disabled:opacity-40"
                         >
                             <RefreshCw size={18} className={refreshing ? 'animate-spin' : ''} />
