@@ -410,6 +410,7 @@ export interface Hackathon {
   date: string;
   location?: string;
   role: 'builder' | 'organizer';
+  award?: string;
   tagline: string;
   techStack?: string[];
   team?: string[];
@@ -419,10 +420,57 @@ export interface Hackathon {
     demo?: string;
     video?: string;
     linkedin?: string;
+    devpost?: string;
   };
 }
 
 export const hackathons: Hackathon[] = [
+  {
+    id: 'yourbusinesscards',
+    project: 'yourbusiness.cards',
+    hackathon: 'DeveloperWeek NY Hackathon',
+    date: 'Jun 2026',
+    location: 'New York',
+    role: 'builder',
+    award: 'Winner · name.com Domain Roulette',
+    tagline: "A freemium SaaS that spins up a polished single-screen digital business card — templates, shareable links, QR codes, and AI-designed art — in under 60 seconds.",
+    techStack: ["Next.js", "Supabase", "Claude", "Stripe"],
+    themeColor: "#10B981", // Emerald
+    links: {
+      github: "https://github.com/ikathuria/yourbusiness.cards",
+      demo: "https://yourbusiness-cards.vercel.app",
+      devpost: "https://devpost.com/software/yourbusiness-cards",
+    },
+  },
+  {
+    id: 'realsight',
+    project: 'RealSight',
+    hackathon: 'Google Cloud Rapid Agent Hackathon',
+    date: 'Jun 2026',
+    role: 'builder',
+    tagline: "A Chrome extension that passively flags AI-generated videos on YouTube & Reels right on the player — a confidence badge with the model's visual reasoning in ~5 seconds.",
+    techStack: ["Google ADK", "Gemini 2.5", "Cloud Run", "MongoDB"],
+    themeColor: "#EA4335", // Google Red
+    links: {
+      github: "https://github.com/ikathuria/RealSight",
+      devpost: "https://devpost.com/software/realsight",
+    },
+  },
+  {
+    id: 'afterpartydigital',
+    project: 'afterparty.digital',
+    hackathon: 'DeveloperWeek NY Hackathon',
+    date: 'Jun 2026',
+    location: 'New York',
+    role: 'builder',
+    tagline: "An AI platform that turns a finished event into lasting connections — personalized attendee match pages, editable relationship graphs, and a connection-ROI dashboard for organizers.",
+    techStack: ["Next.js", "Neon Postgres", "Claude", "force-graph"],
+    themeColor: "#6366F1", // Indigo
+    links: {
+      github: "https://github.com/ikathuria/afterparty.digital",
+      devpost: "https://devpost.com/software/afterparty-digital",
+    },
+  },
   {
     id: 'howcookedami',
     project: 'How Cooked Am I?',

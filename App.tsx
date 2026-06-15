@@ -90,7 +90,7 @@ const IMPACT_STATS: Array<{
     { displayValue: null, numericEnd: 172, prefix: '', suffix: 'K+', label: 'lines of code shipped' },
     { displayValue: null, numericEnd: 200, prefix: '', suffix: '+', label: 'students mentored into AI' },
     { displayValue: null, numericEnd: 4, prefix: '', suffix: '', label: 'peer-reviewed papers' },
-    { displayValue: null, numericEnd: 6, prefix: '', suffix: '', label: 'hackathons built & led' },
+    { displayValue: null, numericEnd: 9, prefix: '', suffix: '', label: 'hackathons built & led' },
     { displayValue: '4.0 GPA', numericEnd: null, prefix: '', suffix: '', label: 'at Purdue University' },
 ];
 
@@ -113,7 +113,7 @@ $50K/mo      infrastructure costs saved
 172K+        lines of code shipped to production
 200+         students mentored into AI careers
 4            peer-reviewed papers (IEEE + Springer)
-6            hackathons built & led
+9            hackathons built & led
 4.0 GPA      at Purdue University
 
 ---
@@ -149,6 +149,25 @@ Built a client-side AI forensic tool using Transformers.js to detect synthetic a
 ---
 
 ## Hackathons
+
+### yourbusiness.cards — DeveloperWeek NY Hackathon
+Jun 2026 · New York · 🏆 Winner (name.com Domain Roulette)
+A freemium SaaS that spins up a polished single-screen digital business card — templates, links, QR codes, and AI art — in under 60 seconds.
+GitHub: https://github.com/ikathuria/yourbusiness.cards
+Demo: https://yourbusiness-cards.vercel.app
+Devpost: https://devpost.com/software/yourbusiness-cards
+
+### RealSight — Google Cloud Rapid Agent Hackathon
+Jun 2026
+A Chrome extension that passively flags AI-generated videos on YouTube & Reels right on the player, with the model's visual reasoning in ~5 seconds.
+GitHub: https://github.com/ikathuria/RealSight
+Devpost: https://devpost.com/software/realsight
+
+### afterparty.digital — DeveloperWeek NY Hackathon
+Jun 2026 · New York
+An AI platform that turns a finished event into lasting connections — attendee match pages, editable relationship graphs, and a connection-ROI dashboard.
+GitHub: https://github.com/ikathuria/afterparty.digital
+Devpost: https://devpost.com/software/afterparty-digital
 
 ### How Cooked Am I? — Vibe-Coded Creator Hackathon
 May 31, 2026 · Chicago (hosted by Play)
@@ -303,8 +322,15 @@ const PaperCard = ({ item }: { item: PortfolioItem }) => (
     </motion.article>
 );
 
+const DevpostIcon = ({ size = 12 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M6.002 1.61L0 12.004 6.002 22.39h11.996L24 12.004 17.998 1.61H6.002zm1.593 4.084h3.947c3.605 0 6.276 1.695 6.276 6.31 0 4.436-3.21 6.302-6.456 6.302H7.595V5.694zm2.517 2.449v7.714h1.241c2.646 0 3.862-1.55 3.862-3.861.009-2.569-1.096-3.853-3.767-3.853H10.112z" />
+    </svg>
+);
+
 const HackathonCard = ({ item }: { item: typeof hackathons[number] }) => {
     const isOrganizer = item.role === 'organizer';
+    const isWinner = !!item.award;
     return (
         <motion.article
             className="group bg-white rounded-3xl p-7 border border-stone-200/80 relative overflow-hidden h-full flex flex-col"
@@ -324,13 +350,14 @@ const HackathonCard = ({ item }: { item: typeof hackathons[number] }) => {
                         {item.hackathon} · {item.date}
                     </div>
                     <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md flex-shrink-0"
-                        style={isOrganizer ? { background: item.themeColor + '18', color: item.themeColor } : { background: '#f5f5f4', color: '#a8a29e' }}>
-                        {isOrganizer ? <><Trophy size={11} /> Organizer</> : <><Code size={11} /> Builder</>}
+                        style={isOrganizer ? { background: item.themeColor + '18', color: item.themeColor } : isWinner ? { background: '#FEF3C7', color: '#B45309' } : { background: '#f5f5f4', color: '#a8a29e' }}>
+                        {isOrganizer ? <><Trophy size={11} /> Organizer</> : isWinner ? <><Trophy size={11} /> Winner</> : <><Code size={11} /> Builder</>}
                     </span>
                 </div>
                 <h3 className="font-serif text-xl text-stone-900 mb-2 leading-snug">{item.project}</h3>
-                {(item.location || (item.team && item.team.length > 0)) && (
+                {(item.award || item.location || (item.team && item.team.length > 0)) && (
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-stone-400 mb-3">
+                        {item.award && <span className="inline-flex items-center gap-1 font-semibold text-amber-600"><Trophy size={11} /> {item.award}</span>}
                         {item.location && <span className="inline-flex items-center gap-1"><MapPin size={11} /> {item.location}</span>}
                         {item.team && item.team.length > 0 && <span className="inline-flex items-center gap-1"><Users size={11} /> with {item.team.join(', ')}</span>}
                     </div>
@@ -368,6 +395,13 @@ const HackathonCard = ({ item }: { item: typeof hackathons[number] }) => {
                             className="w-7 h-7 rounded-full text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="LinkedIn write-up"
                             style={{ backgroundColor: '#0A66C2' }}>
                             <Linkedin size={12} />
+                        </a>
+                    )}
+                    {item.links.devpost && (
+                        <a href={item.links.devpost} target="_blank" rel="noopener noreferrer"
+                            className="w-7 h-7 rounded-full text-white inline-flex items-center justify-center hover:-translate-y-0.5 transition-transform" aria-label="Devpost"
+                            style={{ backgroundColor: '#003E54' }}>
+                            <DevpostIcon size={12} />
                         </a>
                     )}
                 </div>
@@ -586,6 +620,7 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                             {h.links.video && <MLink href={h.links.video}>Watch Demo →</MLink>}
                             {h.links.demo && <MLink href={h.links.demo}>Live Demo →</MLink>}
                             {h.links.linkedin && <MLink href={h.links.linkedin}>Write-up →</MLink>}
+                            {h.links.devpost && <MLink href={h.links.devpost}>Devpost →</MLink>}
                         </div>
                     </div>
                 ))}
