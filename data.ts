@@ -591,7 +591,7 @@ export const resume = {
       company: "Center for Cybersecurity, Purdue University",
       period: "Sep 2025 – Present",
       details: [
-        "Conducting applied research on Retrieval-Augmented Generation (RAG) systems, focusing on retrieval quality, hallucination reduction, and end-to-end latency optimization for LLM-based applications.",
+        "Conducting applied research on Retrieval-Augmented Generation (RAG) systems, focusing on adversarial defenses, retrieval quality, and hallucination reduction for LLM-based applications.",
         "Evaluating retrieval strategies using Recall@K and nDCG to optimize real-world question answering performance."
       ]
     },
@@ -600,9 +600,10 @@ export const resume = {
       company: "Amazon Web Services",
       period: "Jul 2023 – Jul 2025",
       details: [
-        "Contributed to internal AI-assisted debugging workflows leveraging LLM-based log summarization and retrieval techniques, reducing average debugging time from 2.5 hours to 30 minutes.",
-        "Built internal tools to simulate customer interactions, enabling proactive bug detection in microservices and reducing external customer reported issues by 30%.",
-        "Designed and deployed AI-powered chatbots for internal tools, guiding operators on command usage and troubleshooting steps; improved operational efficiency by 40%."
+        "Built and deployed LLM-based log summarization for production services, cutting mean root-cause analysis time from 2.5 hours to 30 minutes.",
+        "Designed internal AI chatbots for developer support workflows, improving resolution efficiency on routine operational queries by 40% for 200+ engineers.",
+        "Automated region-build and deployment pipelines for 15+ OpenSearch services using AWS infrastructure tooling, reducing manual intervention by 80% and accelerating launch timelines by 3 weeks.",
+        "Developed proactive anomaly and bug detection systems to catch failures pre-release, reducing externally reported customer issues by 30%."
       ]
     },
     {
@@ -640,11 +641,42 @@ export const resume = {
     }
   ],
   skills: {
-    genai: ["Large Language Models (LLMs)", "RAG", "Fine-Tuning", "Multi-Agent Systems", "Prompt Engineering", "LangChain", "HuggingFace"],
-    ml: ["Ollama", "PyTorch", "TensorFlow", "Scikit-learn"],
-    programming: ["Python", "Golang", "TypeScript", "Java"],
-    cloud: ["AWS Bedrock", "AWS Lambda", "AWS ECS", "AWS Step Functions", "AWS CloudFormation", "AWS CloudWatch", "Azure"],
-    data: ["React", "Flask", "Django", "Pandas", "NumPy", "Tableau", "Matplotlib", "Seaborn"],
+    genai: ["Large Language Models (LLMs)", "RAG", "Fine-Tuning", "Multi-Agent Systems", "Prompt Engineering", "LLM Evaluation", "LangChain", "HuggingFace"],
+    ml: ["Ollama", "PyTorch", "TensorFlow", "Scikit-learn", "vLLM"],
+    programming: ["Python", "Golang", "TypeScript", "Java", "SQL"],
+    cloud: ["AWS Bedrock", "AWS Lambda", "AWS ECS", "AWS Step Functions", "AWS CloudFormation", "AWS CloudWatch", "Azure", "Docker"],
+    data: ["React", "Flask", "Django", "FastAPI", "Pandas", "NumPy", "Tableau", "Matplotlib", "Seaborn"],
     certs: ["AWS Certified AI Practitioner", "AWS Certified Cloud Practitioner"]
   }
+};
+
+/**
+ * Single source of truth for identity, positioning, and headline stats.
+ * Consumed by the WebMCP tool layer (useWebMCP) so machine agents and the
+ * human-facing site stay in agreement.
+ */
+export const profile = {
+  name: "Ishani Kathuria",
+  headline: "AI/ML Engineer & Researcher",
+  tagline: "MS Applied AI @ Purdue · ex-SDE @ AWS · 4× Published (IEEE + Springer)",
+  status: "Graduating May 2027 — open to AI/ML engineer internships (now) and full-time roles (from May 2027). Primary target: USA; also open to India, Ireland, UK, Netherlands, Germany, Japan, Norway, Switzerland.",
+  location: "Hammond, Indiana, USA",
+  summary:
+    "AI/ML engineer with 2 years building production LLM systems at AWS, now completing an MS in Applied AI at Purdue with research in Retrieval-Augmented Generation and LLM evaluation. I build LLM systems, agentic pipelines, and AI safety tools that bridge rigorous research and real-world products.",
+  email: "ishani@kathuria.net",
+  links: {
+    website: "https://ishani.kathuria.net",
+    linkedin: "https://linkedin.com/in/ishani-kathuria",
+    github: "https://github.com/ikathuria",
+    resume: "https://ishani.kathuria.net/resume.pdf",
+  },
+  stats: [
+    { value: "2.5hr→30m", label: "debugging time cut at AWS" },
+    { value: "$50K/mo", label: "infrastructure costs saved" },
+    { value: "172K+", label: "lines of code shipped to production" },
+    { value: "200+", label: "students mentored into AI careers" },
+    { value: "4", label: "peer-reviewed papers (IEEE + Springer)" },
+    { value: "9", label: "hackathons built & led" },
+    { value: "4.0", label: "GPA at Purdue University" },
+  ],
 };

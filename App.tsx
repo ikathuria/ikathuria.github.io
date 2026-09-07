@@ -9,6 +9,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { FeatureSelectionChart, DualStreamPipeline, FuzzyLogicCurves, AIHierarchyVenn, AudioWaveform, NetworkGraph, ConfidenceMeter, DepthGrid } from './components/Diagrams';
 import { ArrowDown, Menu, X, ArrowLeft, ArrowUpRight, ExternalLink, GraduationCap, Briefcase, Code, Github, Linkedin, Mail, FileText, Cpu, Layers, Badge, Globe, User, Bot, Copy, Check, Trophy, Users, MapPin, PlayCircle } from 'lucide-react';
 import { papers, projects, hackathons, resume, PortfolioItem } from './data';
+import { useWebMCP } from './hooks/useWebMCP';
 
 // Lazy-loaded so these chunks are only fetched when actually rendered.
 const Dashboard = lazy(() => import('./components/Dashboard'));
@@ -97,12 +98,12 @@ const IMPACT_STATS: Array<{
 const MACHINE_CLIPBOARD_TEXT = `ISHANI KATHURIA
 ishani@kathuria.net · linkedin.com/in/ishani-kathuria · github.com/ikathuria · ishani.kathuria.net
 
-STATUS: Open to internships & full-time opportunities
+STATUS: Graduating May 2027 · open to AI/ML engineer internships (now) and full-time (from May 2027) · USA-first, also open to India, Ireland, UK, Netherlands, Germany, Japan, Norway, Switzerland
 
 # AI/ML Engineer & Researcher
 MS Applied AI @ Purdue · ex-SDE @ AWS · 4× Published (IEEE + Springer)
 
-Applied AI researcher building LLM systems, agentic pipelines, and safety tools that bridge research and real-world products.
+AI/ML engineer with 2 years shipping production LLM systems at AWS, now completing an MS in Applied AI at Purdue (May 2027) with research in retrieval-augmented generation, multi-agent systems, and LLM evaluation. 4 peer-reviewed publications. Open to AI/ML engineering internships now and full-time from May 2027.
 
 ---
 
@@ -125,6 +126,12 @@ I'm an AI/ML engineer who spent two years shipping production LLM systems at AWS
 Now at Purdue, I focus on what makes AI systems trustworthy: retrieval quality, hallucination reduction, safety evaluation. I've published four peer-reviewed papers (IEEE + Springer) and co-founded an initiative that helped 200+ students build their first ML projects.
 
 I'm looking for opportunities — internships or full-time — where rigorous research and real-world impact aren't at odds.
+
+---
+
+## Awards & Leadership
+
+Winner, DeveloperWeek NY Hackathon 2026 (name.com Domain Roulette) · Founder & President, SIREN student AI research org (70+ participants) · 9 AI hackathons built & organized.
 
 ---
 
@@ -815,6 +822,11 @@ const App: React.FC = () => {
     }, [activeItemId, showDashboard]);
 
     const allItems = [...papers, ...projects];
+
+    // Expose the portfolio to in-browser AI agents via WebMCP (progressive
+    // enhancement — no-op in browsers/agents without support). The setters are
+    // stable, so the tool layer registers once for the app's lifetime.
+    useWebMCP((id: string) => { setShowDashboard(false); setActiveItemId(id); });
 
     useEffect(() => {
         const currentHash = window.location.hash;
