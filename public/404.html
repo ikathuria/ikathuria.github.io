@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting…</title>
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://ishani.kathuria.net/" />
+  <!--
+    GitHub Pages serves this file for any path it can't find. Its case-sensitive
+    server 404s on typed case-variants of the career-fair route (/IR, /Ir, /iR),
+    so this catches them and sends the visitor to the canonical /ir. The QR codes
+    and NFC tags use the exact lowercase /ir, which is served directly and never
+    reaches this file. Everything else gets a tasteful link home.
+  -->
+  <script>
+    (function () {
+      var p = location.pathname.replace(/\/+$/, ''); // strip trailing slash(es)
+      if (/^\/ir$/i.test(p)) {
+        location.replace('https://ishani.kathuria.net/ir' + location.search + location.hash);
+      }
+    })();
+  </script>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      background: #FAFAF8; color: #0D0D0D;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      text-align: center; padding: 24px;
+    }
+    @media (prefers-color-scheme: dark) { body { background: #0E0E11; color: #f5f4f2; } }
+    h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; font-size: 40px; margin: 0 0 8px; }
+    p { color: #57534e; margin: 0 0 20px; }
+    @media (prefers-color-scheme: dark) { p { color: #b4b0a8; } }
+    a.home {
+      display: inline-block; text-decoration: none; font-weight: 600;
+      background: #3B5BDB; color: #fff; padding: 12px 22px; border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Page not found</h1>
+    <p>That page doesn’t exist here.</p>
+    <a class="home" href="https://ishani.kathuria.net/">Go to ishani.kathuria.net</a>
+  </main>
+</body>
+</html>

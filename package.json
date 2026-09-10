@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "predeploy": "npm run build",
+    "verify:ir": "node scripts/verify-ir.mjs",
+    "predeploy": "npm run verify:ir && npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
