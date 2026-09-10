@@ -9,12 +9,21 @@
   <meta name="theme-color" content="#0E0E11" media="(prefers-color-scheme: dark)" />
   <link rel="canonical" href="https://ishani.kathuria.net/ir" />
   <meta name="robots" content="noindex, follow" />
+  <meta property="og:site_name" content="Ishani Kathuria" />
   <meta property="og:title" content="Ishani Kathuria — AI/ML Engineer" />
   <meta property="og:description" content="ex-AWS SDE · MS Applied AI @ Purdue (May 2027) · 4× published. Seeking full-time new-grad AI/ML roles + internships now." />
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://ishani.kathuria.net/ir" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content="https://ishani.kathuria.net/ir/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ishani Kathuria — AI/ML Engineer · ex-AWS · MS Applied AI @ Purdue" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ishani Kathuria — AI/ML Engineer" />
+  <meta name="twitter:description" content="ex-AWS SDE · MS Applied AI @ Purdue (May 2027) · 4× published. Seeking new-grad AI/ML roles + internships now." />
+  <meta name="twitter:image" content="https://ishani.kathuria.net/ir/og.png" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%233B5BDB'/%3E%3Ctext%20x='16'%20y='23'%20font-family='Georgia,serif'%20font-size='20'%20font-weight='700'%20fill='%23fff'%20text-anchor='middle'%3EIK%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="/ir/apple-touch-icon.png" />
   <!-- Fonts load async with a strong system fallback so text paints instantly on mobile data. -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -108,17 +117,23 @@
       box-shadow: var(--shadow-sm);
     }
     .status svg { flex: none; margin-top: 1px; color: var(--brand); }
+    .workauth {
+      display: flex; gap: 7px; align-items: center;
+      font-size: 12px; color: var(--faint);
+      margin: 8px 2px 0;
+    }
+    .workauth svg { flex: none; }
 
     /* ---- Primary actions ---- */
     .actions {
-      display: grid; gap: 11px;
-      margin: 22px 0 8px;
+      display: grid; gap: 9px;
+      margin: 16px 0 8px;
     }
     .btn {
       display: flex; align-items: center; gap: 13px;
       width: 100%;
-      min-height: 58px;
-      padding: 14px 18px;
+      min-height: 56px;
+      padding: 12px 16px;
       border-radius: 16px;
       font-size: 16px; font-weight: 600;
       text-decoration: none;
@@ -151,6 +166,13 @@
     .btn.primary .ico { background: rgba(255,255,255,0.18); color: #fff; }
     .btn.primary .txt small { color: rgba(255,255,255,0.8); }
     .btn.primary .chev { color: rgba(255,255,255,0.7); }
+
+    /* accent = Save contact (brand-tinted, high emphasis but not filled) */
+    .btn.accent {
+      background: var(--brand-tint); border-color: transparent; color: var(--brand-dark);
+    }
+    @media (prefers-color-scheme: dark) { .btn.accent { color: var(--ink); } }
+    .btn.accent .txt small { color: var(--brand); opacity: .85; }
 
     /* ---- Sections ---- */
     .section-label {
@@ -219,6 +241,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
         Seeking full-time new-grad AI/ML roles (May 2027) + internships now.
       </p>
+      <p class="workauth">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        F-1 STEM — eligible for ~3 years of OPT; no sponsorship needed initially.
+      </p>
     </header>
 
     <nav class="actions fade" aria-label="Primary contact actions">
@@ -231,7 +257,25 @@
         <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </a>
 
-      <!-- 2. Resume -->
+      <!-- 2. Save contact (vCard) -->
+      <a class="btn accent" href="/ir/ishani-kathuria.vcf" download="ishani-kathuria.vcf">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+        </span>
+        <span class="txt">Save my contact<small>vCard · one tap to your phone</small></span>
+        <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+      </a>
+
+      <!-- 3. Email -->
+      <a class="btn" href="mailto:ishani@kathuria.net?subject=Hi%20Ishani%20%E2%80%94%20met%20at%20Industrial%20Roundtable">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+        </span>
+        <span class="txt">Email me<small>ishani@kathuria.net</small></span>
+        <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+
+      <!-- 4. Resume (clean, no-QR PDF) -->
       <a class="btn" href="/resume.pdf" target="_blank" rel="noopener">
         <span class="ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/></svg>
@@ -240,16 +284,7 @@
         <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </a>
 
-      <!-- 3. Email -->
-      <a class="btn" href="mailto:ishani@kathuria.net?subject=Hello%20from%20Industrial%20Roundtable">
-        <span class="ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-        </span>
-        <span class="txt">Email me<small>ishani@kathuria.net</small></span>
-        <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </a>
-
-      <!-- 4. GitHub -->
+      <!-- 5. GitHub -->
       <a class="btn" href="https://github.com/ikathuria" target="_blank" rel="noopener">
         <span class="ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.05.78 2.12v3.14c0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
@@ -258,11 +293,6 @@
         <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </a>
     </nav>
-
-    <a class="vcard-btn fade" href="/ir/ishani-kathuria.vcf" download="ishani-kathuria.vcf">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-      Save my contact
-    </a>
 
     <p class="section-label fade">Featured projects</p>
     <div class="projects fade">
@@ -309,5 +339,11 @@
     ]
   }
   </script>
+
+  <!-- Privacy-friendly analytics: no cookies, no cross-site tracking, no banner needed.
+       Loads async so it never blocks first paint. Create the site at goatcounter.com
+       with code "ishani" (or update the data-goatcounter URL if you pick another). -->
+  <script data-goatcounter="https://ishani.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
