@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Kathuria;Ishani;;;
+FN:Ishani Kathuria
+TITLE:AI/ML Engineer
+ORG:MS Applied AI @ Purdue (May 2027)
+EMAIL;type=INTERNET;type=pref:ishani@kathuria.net
+TEL;type=CELL:+12193680435
+URL:https://ishani.kathuria.net
+X-SOCIALPROFILE;type=linkedin:https://www.linkedin.com/in/ishani-kathuria
+X-SOCIALPROFILE;type=github:https://github.com/ikathuria
+NOTE:AI/ML Engineer - ex-AWS SDE - MS Applied AI @ Purdue (May 2027). 2 years shipping production LLM systems at AWS; researching RAG & LLM evaluation. 4 peer-reviewed publications, 4.0 GPA. Seeking full-time new-grad AI/ML roles + internships now.
+END:VCARD
