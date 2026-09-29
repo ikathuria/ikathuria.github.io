@@ -428,13 +428,13 @@ const Hero = () => {
 
 const Ledger = () => (
     <section aria-label="Impact" className="border-y border-ink">
-        <dl className="max-w-[1120px] mx-auto px-5 md:px-8 py-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-x-6 gap-y-6">
+        <dl className="max-w-[1120px] mx-auto px-5 md:px-8 py-10 grid grid-cols-2 lg:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-9">
             {IMPACT_STATS.map((s, i) => (
                 <div key={i}>
-                    <dt className="font-serif text-[28px] leading-none tracking-tight">
+                    <dt className="font-serif text-[25px] sm:text-[36px] leading-none tracking-tight whitespace-nowrap">
                         {s.displayValue ?? `${s.prefix}${s.numericEnd}${s.suffix}`}
                     </dt>
-                    <dd className="text-[13px] leading-snug text-ink-2 mt-2 max-w-[16ch]">
+                    <dd className="text-[14px] leading-snug text-ink-2 mt-3 max-w-[24ch]">
                         {s.label}
                     </dd>
                 </div>
