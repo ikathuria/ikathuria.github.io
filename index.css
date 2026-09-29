@@ -1,13 +1,40 @@
 @import "tailwindcss";
 
+/* Design tokens: paper + ink, one highlighter accent.
+   Tailwind v4 reads @theme here (tailwind.config.ts is not loaded). */
+@theme {
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+  --color-paper: #FBF8F3;
+  --color-paper-2: #F3EEE4;
+  --color-ink: #1C1A17;
+  --color-ink-2: #5C564C;
+  --color-rule: #D9D2C3;
+  --color-hi: #FFE45C;
+  --color-agent: #FF4F00;
+  --color-machine: #111111;
+  --color-machine-ink: #A8A8A8;
+  --color-machine-dim: #8C8C8C;
+}
+
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 100px;
+  scroll-padding-top: 80px;
 }
 
 body {
-  background-color: #FAFAF8;
-  color: #0D0D0D;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Hard-edged highlighter stroke behind text */
+@utility mark-hi {
+  background-image: linear-gradient(transparent 58%, var(--color-hi) 58%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 @media print {
@@ -20,7 +47,24 @@ body {
 
 /* Accessibility: keep focus visible when navigating via keyboard */
 :focus-visible {
-  outline: 2px solid #3B5BDB;
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
 
+[data-dark] :focus-visible,
+[data-dark]:focus-visible {
+  outline-color: var(--color-hi);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
