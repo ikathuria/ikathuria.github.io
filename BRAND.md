@@ -234,7 +234,7 @@ The path `/ir` is printed on QR codes and programmed into NFC tags. **It must ne
 - Same tokens and devices as the site (paper/ink, Fraunces/Inter/Plex Mono, stickers, hard-shadow buttons, machine chip), single column, max 480px, light only.
 - Must keep: LinkedIn, vCard (`/ir/ishani-kathuria.vcf`, with `download`), email, résumé (new tab), GitHub, GoatCounter script, JSON-LD, `og.png`, `apple-touch-icon.png`.
 - Guarded by `npm run verify:ir` (runs on `predeploy`).
-- Event copy ("Purdue Industrial Roundtable", the email subject) is time-bound: review it after the event.
+- Copy stays evergreen: the URL lives on printed résumés and NFC tags long after any single event, so never name an event, date, or venue in the page, email subject, footer, or vCard note. (It was reworded on 29 Sep 2026, after the Purdue Industrial Roundtable.)
 
 ---
 
