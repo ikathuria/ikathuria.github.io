@@ -32,6 +32,8 @@ const NAV: [string, string][] = [
     ['research', 'Research'],
     ['resume', 'Resume'],
 ];
+/** External links and PDFs (the résumé) always open in a new tab. */
+export const opensInNewTab = (href: string) => /^https?:/.test(href) || /\.pdf([?#]|$)/i.test(href);
 const EMAIL = 'ishani@kathuria.net';
 const LINKEDIN = 'https://www.linkedin.com/in/ishani-kathuria';
 const GITHUB = 'https://github.com/ikathuria';
@@ -99,8 +101,8 @@ export const TextLink = ({
 }) => (
     <a
         href={href}
-        target={href.startsWith('http') ? '_blank' : undefined}
-        rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        target={opensInNewTab(href) ? '_blank' : undefined}
+        rel={opensInNewTab(href) ? 'noopener noreferrer' : undefined}
         className={`inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-1 transition-colors ${dark ? 'decoration-paper/40 hover:decoration-hi hover:text-hi' : 'decoration-ink/30 hover:decoration-ink'}`}
     >
         {children}

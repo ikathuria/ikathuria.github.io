@@ -8,7 +8,7 @@ import { User, Bot, Copy, Check } from 'lucide-react';
 import { papers, projects, hackathons, resume } from './data';
 import { IMPACT_STATS } from './content';
 import { useWebMCP } from './hooks/useWebMCP';
-import Home from './components/Home';
+import Home, { opensInNewTab } from './components/Home';
 import Detail from './components/Detail';
 
 // Lazy-loaded so these chunks are only fetched when actually rendered.
@@ -198,7 +198,7 @@ CONTACT
 const MLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <>
         <span className="text-machine-dim select-none">[</span>
-        <a href={href} target={href.startsWith('http') || href.startsWith('mailto') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-[#FFE45C] hover:underline underline-offset-2">{children}</a>
+        <a href={href} target={opensInNewTab(href) || href.startsWith('mailto') ? '_blank' : undefined} rel={opensInNewTab(href) ? 'noopener noreferrer' : undefined} className="text-[#FFE45C] hover:underline underline-offset-2">{children}</a>
         <span className="text-machine-dim select-none">]</span>
     </>
 );

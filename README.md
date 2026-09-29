@@ -11,13 +11,20 @@ Built with a modern frontend stack focusing on performance and interactivity:
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Icons**: [Lucide React](https://lucide.dev/)
+- **Type**: Fraunces, Inter, IBM Plex Mono (Google Fonts)
 
 ## Features
 
-- **Animated SVG Illustrations**: Hand-built diagrams and draw-in illustrations giving each project a unique visual identity.
-- **Human/Machine Toggle**: A markdown-style "machine mode" resume view with one-click copy as plain text.
-- **Dynamic Content Rendering**: Data-driven components for papers, projects, and resume sections.
-- **Responsive Design**: Fully optimized for mobile and desktop viewing.
+- **Human / machine twin**: the home page pairs prose with the same facts as JSON, and a small agent cursor reads the hero on load. A full Machine view (with copy-as-text) and a WebMCP tool layer make the site readable by AI agents.
+- **Interactive project diagrams**: every project and paper has its own diagram you can play with (query router, red-team loop, in-browser vs server inference, fuzzy menu, and more), built from that item's real mechanism.
+- **Real product screenshots and hackathon tiles**: framed, populated captures of the live demos; hackathons as a color-tile grid.
+- **Live build tracker** (`#dashboard`): every public repo with push recency and `PLAN.md` progress, pulled from the GitHub API.
+- **`/ir` career-fair page**: a standalone, framework-free landing page for QR/NFC use, with vCard, résumé, and analytics.
+- **Accessible and responsive**: WCAG AA contrast, keyboard focus, 44px targets, reduced-motion support.
+
+## Design
+
+The visual system (paper and ink, one highlighter accent, Fraunces / Inter / IBM Plex Mono, stickers, hard-offset shadows) is documented in **[BRAND.md](BRAND.md)**: tokens, contrast ratios, voice, components, motion, accessibility rules, and the release checklist. Tokens live in [`index.css`](index.css).
 
 ## Run Locally
 
