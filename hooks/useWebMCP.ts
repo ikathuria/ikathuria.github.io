@@ -204,7 +204,9 @@ export function useWebMCP(onOpenProject: (id: string) => void): void {
         if (!mc) return;
         const tools = buildTools(onOpenProject);
         await Promise.all(
-          tools.map((tool) => mc.registerTool(tool, { signal: controller.signal }))
+          tools.map((tool) =>
+            mc.registerTool(tool as Parameters<typeof mc.registerTool>[0], { signal: controller.signal })
+          )
         );
       } catch (err) {
         // WebMCP is experimental; never let a registration failure break the site.

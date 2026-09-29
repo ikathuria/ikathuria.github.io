@@ -41,7 +41,7 @@
 
   "ikathuria": "GitHub profile README repository — the special repo that renders custom content on the ikathuria GitHub profile page.",
 
-  "ikathuria.github.io": "Personal AI/ML research portfolio built with React 19, Vite, and Tailwind, featuring animated SVG project illustrations, full project and publication deep-dives, and Framer Motion page transitions. Deployed to GitHub Pages via GitHub Actions.",
+  "ikathuria.github.io": "Personal AI/ML portfolio built with React 19, Vite, and Tailwind v4. A human/machine twin home page where a small agent reads the hero aloud, an interactive diagram for every project and paper, a live GitHub build tracker, and a WebMCP tool layer so AI agents can query the site. Published to GitHub Pages.",
 
   "ImageManipulation": "Python scripts for image processing tasks including real-time color identification and dominant-color extraction from images using OpenCV. Demonstrates pixel-level manipulation and color-space conversion techniques.",
 

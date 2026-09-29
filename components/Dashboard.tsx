@@ -143,10 +143,11 @@ const StatusMark = ({ status }: { status: RepoStatus }) => (
     </span>
 );
 
-const ProgressBar = ({ value, className = '' }: { value: number; className?: string }) => (
+const ProgressBar = ({ value, label, className = '' }: { value: number; label: string; className?: string }) => (
     <div
         className={`h-2 bg-paper-2 border border-ink ${className}`}
         role="progressbar"
+        aria-label={label}
         aria-valuenow={Math.round(value)}
         aria-valuemin={0}
         aria-valuemax={100}
@@ -235,7 +236,7 @@ const PlanSidebar = ({ repo, plan, onClose }: PlanSidebarProps) => {
                             {plan.totalDone} / {plan.totalTasks} tasks · {Math.round(progress)}%
                         </span>
                     </div>
-                    <ProgressBar value={progress} />
+                    <ProgressBar value={progress} label={`${repo.name} overall plan progress`} />
                 </div>
 
                 <div className="flex-1 overflow-y-auto">
@@ -438,7 +439,7 @@ const RepoRow = ({
                             </span>
                             <span className="text-ink-2">{Math.round(progress)}%</span>
                         </div>
-                        <ProgressBar value={progress} />
+                        <ProgressBar value={progress} label={`${repo.name} plan progress`} />
                         <button
                             onClick={() => onShowPlan(repo, plan)}
                             className="inline-flex items-center min-h-11 mt-1 underline underline-offset-4 decoration-ink/30 hover:decoration-ink"

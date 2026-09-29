@@ -309,7 +309,7 @@ const Detail: React.FC<{ item: PortfolioItem; siblings: PortfolioItem[]; onBack:
                             aria-hidden="true"
                         >
                             <Suspense fallback={null}>
-                                <AbstractImpactScene themeColor={m.themeColor} id={item.id} />
+                                <AbstractImpactScene id={item.id} />
                             </Suspense>
                         </div>
                         <div className="md:col-span-7 flex flex-col justify-center">

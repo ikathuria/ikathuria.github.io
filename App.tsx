@@ -197,15 +197,15 @@ CONTACT
 
 const MLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <>
-        <span className="text-stone-600 select-none">[</span>
+        <span className="text-machine-dim select-none">[</span>
         <a href={href} target={href.startsWith('http') || href.startsWith('mailto') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-[#FFE45C] hover:underline underline-offset-2">{children}</a>
-        <span className="text-stone-600 select-none">]</span>
+        <span className="text-machine-dim select-none">]</span>
     </>
 );
-const H1 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-1"><span className="text-stone-700 select-none mr-1">#</span><span className="text-white font-semibold">{children}</span></div>;
-const H2 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-8"><span className="text-stone-700 select-none mr-1">##</span><span className="text-[#FFE45C] font-semibold">{children}</span></div>;
-const H3 = ({ children }: { children: React.ReactNode }) => <div className="mb-1 mt-5"><span className="text-stone-700 select-none mr-1">###</span><span className="text-stone-200 font-semibold">{children}</span></div>;
-const Hr = () => <div className="border-t border-stone-800 my-8" />;
+const H1 = ({ children }: { children: React.ReactNode }) => <div className="mb-3 mt-1"><span className="text-[#5A5A5A] select-none mr-1">#</span><span className="text-[#F1EFE8] font-semibold">{children}</span></div>;
+const H2 = ({ children, id }: { children: React.ReactNode; id?: string }) => <div id={id} className="mb-3 mt-8 scroll-mt-20"><span className="text-[#5A5A5A] select-none mr-1">##</span><span className="text-[#FFE45C] font-semibold">{children}</span></div>;
+const H3 = ({ children }: { children: React.ReactNode }) => <div className="mb-1 mt-5"><span className="text-[#5A5A5A] select-none mr-1">###</span><span className="text-[#F1EFE8] font-semibold">{children}</span></div>;
+const Hr = () => <div className="border-t border-[#2A2A2A] my-8" />;
 
 const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
     const [copied, setCopied] = useState(false);
@@ -217,41 +217,36 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0D0D0F] font-mono text-sm">
-            <div className="sticky top-0 z-50 bg-[#0D0D0F]/95 backdrop-blur-sm border-b border-stone-800 px-4 sm:px-6 py-4 flex items-center justify-between gap-2">
+        <div className="min-h-screen bg-machine font-mono text-sm">
+            <header className="sticky top-0 z-50 bg-machine/95 border-b border-[#2A2A2A] px-4 sm:px-6 py-4 flex items-center justify-between gap-2">
                 <div className="hidden sm:flex items-center gap-3">
-                    <div className="flex gap-1.5">
-                        <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                        <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                        <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                    </div>
-                    <span className="text-xs text-stone-500 ml-2 hidden md:inline">ishani.kathuria.net</span>
+                    <span className="text-xs text-machine-dim hidden md:inline">ishani.kathuria.net</span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-3 flex-shrink min-w-0">
-                    <button onClick={handleCopy} className="flex items-center gap-2 text-xs px-3 py-1.5 rounded border border-stone-700 hover:border-[#FFE45C] hover:text-[#FFE45C] transition-colors text-stone-400 whitespace-nowrap">
+                    <button onClick={handleCopy} className="flex items-center gap-2 text-xs px-3 min-h-9 rounded-[3px] border border-[#3A3A3A] hover:border-[#FFE45C] hover:text-[#FFE45C] transition-colors text-machine-ink whitespace-nowrap">
                         {copied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> <span className="hidden sm:inline">Copy as Text</span><span className="sm:hidden">Copy</span></>}
                     </button>
-                    <div className="flex items-center gap-0.5 bg-stone-900 rounded-full p-1 border border-stone-800">
-                        <button onClick={onToggle} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-stone-500 hover:text-stone-300 transition-colors text-xs"><User size={11} /> Human</button>
-                        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FFE45C] text-[#111] font-semibold text-xs"><Bot size={11} /> Machine</button>
+                    <div className="flex items-center border border-[#3A3A3A] rounded-[3px] p-0.5">
+                        <button onClick={onToggle} className="flex items-center gap-1.5 px-3 min-h-9 rounded-[2px] text-machine-dim hover:text-[#E0DED8] transition-colors text-xs"><User size={11} /> Human</button>
+                        <button className="flex items-center gap-1.5 px-3 min-h-9 rounded-[2px] bg-[#FFE45C] text-[#111] font-semibold text-xs"><Bot size={11} /> Machine</button>
                     </div>
                 </div>
-            </div>
-            <div className="max-w-3xl mx-auto px-6 py-12 text-stone-300 leading-relaxed text-xs">
-                <div className="text-white font-bold text-base mb-2">ISHANI KATHURIA</div>
-                <div className="flex flex-wrap gap-x-3 gap-y-1 text-stone-500 mb-1">
+            </header>
+            <main className="max-w-3xl mx-auto px-6 py-12 text-[#E0DED8] leading-relaxed text-xs">
+                <h1 className="text-[#F1EFE8] font-bold text-base mb-2">ISHANI KATHURIA</h1>
+                <div className="flex flex-wrap gap-x-3 gap-y-1 text-machine-dim mb-1">
                     <MLink href="mailto:ishani@kathuria.net">ishani@kathuria.net</MLink>
-                    <span className="text-stone-700">·</span>
+                    <span className="text-[#5A5A5A]">·</span>
                     <MLink href="https://www.linkedin.com/in/ishani-kathuria">LinkedIn</MLink>
-                    <span className="text-stone-700">·</span>
+                    <span className="text-[#5A5A5A]">·</span>
                     <MLink href="https://github.com/ikathuria">GitHub</MLink>
-                    <span className="text-stone-700">·</span>
+                    <span className="text-[#5A5A5A]">·</span>
                     <MLink href="https://ishani.kathuria.net">ishani.kathuria.net</MLink>
                 </div>
-                <div className="text-emerald-400 mb-6">● Open to internships & full-time opportunities</div>
+                <div className="text-[#FFE45C] mb-6">● Open to internships & full-time opportunities</div>
                 <H1>AI/ML Engineer & Researcher</H1>
-                <div className="text-stone-500 mb-2">MS Applied AI @ Purdue · ex-SDE @ AWS · 4× Published (IEEE + Springer)</div>
-                <p className="text-stone-300 mb-3">Applied AI researcher building LLM systems, agentic pipelines, and safety tools that bridge research and real-world products.</p>
+                <div className="text-machine-dim mb-2">MS Applied AI @ Purdue · ex-SDE @ AWS · 4× Published (IEEE + Springer)</div>
+                <p className="text-[#E0DED8] mb-3">Applied AI researcher building LLM systems, agentic pipelines, and safety tools that bridge research and real-world products.</p>
                 <div className="flex flex-wrap gap-4 mb-2">
                     <MLink href="#projects">View Projects</MLink>
                     <MLink href="#research">View Publications</MLink>
@@ -262,25 +257,25 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                 <div className="space-y-1.5 mb-2">
                     {IMPACT_STATS.map((stat, i) => {
                         const val = stat.displayValue ?? `${stat.prefix}${stat.numericEnd}${stat.suffix}`;
-                        return <div key={i} className="flex gap-4"><span className="text-[#FFE45C] font-bold w-20 flex-shrink-0">{val}</span><span className="text-stone-400">{stat.label}</span></div>;
+                        return <div key={i} className="flex gap-4"><span className="text-[#FFE45C] font-bold w-20 flex-shrink-0">{val}</span><span className="text-machine-ink">{stat.label}</span></div>;
                     })}
                 </div>
                 <Hr />
                 <H2>About</H2>
-                <div className="space-y-3 mb-2 text-stone-300">
+                <div className="space-y-3 mb-2 text-[#E0DED8]">
                     <p>I'm an AI/ML engineer who spent two years shipping production LLM systems at AWS — log summarization tools, internal chatbots, automated deployment pipelines across 15+ distributed services — before returning to academia to research the harder questions.</p>
                     <p>Now at Purdue, I focus on what makes AI systems trustworthy: retrieval quality, hallucination reduction, safety evaluation. I've published four peer-reviewed papers (IEEE + Springer) and co-founded an initiative that helped 200+ students build their first ML projects.</p>
                     <p>I'm looking for opportunities — internships or full-time — where rigorous research and real-world impact aren't at odds.</p>
                 </div>
                 <Hr />
-                <H2>Selected Projects</H2>
+                <H2 id="projects">Selected Projects</H2>
                 {projects.map(project => (
                     <div key={project.id}>
                         <H3>{project.metadata.title}</H3>
-                        <div className="text-stone-600 mb-1">{project.metadata.venue} · {project.metadata.date}</div>
-                        <p className="text-stone-400 italic mb-2">{project.metadata.subtitle}</p>
-                        <p className="text-stone-300 mb-2">{project.narrative.innovation}</p>
-                        {project.technical && <p className="text-stone-600 mb-2">Tech Stack: {project.technical.techStack.join(', ')}</p>}
+                        <div className="text-machine-dim mb-1">{project.metadata.venue} · {project.metadata.date}</div>
+                        <p className="text-machine-ink italic mb-2">{project.metadata.subtitle}</p>
+                        <p className="text-[#E0DED8] mb-2">{project.narrative.innovation}</p>
+                        {project.technical && <p className="text-machine-dim mb-2">Tech Stack: {project.technical.techStack.join(', ')}</p>}
                         <div className="flex flex-wrap gap-4 mb-2">
                             {project.metadata.githubUrl && <MLink href={project.metadata.githubUrl}>View Code →</MLink>}
                             {project.metadata.demoUrl && <MLink href={project.metadata.demoUrl}>Live Demo →</MLink>}
@@ -293,9 +288,9 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                 {hackathons.map(h => (
                     <div key={h.id}>
                         <H3>{h.project}</H3>
-                        <div className="text-stone-600 mb-1">{h.hackathon} · {h.date}{h.location ? ` · ${h.location}` : ''}</div>
-                        <p className="text-stone-400 italic mb-2">{h.tagline}</p>
-                        {h.techStack && <p className="text-stone-600 mb-2">Tech Stack: {h.techStack.join(', ')}</p>}
+                        <div className="text-machine-dim mb-1">{h.hackathon} · {h.date}{h.location ? ` · ${h.location}` : ''}</div>
+                        <p className="text-machine-ink italic mb-2">{h.tagline}</p>
+                        {h.techStack && <p className="text-machine-dim mb-2">Tech Stack: {h.techStack.join(', ')}</p>}
                         <div className="flex flex-wrap gap-4 mb-2">
                             {h.links.github && <MLink href={h.links.github}>View Code →</MLink>}
                             {h.links.video && <MLink href={h.links.video}>Watch Demo →</MLink>}
@@ -306,12 +301,12 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                     </div>
                 ))}
                 <Hr />
-                <H2>Research Publications</H2>
+                <H2 id="research">Research Publications</H2>
                 {papers.map(paper => (
                     <div key={paper.id}>
                         <H3>{paper.metadata.title}</H3>
-                        <div className="text-stone-600 mb-1">{paper.metadata.venue} · {paper.metadata.date}</div>
-                        <p className="text-stone-400 italic mb-2">{paper.metadata.subtitle}</p>
+                        <div className="text-machine-dim mb-1">{paper.metadata.venue} · {paper.metadata.date}</div>
+                        <p className="text-machine-ink italic mb-2">{paper.metadata.subtitle}</p>
                         {paper.metadata.link && <div className="mb-2"><MLink href={paper.metadata.link}>Read Paper →</MLink></div>}
                     </div>
                 ))}
@@ -320,9 +315,9 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                 {resume.experience.map((exp, idx) => (
                     <div key={idx}>
                         <H3>{exp.company}</H3>
-                        <div className="text-stone-600 mb-2">{exp.role} · {exp.period}</div>
+                        <div className="text-machine-dim mb-2">{exp.role} · {exp.period}</div>
                         <ul className="space-y-1 mb-2">
-                            {exp.details.map((d, i) => <li key={i} className="flex gap-2 text-stone-400"><span className="text-stone-700 flex-shrink-0">-</span><span>{d}</span></li>)}
+                            {exp.details.map((d, i) => <li key={i} className="flex gap-2 text-machine-ink"><span className="text-[#5A5A5A] flex-shrink-0">-</span><span>{d}</span></li>)}
                         </ul>
                     </div>
                 ))}
@@ -330,9 +325,9 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                 <H2>Education</H2>
                 {resume.education.map((edu, idx) => (
                     <div key={idx} className="mb-4">
-                        <span className="text-stone-200 font-semibold">{edu.degree}</span>
-                        <span className="text-stone-600"> · {edu.school} · {edu.period}</span>
-                        {edu.details.map((d, i) => <div key={i} className="text-stone-500 mt-0.5">{d}</div>)}
+                        <span className="text-[#F1EFE8] font-semibold">{edu.degree}</span>
+                        <span className="text-machine-dim"> · {edu.school} · {edu.period}</span>
+                        {edu.details.map((d, i) => <div key={i} className="text-machine-dim mt-0.5">{d}</div>)}
                     </div>
                 ))}
                 <Hr />
@@ -347,20 +342,20 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
                         { label: 'Certifications', items: resume.skills.certs },
                     ].map(({ label, items }) => (
                         <div key={label} className="flex gap-2">
-                            <span className="text-stone-500 flex-shrink-0 w-32">{label}:</span>
-                            <span className="text-stone-300">{items.join(', ')}</span>
+                            <span className="text-machine-dim flex-shrink-0 w-32">{label}:</span>
+                            <span className="text-[#E0DED8]">{items.join(', ')}</span>
                         </div>
                     ))}
                 </div>
                 <Hr />
-                <div className="space-y-1 text-stone-500">
-                    <div className="text-stone-400 font-semibold mb-3">CONTACT</div>
+                <div className="space-y-1 text-machine-dim">
+                    <div className="text-machine-ink font-semibold mb-3">CONTACT</div>
                     <div><MLink href="mailto:ishani@kathuria.net">ishani@kathuria.net</MLink></div>
                     <div><MLink href="https://www.linkedin.com/in/ishani-kathuria">LinkedIn</MLink></div>
                     <div><MLink href="https://github.com/ikathuria">GitHub</MLink></div>
-                    <div className="pt-6 text-stone-700">© {new Date().getFullYear()} Ishani Kathuria</div>
+                    <div className="pt-6 text-machine-dim">© {new Date().getFullYear()} Ishani Kathuria</div>
                 </div>
-            </div>
+            </main>
         </div>
     );
 };
@@ -387,6 +382,16 @@ const App: React.FC = () => {
         if (!viewRef.current.activeItemId && !viewRef.current.showDashboard) homeScroll.current = window.scrollY;
     };
 
+    // How many history entries sit between the home entry and the current page.
+    // Each in-app entry is tagged with it (history.state.d), so the Back links can
+    // jump straight to home instead of stacking a new entry on top.
+    const depthRef = useRef(0);
+    const goHome = () => {
+        if (depthRef.current > 0) { history.go(-depthRef.current); return; }
+        setShowDashboard(false);
+        setActiveItemId(null);
+    };
+
     // Expose the portfolio to in-browser AI agents via WebMCP (progressive
     // enhancement — no-op in browsers/agents without support). The setters are
     // stable, so the tool layer registers once for the app's lifetime.
@@ -404,18 +409,30 @@ const App: React.FC = () => {
     }, [activeItemId, showDashboard]);
 
     useEffect(() => {
-        const handleHashChange = () => {
+        const handleHashChange = (initial: boolean) => {
+            const prevWasHome = !viewRef.current.activeItemId && !viewRef.current.showDashboard;
             saveScroll();
             const hash = window.location.hash;
+            let toHome = false;
             if (hash === '#dashboard') { setShowDashboard(true); setActiveItemId(null); }
             else if (hash.startsWith('#project=')) {
                 const id = hash.replace('#project=', '');
-                if (allItems.find(p => p.id === id)) { setShowDashboard(false); setActiveItemId(id); }
-            } else { setShowDashboard(false); setActiveItemId(null); }
+                if (!allItems.find(p => p.id === id)) return;
+                setShowDashboard(false); setActiveItemId(id);
+            } else { setShowDashboard(false); setActiveItemId(null); toHome = true; }
+
+            const tagged = (history.state as { d?: number } | null)?.d;
+            if (typeof tagged === 'number') depthRef.current = tagged;   // back/forward/reload: already known
+            else {
+                const d = initial || toHome ? 0 : prevWasHome ? 1 : depthRef.current + 1;
+                depthRef.current = d;
+                history.replaceState({ d }, '');
+            }
         };
-        handleHashChange();
-        window.addEventListener('hashchange', handleHashChange);
-        return () => window.removeEventListener('hashchange', handleHashChange);
+        const onHashChange = () => handleHashChange(false);
+        handleHashChange(true);
+        window.addEventListener('hashchange', onHashChange);
+        return () => window.removeEventListener('hashchange', onHashChange);
     }, []);
 
     // New page: start at the top. Back on the home page: return to where we were.
@@ -428,8 +445,8 @@ const App: React.FC = () => {
 
     if (showDashboard) {
         return (
-            <Suspense fallback={<div className="min-h-screen bg-[#FAFAF8]" />}>
-                <Dashboard onBack={() => setShowDashboard(false)} />
+            <Suspense fallback={<div className="min-h-screen bg-paper" />}>
+                <Dashboard onBack={goHome} />
             </Suspense>
         );
     }
@@ -439,7 +456,7 @@ const App: React.FC = () => {
         return <Home machineMode={machineMode} onToggleMode={() => setMachineMode(m => !m)} onOpenDashboard={() => { saveScroll(); setShowDashboard(true); }} />;
     }
 
-    return <Detail key={activeItem.id} item={activeItem} siblings={activeItem.type === 'project' ? projects : papers} onBack={() => setActiveItemId(null)} />;
+    return <Detail key={activeItem.id} item={activeItem} siblings={activeItem.type === 'project' ? projects : papers} onBack={goHome} />;
 };
 
 export default App;
