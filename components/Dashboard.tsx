@@ -1,8 +1,22 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowLeft, Github, Star, GitFork, AlertCircle,
-    Search, Clock, Check, Terminal, ChevronDown, X, ListChecks, RefreshCw
+    ArrowLeft,
+    Github,
+    Star,
+    GitFork,
+    AlertCircle,
+    Search,
+    Check,
+    Terminal,
+    X,
+    RefreshCw,
+    ChevronDown,
 } from 'lucide-react';
 import repoDescriptions from '../public/repo-descriptions.json';
 
@@ -56,20 +70,25 @@ interface PlanSidebarProps {
 
 function parsePlan(content: string): PlanData {
     const extractTasks = (section: string): Task[] =>
-        (section.match(/- \[[ xX]\] .+/g) ?? []).map(line => ({
+        (section.match(/- \[[ xX]\] .+/g) ?? []).map((line) => ({
             done: /^- \[[xX]\]/.test(line),
             text: line.replace(/^- \[[ xX]\] /, '').trim(),
         }));
 
     const buildMilestones = (sections: string[]): Milestone[] =>
         sections
-            .map(section => {
+            .map((section) => {
                 const titleMatch = section.match(/^[^\n]*/);
                 const title = titleMatch ? titleMatch[0].replace(/^#+\s*/, '').trim() : 'Milestone';
                 const tasks = extractTasks(section);
-                return { title, done: tasks.filter(t => t.done).length, total: tasks.length, tasks };
+                return {
+                    title,
+                    done: tasks.filter((t) => t.done).length,
+                    total: tasks.length,
+                    tasks,
+                };
             })
-            .filter(m => m.total > 0);
+            .filter((m) => m.total > 0);
 
     // Try ### headings first (e.g. "## Milestones / ### Milestone 1: ...")
     const h3Sections = content.split(/^### /m).slice(1);
@@ -107,12 +126,37 @@ function relativeTime(dateStr: string): string {
     return `${Math.floor(months / 12)}yr ago`;
 }
 
-const STATUS_CONFIG: Record<RepoStatus, { label: string; color: string; bg: string; text: string }> = {
-    active:   { label: 'Active',   color: '#22c55e', bg: '#f0fdf4', text: '#15803d' },
-    stale:    { label: 'Stale',    color: '#f97316', bg: '#fff7ed', text: '#c2410c' },
-    inactive: { label: 'Inactive', color: '#78716c', bg: '#f5f5f4', text: '#57534e' },
-    archived: { label: 'Archived', color: '#a8a29e', bg: '#f5f5f4', text: '#78716c' },
+// --- STATUS ---
+// Marker shapes carry the status too, so it never relies on color alone.
+
+const STATUS_CONFIG: Record<RepoStatus, { label: string; marker: string }> = {
+    active: { label: 'Active', marker: 'bg-hi border-ink' },
+    stale: { label: 'Stale', marker: 'bg-paper-2 border-ink' },
+    inactive: { label: 'Inactive', marker: 'bg-paper border-ink-2' },
+    archived: { label: 'Archived', marker: 'bg-paper border-ink-2 border-dashed' },
 };
+
+const StatusMark = ({ status }: { status: RepoStatus }) => (
+    <span className="inline-flex items-center gap-2 font-mono text-xs text-ink">
+        <span aria-hidden="true" className={`w-2.5 h-2.5 border ${STATUS_CONFIG[status].marker}`} />
+        {STATUS_CONFIG[status].label}
+    </span>
+);
+
+const ProgressBar = ({ value, className = '' }: { value: number; className?: string }) => (
+    <div
+        className={`h-2 bg-paper-2 border border-ink ${className}`}
+        role="progressbar"
+        aria-valuenow={Math.round(value)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+    >
+        <div
+            className={`h-full transition-all duration-500 ${value >= 100 ? 'bg-hi' : 'bg-ink'}`}
+            style={{ width: `${value}%` }}
+        />
+    </div>
+);
 
 const LOCK_IN_CMD = `claude "Read PLAN.md, find the first incomplete task, and continue. Mark tasks done as you go. Commit when a milestone is complete."`;
 
@@ -120,156 +164,131 @@ const LOCK_IN_CMD = `claude "Read PLAN.md, find the first incomplete task, and c
 
 const PlanSidebar = ({ repo, plan, onClose }: PlanSidebarProps) => {
     const status = getStatus(repo);
-    const cfg = STATUS_CONFIG[status];
     const progress = plan.totalTasks > 0 ? (plan.totalDone / plan.totalTasks) * 100 : 0;
-    const panelRef = useRef<HTMLDivElement>(null);
+    const closeRef = useRef<HTMLButtonElement>(null);
 
-    // Close on Escape
     useEffect(() => {
-        const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+        closeRef.current?.focus();
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
         window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
-    }, [onClose]);
-
-    // Prevent body scroll
-    useEffect(() => {
         document.body.style.overflow = 'hidden';
-        return () => { document.body.style.overflow = ''; };
-    }, []);
+        return () => {
+            window.removeEventListener('keydown', handler);
+            document.body.style.overflow = '';
+        };
+    }, [onClose]);
 
     return (
         <>
-            {/* Backdrop */}
             <motion.div
-                className="fixed inset-0 bg-black/30 backdrop-blur-[2px] z-[60]"
+                className="fixed inset-0 bg-ink/40 z-[60]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 onClick={onClose}
             />
-
-            {/* Sidebar panel */}
-            <motion.div
-                ref={panelRef}
-                className="fixed top-0 right-0 h-full w-full max-w-md bg-[#FAFAF8] z-[70] flex flex-col shadow-2xl"
+            <motion.aside
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${repo.name} plan`}
+                className="fixed top-0 right-0 h-full w-full max-w-md bg-paper border-l border-ink z-[70] flex flex-col"
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', stiffness: 320, damping: 32 }}
             >
-                {/* Sidebar header */}
-                <div className="flex-shrink-0 px-6 pt-6 pb-4 border-b border-stone-200">
-                    <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex-shrink-0 px-6 pt-6 pb-5 border-b border-ink">
+                    <div className="flex items-start justify-between gap-3 mb-4">
                         <div className="min-w-0">
                             <a
                                 href={repo.html_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-serif text-xl text-stone-900 hover:underline underline-offset-4 decoration-stone-300 truncate block"
+                                className="font-serif text-2xl tracking-tight hover:underline underline-offset-4 decoration-1 truncate block"
                             >
                                 {repo.name}
                             </a>
-                            <div className="flex items-center gap-2 mt-1">
-                                <span
-                                    className="px-2 py-0.5 text-xs font-bold rounded-full uppercase tracking-wider"
-                                    style={{ backgroundColor: cfg.bg, color: cfg.text }}
-                                >
-                                    {cfg.label}
-                                </span>
+                            <div className="flex items-center gap-3 mt-2">
+                                <StatusMark status={status} />
                                 {repo.language && (
-                                    <span className="text-xs font-mono text-stone-400">{repo.language}</span>
+                                    <span className="font-mono text-xs text-ink-2">
+                                        {repo.language}
+                                    </span>
                                 )}
                             </div>
                         </div>
                         <button
+                            ref={closeRef}
                             onClick={onClose}
-                            className="flex-shrink-0 p-2 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-all"
                             aria-label="Close"
+                            className="flex-shrink-0 w-11 h-11 -mr-2 -mt-2 inline-flex items-center justify-center hover:bg-hi transition-colors"
                         >
                             <X size={18} />
                         </button>
                     </div>
-
-                    {/* Overall progress bar */}
-                    <div className="space-y-1.5">
-                        <div className="flex items-center justify-between text-xs text-stone-500">
-                            <span className="font-bold uppercase tracking-wider">Overall progress</span>
-                            <span>{plan.totalDone} / {plan.totalTasks} tasks</span>
-                        </div>
-                        <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full rounded-full transition-all duration-700"
-                                style={{ width: `${progress}%`, backgroundColor: cfg.color }}
-                            />
-                        </div>
-                        <div className="text-xs text-stone-400 text-right">
-                            {Math.round(progress)}% complete
-                        </div>
+                    <div className="flex items-baseline justify-between font-mono text-xs text-ink-2 mb-2">
+                        <span>OVERALL</span>
+                        <span className="text-ink">
+                            {plan.totalDone} / {plan.totalTasks} tasks · {Math.round(progress)}%
+                        </span>
                     </div>
+                    <ProgressBar value={progress} />
                 </div>
 
-                {/* Milestone + task list */}
-                <div className="flex-1 overflow-y-auto py-4 space-y-2">
-                    {plan.milestones.map((milestone, mi) => {
-                        const milestoneComplete = milestone.total > 0 && milestone.done === milestone.total;
-                        const milestoneColor = milestoneComplete ? '#22c55e' : cfg.color;
-                        const milestoneProgress = milestone.total > 0 ? (milestone.done / milestone.total) * 100 : 0;
-                        // Strip leading "Milestone N: " for cleaner display
-                        const displayTitle = milestone.title.replace(/^Milestone\s+\d+[:\s]*/i, '').trim() || milestone.title;
-
+                <div className="flex-1 overflow-y-auto">
+                    {plan.milestones.map((m, mi) => {
+                        const complete = m.total > 0 && m.done === m.total;
+                        const title =
+                            m.title.replace(/^Milestone\s+\d+[:\s]*/i, '').trim() || m.title;
                         return (
-                            <div key={mi} className="border-b border-stone-100 last:border-b-0">
-                                {/* Milestone header — solid colored band */}
-                                <div
-                                    className="flex items-center justify-between px-6 py-3 gap-3"
-                                    style={{ backgroundColor: milestoneColor + '18' }}
-                                >
-                                    <div className="flex items-center gap-2.5 min-w-0">
+                            <div key={mi} className="border-b border-rule">
+                                <div className="flex items-center justify-between gap-3 px-6 py-3 bg-paper-2">
+                                    <div className="flex items-center gap-3 min-w-0">
                                         <span
-                                            className="flex-shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded text-white"
-                                            style={{ backgroundColor: milestoneColor }}
+                                            className={`flex-shrink-0 font-mono text-xs px-1.5 py-0.5 border border-ink ${complete ? 'bg-hi text-ink' : 'bg-paper text-ink'}`}
                                         >
                                             M{mi + 1}
                                         </span>
-                                        <span className="text-sm font-semibold text-stone-800 leading-snug truncate">
-                                            {displayTitle}
+                                        <span className="text-sm font-medium truncate">
+                                            {title}
                                         </span>
                                     </div>
-                                    <span className="flex-shrink-0 text-xs font-mono text-stone-500">
-                                        {milestone.done}/{milestone.total}
+                                    <span className="flex-shrink-0 font-mono text-xs text-ink-2">
+                                        {m.done}/{m.total}
                                     </span>
                                 </div>
-
-                                {/* Milestone progress bar — full width, thin */}
-                                <div className="h-0.5 bg-stone-100">
-                                    <div
-                                        className="h-full transition-all duration-500"
-                                        style={{ width: `${milestoneProgress}%`, backgroundColor: milestoneColor }}
-                                    />
-                                </div>
-
-                                {/* Tasks */}
-                                <ul className="px-6 py-3 space-y-2.5">
-                                    {milestone.tasks.map((task, ti) => (
-                                        <li key={ti} className="flex items-start gap-2.5">
+                                <ul className="px-6 py-4 space-y-3">
+                                    {m.tasks.map((t, ti) => (
+                                        <li key={ti} className="flex items-start gap-3">
                                             <span
-                                                className="mt-0.5 w-4 h-4 rounded flex-shrink-0 flex items-center justify-center border"
-                                                style={
-                                                    task.done
-                                                        ? { backgroundColor: milestoneColor, borderColor: milestoneColor }
-                                                        : { borderColor: '#d6d3d1', backgroundColor: '#fff' }
-                                                }
+                                                aria-hidden="true"
+                                                className={`mt-1 w-4 h-4 flex-shrink-0 inline-flex items-center justify-center border border-ink ${t.done ? 'bg-ink' : 'bg-paper'}`}
                                             >
-                                                {task.done && <Check size={9} className="text-white" strokeWidth={3} />}
+                                                {t.done && (
+                                                    <Check
+                                                        size={10}
+                                                        className="text-paper"
+                                                        strokeWidth={3}
+                                                    />
+                                                )}
                                             </span>
-                                            <span className={`text-sm leading-relaxed ${task.done ? 'text-stone-400 line-through' : 'text-stone-700'}`}>
-                                                {task.text}
+                                            <span
+                                                className={`text-sm leading-relaxed ${t.done ? 'text-ink-2 line-through' : 'text-ink'}`}
+                                            >
+                                                <span className="sr-only">
+                                                    {t.done ? 'Done: ' : 'To do: '}
+                                                </span>
+                                                {t.text}
                                             </span>
                                         </li>
                                     ))}
-                                    {milestone.tasks.length === 0 && (
-                                        <li className="text-xs text-stone-300 italic">No tasks listed</li>
+                                    {m.tasks.length === 0 && (
+                                        <li className="text-xs text-ink-2 italic">
+                                            No tasks listed
+                                        </li>
                                     )}
                                 </ul>
                             </div>
@@ -277,31 +296,30 @@ const PlanSidebar = ({ repo, plan, onClose }: PlanSidebarProps) => {
                     })}
                 </div>
 
-                {/* Footer */}
-                <div className="flex-shrink-0 px-6 py-4 border-t border-stone-100 flex items-center justify-between">
+                <div className="flex-shrink-0 px-6 py-3 border-t border-ink flex items-center justify-between">
                     <a
                         href={`${repo.html_url}/blob/main/PLAN.md`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-stone-400 hover:text-stone-700 underline underline-offset-2 transition-colors"
+                        className="inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
                     >
-                        View PLAN.md on GitHub
+                        View PLAN.md on GitHub ↗
                     </a>
                     <button
                         onClick={onClose}
-                        className="text-xs text-stone-400 hover:text-stone-700 transition-colors"
+                        className="inline-flex items-center min-h-11 px-2 font-mono text-[13px] text-ink-2 hover:text-ink"
                     >
                         Close
                     </button>
                 </div>
-            </motion.div>
+            </motion.aside>
         </>
     );
 };
 
-// --- REPO CARD ---
+// --- REPO ROW ---
 
-const RepoCard = ({
+const RepoRow = ({
     repo,
     description,
     onShowPlan,
@@ -312,10 +330,8 @@ const RepoCard = ({
 }) => {
     const [copied, setCopied] = useState(false);
     const status = getStatus(repo);
-    const cfg = STATUS_CONFIG[status];
     const plan = repo.planData;
     const progress = plan && plan.totalTasks > 0 ? (plan.totalDone / plan.totalTasks) * 100 : 0;
-
     const needsReview = description?.endsWith('[needs review]') ?? false;
     const descText = needsReview ? description!.replace(' [needs review]', '') : description;
 
@@ -325,179 +341,148 @@ const RepoCard = ({
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            // clipboard unavailable — silently ignore
+            /* clipboard unavailable */
         }
     };
 
     return (
-        <motion.article
-            className="group bg-white rounded-2xl p-8 border border-stone-200 relative overflow-hidden flex flex-col"
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ y: -4, boxShadow: '0 16px 40px rgba(15,23,42,0.10)' }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            viewport={{ once: true, amount: 0.15 }}
-        >
-            {/* Left accent bar */}
-            <div className="absolute top-0 left-0 w-1.5 h-full" style={{ backgroundColor: cfg.color }} />
+        <article className="grid md:grid-cols-[120px_minmax(0,1fr)_200px] gap-x-8 gap-y-3 py-6 border-b border-rule">
+            <div className="font-mono text-xs text-ink-2 leading-relaxed space-y-1">
+                <StatusMark status={status} />
+                <div>{relativeTime(repo.pushed_at)}</div>
+                {repo.language && <div>{repo.language}</div>}
+            </div>
 
-            <div className="pl-5 flex flex-col h-full">
-                {/* Title + status pill */}
-                <div className="flex items-start justify-between gap-3 mb-2">
-                    <a
-                        href={repo.html_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-serif text-xl text-stone-900 hover:underline decoration-1 underline-offset-4 decoration-stone-300 line-clamp-1 leading-snug"
-                    >
-                        {repo.name}
-                    </a>
-                    <span
-                        className="flex-shrink-0 px-2.5 py-0.5 text-xs font-bold rounded-full uppercase tracking-wider"
-                        style={{ backgroundColor: cfg.bg, color: cfg.text }}
-                    >
-                        {cfg.label}
-                    </span>
-                </div>
-
-                {/* Language + time + topic pills */}
-                <div className="flex items-center gap-3 text-xs text-stone-400 mb-3 flex-wrap">
-                    {repo.language && <span className="font-mono">{repo.language}</span>}
-                    <span className="flex items-center gap-1">
-                        <Clock size={11} />
-                        {relativeTime(repo.pushed_at)}
-                    </span>
-                    {repo.topics && repo.topics.length > 0 && (
-                        <>
-                            {repo.topics.slice(0, 2).map(t => (
-                                <span key={t} className="px-1.5 py-0 bg-stone-100 text-stone-400 rounded text-[10px] font-mono">
-                                    {t}
-                                </span>
-                            ))}
-                        </>
+            <div className="min-w-0">
+                <a
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-serif text-2xl tracking-tight leading-tight hover:underline underline-offset-4 decoration-1 break-words"
+                >
+                    {repo.name}
+                </a>
+                {descText && (
+                    <p className="text-ink-2 text-[15px] leading-relaxed mt-2 max-w-[68ch]">
+                        {descText}
+                    </p>
+                )}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 font-mono text-xs text-ink-2">
+                    {needsReview && (
+                        <span className="border border-dashed border-ink-2 px-1.5 py-0.5">
+                            needs review
+                        </span>
+                    )}
+                    {repo.topics?.slice(0, 3).map((t) => (
+                        <span key={t}>#{t}</span>
+                    ))}
+                    {repo.stargazers_count > 0 && (
+                        <span className="inline-flex items-center gap-1">
+                            <Star size={12} aria-hidden="true" />
+                            {repo.stargazers_count}
+                            <span className="sr-only"> stars</span>
+                        </span>
+                    )}
+                    {repo.forks_count > 0 && (
+                        <span className="inline-flex items-center gap-1">
+                            <GitFork size={12} aria-hidden="true" />
+                            {repo.forks_count}
+                            <span className="sr-only"> forks</span>
+                        </span>
+                    )}
+                    {repo.open_issues_count > 0 && (
+                        <span className="inline-flex items-center gap-1">
+                            <AlertCircle size={12} aria-hidden="true" />
+                            {repo.open_issues_count}
+                            <span className="sr-only"> open issues</span>
+                        </span>
                     )}
                 </div>
-
-                {/* Description */}
-                {descText && (
-                    <div className="mb-4 flex-grow">
-                        <p className="text-stone-600 text-sm leading-relaxed">{descText}</p>
-                        {needsReview && (
-                            <span className="mt-2 inline-block text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                                needs review
-                            </span>
-                        )}
-                    </div>
-                )}
-
-                {/* Stats */}
-                {(repo.stargazers_count > 0 || repo.forks_count > 0 || repo.open_issues_count > 0) && (
-                    <div className="flex items-center gap-4 text-xs text-stone-400 mb-4">
-                        {repo.stargazers_count > 0 && (
-                            <span className="flex items-center gap-1"><Star size={12} />{repo.stargazers_count}</span>
-                        )}
-                        {repo.forks_count > 0 && (
-                            <span className="flex items-center gap-1"><GitFork size={12} />{repo.forks_count}</span>
-                        )}
-                        {repo.open_issues_count > 0 && (
-                            <span className="flex items-center gap-1"><AlertCircle size={12} />{repo.open_issues_count}</span>
-                        )}
-                    </div>
-                )}
-
-                {/* PLAN.md loading skeleton */}
-                {repo.planLoading && (
-                    <div className="mb-4 space-y-2">
-                        <div className="h-2 bg-stone-100 rounded-full animate-pulse w-24" />
-                        <div className="h-1.5 bg-stone-100 rounded-full animate-pulse" />
-                    </div>
-                )}
-
-                {/* PLAN.md progress */}
-                {!repo.planLoading && plan && plan.totalTasks > 0 && (
-                    <div className="mb-4 space-y-2">
-                        <div className="flex items-center justify-between text-xs text-stone-500">
-                            <span className="font-bold uppercase tracking-wider">Plan</span>
-                            <span>{plan.totalDone}/{plan.totalTasks} tasks</span>
-                        </div>
-                        <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full rounded-full transition-all duration-700"
-                                style={{ width: `${progress}%`, backgroundColor: cfg.color }}
-                            />
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                            {plan.milestones.map((m, i) => (
-                                <span
-                                    key={i}
-                                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-stone-50 border border-stone-200 text-stone-500 text-xs rounded-md"
-                                >
-                                    <span
-                                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                                        style={{ backgroundColor: m.total > 0 && m.done === m.total ? '#22c55e' : cfg.color }}
-                                    />
-                                    <span className="truncate max-w-[100px]">{m.title}</span>
-                                    <span className="text-stone-300">·</span>
-                                    {m.done}/{m.total}
-                                </span>
-                            ))}
-                        </div>
-
-                        {/* Open sidebar button */}
-                        <button
-                            onClick={() => onShowPlan(repo, plan)}
-                            className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-[#3B5BDB] transition-colors mt-1 group/plan"
-                        >
-                            <ListChecks size={13} className="group-hover/plan:scale-110 transition-transform" />
-                            View all steps
-                        </button>
-                    </div>
-                )}
-
-                {!repo.planLoading && plan === null && (
-                    <p className="mb-4 text-xs text-stone-300 italic">no plan yet</p>
-                )}
-
-                {/* Footer */}
-                <div className="mt-auto flex items-center justify-between pt-3 border-t border-stone-100">
+                <div className="flex flex-wrap items-center gap-x-5 mt-1 -mb-2">
                     <a
                         href={repo.html_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-700 transition-colors"
+                        className="inline-flex items-center gap-1.5 min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
                     >
-                        <Github size={13} /> GitHub
+                        <Github size={13} aria-hidden="true" /> GitHub ↗
                     </a>
                     <button
                         onClick={handleLockIn}
-                        title="Copy Claude Code command to clipboard"
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#3B5BDB] text-white text-xs font-semibold rounded-full hover:bg-[#2F4AC7] transition-colors"
+                        title="Copy the Claude Code command to your clipboard"
+                        className="inline-flex items-center gap-1.5 min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
                     >
-                        {copied ? <Check size={12} /> : <Terminal size={12} />}
-                        {copied ? 'Copied!' : 'Lock in'}
+                        {copied ? (
+                            <Check size={13} aria-hidden="true" />
+                        ) : (
+                            <Terminal size={13} aria-hidden="true" />
+                        )}
+                        {copied ? 'Copied' : 'Copy lock-in command'}
                     </button>
                 </div>
             </div>
-        </motion.article>
+
+            <div className="font-mono text-xs">
+                <div className="text-ink-2 mb-2">PLAN.md</div>
+                {repo.planLoading && (
+                    <div className="space-y-2" aria-label="Loading plan">
+                        <div className="h-3 bg-paper-2 animate-pulse w-24" />
+                        <div className="h-2 bg-paper-2 animate-pulse" />
+                    </div>
+                )}
+                {!repo.planLoading && plan && plan.totalTasks > 0 && (
+                    <div>
+                        <div className="flex justify-between mb-2">
+                            <span>
+                                {plan.totalDone}/{plan.totalTasks} tasks
+                            </span>
+                            <span className="text-ink-2">{Math.round(progress)}%</span>
+                        </div>
+                        <ProgressBar value={progress} />
+                        <button
+                            onClick={() => onShowPlan(repo, plan)}
+                            className="inline-flex items-center min-h-11 mt-1 underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
+                        >
+                            View all {plan.milestones.length} milestones
+                        </button>
+                    </div>
+                )}
+                {!repo.planLoading && plan === null && (
+                    <div className="text-ink-2">no plan yet</div>
+                )}
+                {!repo.planLoading && plan && plan.totalTasks === 0 && (
+                    <div className="text-ink-2">no tasks listed</div>
+                )}
+            </div>
+        </article>
     );
 };
 
-// --- SKELETON CARD ---
-
-const SkeletonCard = () => (
-    <div className="bg-white rounded-2xl p-8 border border-stone-200 animate-pulse space-y-4 h-56">
-        <div className="flex items-start justify-between gap-3">
-            <div className="h-4 bg-stone-100 rounded w-2/3" />
-            <div className="h-5 bg-stone-100 rounded-full w-16" />
+const SkeletonRow = () => (
+    <div
+        className="grid md:grid-cols-[120px_minmax(0,1fr)_200px] gap-x-8 gap-y-3 py-6 border-b border-rule animate-pulse"
+        aria-hidden="true"
+    >
+        <div className="space-y-2">
+            <div className="h-3 bg-paper-2 w-16" />
+            <div className="h-3 bg-paper-2 w-12" />
         </div>
-        <div className="h-3 bg-stone-100 rounded w-1/4" />
-        <div className="h-3 bg-stone-100 rounded" />
-        <div className="h-3 bg-stone-100 rounded w-4/5" />
-        <div className="h-3 bg-stone-100 rounded w-3/5" />
+        <div className="space-y-2">
+            <div className="h-6 bg-paper-2 w-1/3" />
+            <div className="h-3 bg-paper-2 w-4/5" />
+            <div className="h-3 bg-paper-2 w-3/5" />
+        </div>
+        <div className="space-y-2">
+            <div className="h-3 bg-paper-2 w-24" />
+            <div className="h-2 bg-paper-2" />
+        </div>
     </div>
 );
 
 // --- MAIN DASHBOARD ---
+
+const controlClass =
+    'h-11 px-3 bg-paper border border-ink rounded-[3px] font-mono text-[13px] text-ink placeholder:text-ink-2 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2';
 
 const Dashboard = ({ onBack }: { onBack: () => void }) => {
     const [repos, setRepos] = useState<Repo[]>([]);
@@ -507,15 +492,8 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
     const [langFilter, setLangFilter] = useState('');
     const [topicFilter, setTopicFilter] = useState('');
     const [search, setSearch] = useState('');
-    const [scrolled, setScrolled] = useState(false);
     const [activePlan, setActivePlan] = useState<{ repo: Repo; plan: PlanData } | null>(null);
     const [refreshing, setRefreshing] = useState(false);
-
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 50);
-        window.addEventListener('scroll', onScroll);
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
 
     const fetchAll = async (isRefresh = false) => {
         try {
@@ -534,11 +512,11 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
             if (!res.ok) throw new Error(`GitHub API responded with ${res.status}`);
             const data: Repo[] = await res.json();
 
-            setRepos(data.map(r => ({ ...r, planData: undefined, planLoading: true })));
+            setRepos(data.map((r) => ({ ...r, planData: undefined, planLoading: true })));
             setLoading(false);
 
             await Promise.allSettled(
-                data.map(async repo => {
+                data.map(async (repo) => {
                     try {
                         const branch = repo.default_branch || 'main';
                         const pr = await fetch(
@@ -546,12 +524,16 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                             { cache: 'no-store' }
                         );
                         const planData = pr.ok ? parsePlan(await pr.text()) : null;
-                        setRepos(prev =>
-                            prev.map(r => r.id === repo.id ? { ...r, planData, planLoading: false } : r)
+                        setRepos((prev) =>
+                            prev.map((r) =>
+                                r.id === repo.id ? { ...r, planData, planLoading: false } : r
+                            )
                         );
                     } catch {
-                        setRepos(prev =>
-                            prev.map(r => r.id === repo.id ? { ...r, planData: null, planLoading: false } : r)
+                        setRepos((prev) =>
+                            prev.map((r) =>
+                                r.id === repo.id ? { ...r, planData: null, planLoading: false } : r
+                            )
                         );
                     }
                 })
@@ -564,22 +546,19 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
         }
     };
 
-    useEffect(() => { fetchAll(); }, []);
+    useEffect(() => {
+        fetchAll();
+    }, []);
 
     const uniqueLangs = Array.from(
-        new Set(repos.map(r => r.language).filter(Boolean) as string[])
+        new Set(repos.map((r) => r.language).filter(Boolean) as string[])
     ).sort();
+    const uniqueTopics = Array.from(new Set(repos.flatMap((r) => r.topics ?? []))).sort();
 
-    const uniqueTopics = Array.from(
-        new Set(repos.flatMap(r => r.topics ?? []))
-    ).sort();
-
-    const filtered = repos.filter(repo => {
+    const filtered = repos.filter((repo) => {
         const status = getStatus(repo);
         const matchesFilter =
-            filter === 'all' ||
-            filter === status ||
-            (filter === 'archived' && repo.archived);
+            filter === 'all' || filter === status || (filter === 'archived' && repo.archived);
         const matchesLang = !langFilter || repo.language === langFilter;
         const matchesTopic = !topicFilter || (repo.topics ?? []).includes(topicFilter);
         const q = search.toLowerCase();
@@ -591,210 +570,253 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
     });
 
     const counts: Record<FilterTab, number> = {
-        all:      repos.length,
-        active:   repos.filter(r => getStatus(r) === 'active').length,
-        stale:    repos.filter(r => getStatus(r) === 'stale').length,
-        archived: repos.filter(r => getStatus(r) === 'archived').length,
+        all: repos.length,
+        active: repos.filter((r) => getStatus(r) === 'active').length,
+        stale: repos.filter((r) => getStatus(r) === 'stale').length,
+        archived: repos.filter((r) => getStatus(r) === 'archived').length,
     };
-
     const filterTabs: { key: FilterTab; label: string }[] = [
-        { key: 'all',      label: 'All' },
-        { key: 'active',   label: 'Active' },
-        { key: 'stale',    label: 'Stale' },
+        { key: 'all', label: 'All' },
+        { key: 'active', label: 'Active' },
+        { key: 'stale', label: 'Stale' },
         { key: 'archived', label: 'Archived' },
     ];
 
-    const selectClass = "h-9 pl-3 pr-8 bg-white border border-stone-200 rounded-full text-sm text-stone-600 focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 appearance-none cursor-pointer hover:border-stone-400 transition-all";
+    const plans = repos.filter((r) => r.planData && r.planData.totalTasks > 0);
+    const tasksDone = plans.reduce((s, r) => s + r.planData!.totalDone, 0);
+    const tasksTotal = plans.reduce((s, r) => s + r.planData!.totalTasks, 0);
+    const plansPending = repos.some((r) => r.planLoading);
+    const ledger: Array<[string, string]> = [
+        [String(counts.all), 'public repos'],
+        [String(counts.active), 'pushed in the last 14 days'],
+        [plansPending ? '…' : String(plans.length), 'repos with a PLAN.md'],
+        [plansPending ? '…' : `${tasksDone}/${tasksTotal}`, 'plan tasks done'],
+    ];
 
     return (
-        <div className="min-h-screen bg-[#FAFAF8] text-stone-800">
-            {/* Nav */}
-            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#FAFAF8]/90 backdrop-blur-md shadow-sm py-4' : 'bg-[#FAFAF8] py-6 border-b border-stone-100'}`}>
-                <div className="container mx-auto px-6 flex items-center justify-between">
-                    <button
-                        onClick={onBack}
-                        className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors"
+        <div className="min-h-screen bg-paper text-ink">
+            <nav aria-label="Tracker" className="sticky top-0 z-50 bg-paper/95 border-b border-ink">
+                <div className="max-w-[1120px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between gap-4">
+                    <a
+                        href="/"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onBack();
+                        }}
+                        className="inline-flex items-center gap-2 min-h-11 hover:underline underline-offset-4"
                     >
-                        <ArrowLeft size={20} />
-                        <span className="font-medium text-sm tracking-wide uppercase">Portfolio</span>
-                    </button>
-
-                    <span className="font-serif font-bold text-xl text-stone-900 tracking-tight">
-                        Ishani<span className="text-stone-400">.build</span>
+                        <ArrowLeft size={16} aria-hidden="true" />{' '}
+                        <span className="font-serif text-lg tracking-tight">Ishani Kathuria</span>
+                    </a>
+                    <span className="hidden sm:inline font-mono text-xs text-ink-2">
+                        build tracker
                     </span>
-
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center">
                         <button
                             onClick={() => fetchAll(true)}
                             disabled={refreshing || loading}
-                            title="Refresh repos and plans"
                             aria-label="Refresh repos and plans"
-                            className="p-2 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-all disabled:opacity-40"
+                            title="Refresh repos and plans"
+                            className="w-11 h-11 inline-flex items-center justify-center hover:bg-hi transition-colors disabled:opacity-40"
                         >
-                            <RefreshCw size={18} className={refreshing ? 'animate-spin' : ''} />
+                            <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
                         </button>
                         <a
                             href="https://github.com/ikathuria"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="GitHub profile"
-                            className="p-2 rounded-full text-stone-500 hover:text-stone-900 hover:bg-stone-100 transition-all"
+                            className="w-11 h-11 inline-flex items-center justify-center hover:bg-hi transition-colors"
                         >
-                            <Github size={20} />
+                            <Github size={18} />
                         </a>
                     </div>
                 </div>
             </nav>
 
-            <main className="container mx-auto px-6 pt-28 pb-24">
-                {/* Page header */}
-                <motion.div
-                    className="mb-10"
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <div className="inline-block mb-3 text-xs font-bold tracking-widest text-stone-400 uppercase">
-                        GitHub · ikathuria
+            <header className="max-w-[1120px] mx-auto px-5 md:px-8 pt-16 pb-10">
+                <div className="grid md:grid-cols-12 gap-x-8 gap-y-4 items-end">
+                    <div className="md:col-span-7">
+                        <div className="font-mono text-xs text-ink-2 mb-3">github / ikathuria</div>
+                        <h1 className="font-serif text-[clamp(40px,7vw,80px)] leading-[1] tracking-[-0.03em]">
+                            Build tracker
+                        </h1>
                     </div>
-                    <h1 className="font-serif text-4xl md:text-5xl text-stone-900 mb-3">Project Tracker</h1>
-                    <p className="text-stone-500 max-w-xl leading-relaxed">
-                        Live view of all public repos — push-date status and PLAN.md milestone progress.
-                    </p>
-                </motion.div>
+                    <div className="md:col-span-5 md:text-right">
+                        <p className="text-ink-2 text-[15px] leading-relaxed md:ml-auto max-w-[44ch]">
+                            Live view of every public repo: how recently it moved, and how far along
+                            its PLAN.md is.
+                        </p>
+                        <span className="inline-block font-mono text-xs mt-3 bg-machine text-machine-ink px-2 py-1 rounded-[2px]">
+                            repos.list() → {loading ? '…' : counts.all}
+                        </span>
+                    </div>
+                </div>
+            </header>
 
-                {/* Search + filters */}
-                <motion.div
-                    className="flex flex-col gap-3 mb-8"
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                >
-                    {/* Row 1: search + language + topic dropdowns */}
+            <section aria-label="Summary" className="border-y border-ink">
+                <dl className="max-w-[1120px] mx-auto px-5 md:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-6">
+                    {ledger.map(([v, l]) => (
+                        <div key={l}>
+                            <dt className="font-serif text-[36px] leading-none tracking-tight">
+                                {loading ? '…' : v}
+                            </dt>
+                            <dd className="text-[13px] leading-snug text-ink-2 mt-2 max-w-[20ch]">
+                                {l}
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
+
+            <main className="max-w-[1120px] mx-auto px-5 md:px-8 pt-10 pb-24">
+                <div className="flex flex-col gap-3 mb-8">
                     <div className="flex flex-wrap gap-3 items-center">
-                        <div className="relative">
-                            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
+                        <label className="relative">
+                            <span className="sr-only">Search repos</span>
+                            <Search
+                                size={14}
+                                aria-hidden="true"
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
+                            />
                             <input
                                 type="text"
-                                placeholder="Search repos…"
+                                placeholder="search repos"
                                 value={search}
-                                onChange={e => setSearch(e.target.value)}
-                                className="h-9 pl-9 pr-4 bg-white border border-stone-200 rounded-full text-sm text-stone-700 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-indigo/30 transition-all w-48"
+                                onChange={(e) => setSearch(e.target.value)}
+                                className={`${controlClass} pl-9 w-52`}
                             />
-                        </div>
-
+                        </label>
                         {uniqueLangs.length > 0 && (
                             <div className="relative">
                                 <select
+                                    aria-label="Language"
                                     value={langFilter}
-                                    onChange={e => setLangFilter(e.target.value)}
-                                    className={selectClass}
+                                    onChange={(e) => setLangFilter(e.target.value)}
+                                    className={`${controlClass} appearance-none pr-9 cursor-pointer`}
                                 >
                                     <option value="">All languages</option>
-                                    {uniqueLangs.map(l => (
-                                        <option key={l} value={l}>{l}</option>
+                                    {uniqueLangs.map((l) => (
+                                        <option key={l} value={l}>
+                                            {l}
+                                        </option>
                                     ))}
                                 </select>
-                                <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
+                                <ChevronDown
+                                    size={14}
+                                    aria-hidden="true"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
+                                />
                             </div>
                         )}
-
                         {uniqueTopics.length > 0 && (
                             <div className="relative">
                                 <select
+                                    aria-label="Topic"
                                     value={topicFilter}
-                                    onChange={e => setTopicFilter(e.target.value)}
-                                    className={selectClass}
+                                    onChange={(e) => setTopicFilter(e.target.value)}
+                                    className={`${controlClass} appearance-none pr-9 cursor-pointer`}
                                 >
                                     <option value="">All topics</option>
-                                    {uniqueTopics.map(t => (
-                                        <option key={t} value={t}>{t}</option>
+                                    {uniqueTopics.map((t) => (
+                                        <option key={t} value={t}>
+                                            {t}
+                                        </option>
                                     ))}
                                 </select>
-                                <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
+                                <ChevronDown
+                                    size={14}
+                                    aria-hidden="true"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
+                                />
                             </div>
                         )}
-
                         {(langFilter || topicFilter) && (
                             <button
-                                onClick={() => { setLangFilter(''); setTopicFilter(''); }}
-                                className="text-xs text-stone-400 hover:text-stone-700 underline underline-offset-2 transition-colors"
+                                onClick={() => {
+                                    setLangFilter('');
+                                    setTopicFilter('');
+                                }}
+                                className="inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
                             >
-                                Clear filters
+                                clear filters
                             </button>
                         )}
                     </div>
-
-                    {/* Row 2: status pills */}
-                    <div className="flex gap-2 flex-wrap">
-                        {filterTabs.map(f => (
+                    <div role="group" aria-label="Status" className="flex gap-2 flex-wrap">
+                        {filterTabs.map((f) => (
                             <button
                                 key={f.key}
                                 onClick={() => setFilter(f.key)}
-                                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                                    filter === f.key
-                                        ? 'bg-[#3B5BDB] text-white shadow-sm'
-                                        : 'bg-white border border-stone-200 text-stone-500 hover:border-stone-400 hover:text-stone-700'
-                                }`}
+                                aria-pressed={filter === f.key}
+                                className={`min-h-11 px-3.5 font-mono text-[13px] border border-ink rounded-[3px] transition-colors ${filter === f.key ? 'bg-ink text-paper' : 'bg-paper text-ink hover:bg-hi'}`}
                             >
-                                {f.label}
-                                <span className={`ml-1.5 text-xs ${filter === f.key ? 'text-indigo-200' : 'text-stone-400'}`}>
+                                {f.label}{' '}
+                                <span
+                                    className={filter === f.key ? 'text-machine-ink' : 'text-ink-2'}
+                                >
                                     {counts[f.key]}
                                 </span>
                             </button>
                         ))}
                     </div>
-                </motion.div>
+                </div>
 
-                {/* Grid */}
-                {loading && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)}
-                    </div>
-                )}
+                <div className="border-t border-ink">
+                    {loading && Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)}
 
-                {error && (
-                    <div className="text-center py-20">
-                        <p className="text-stone-500 mb-4">{error}</p>
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="text-sm text-stone-400 underline underline-offset-2 hover:text-stone-700 transition-colors"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                )}
+                    {error && (
+                        <div className="py-16">
+                            <p className="font-serif text-2xl mb-2">Couldn't reach GitHub.</p>
+                            <p className="text-ink-2 text-[15px] mb-4">
+                                {error}. The public API allows a limited number of requests per
+                                hour, so try again in a bit.
+                            </p>
+                            <button
+                                onClick={() => fetchAll()}
+                                className="min-h-11 px-4 font-mono text-[13px] border border-ink rounded-[3px] bg-ink text-paper hover:bg-hi hover:text-ink transition-colors"
+                            >
+                                Try again
+                            </button>
+                        </div>
+                    )}
 
-                {!loading && !error && filtered.length === 0 && (
-                    <div className="text-center py-20 text-stone-400 font-serif text-xl">
-                        No repositories match your filters.
-                    </div>
-                )}
+                    {!loading && !error && filtered.length === 0 && (
+                        <div className="py-16">
+                            <p className="font-serif text-2xl mb-2">
+                                No repos match those filters.
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setFilter('all');
+                                    setLangFilter('');
+                                    setTopicFilter('');
+                                    setSearch('');
+                                }}
+                                className="inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
+                            >
+                                Clear everything
+                            </button>
+                        </div>
+                    )}
 
-                {!loading && !error && filtered.length > 0 && (
-                    <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        {filtered.map(repo => (
-                            <RepoCard
+                    {!loading &&
+                        !error &&
+                        filtered.map((repo) => (
+                            <RepoRow
                                 key={repo.id}
                                 repo={repo}
                                 description={
-                                    (repoDescriptions as Record<string, string>)[repo.name]
-                                    ?? repo.description
-                                    ?? null
+                                    (repoDescriptions as Record<string, string>)[repo.name] ??
+                                    repo.description ??
+                                    null
                                 }
                                 onShowPlan={(r, p) => setActivePlan({ repo: r, plan: p })}
                             />
                         ))}
-                    </motion.div>
-                )}
+                </div>
             </main>
 
-            {/* Plan sidebar portal */}
             <AnimatePresence>
                 {activePlan && (
                     <PlanSidebar

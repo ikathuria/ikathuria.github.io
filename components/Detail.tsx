@@ -5,16 +5,7 @@
 
 import React, { useState, Suspense, lazy } from 'react';
 import { ArrowLeft, ArrowUpRight, Github } from 'lucide-react';
-import {
-    FeatureSelectionChart,
-    DualStreamPipeline,
-    FuzzyLogicCurves,
-    AIHierarchyVenn,
-    AudioWaveform,
-    NetworkGraph,
-    ConfidenceMeter,
-    DepthGrid,
-} from './Diagrams';
+import { ItemDiagram } from './ProjectDiagrams';
 import { Sticker, StickerColor } from './Sticker';
 import { TextLink } from './Home';
 import type { PortfolioItem } from '../data';
@@ -42,34 +33,22 @@ const Eyebrow = ({ children }: { children: React.ReactNode }) => (
     <div className="font-mono text-xs text-ink-2 mb-3">{children}</div>
 );
 
-const Detail: React.FC<{ item: PortfolioItem; onBack: () => void }> = ({ item, onBack }) => {
-    const { metadata: m, narrative, authors, visuals, technical } = item;
+const Detail: React.FC<{ item: PortfolioItem; siblings: PortfolioItem[]; onBack: () => void }> = ({
+    item,
+    siblings,
+    onBack,
+}) => {
+    const { metadata: m, narrative, authors, technical, results } = item;
     const [showCode, setShowCode] = useState(false);
     const year = m.date.split(' ').pop();
+    const at = Math.max(
+        0,
+        siblings.findIndex((x) => x.id === item.id)
+    );
+    const prev = siblings[(at - 1 + siblings.length) % siblings.length];
+    const next = siblings[(at + 1) % siblings.length];
+    const setName = item.type === 'project' ? 'projects' : 'papers';
     const stack = technical?.techStack ?? [];
-
-    const renderDiagram = () => {
-        switch (visuals.diagramType) {
-            case 'bar-chart':
-                return <FeatureSelectionChart color={m.themeColor} />;
-            case 'flow-chart':
-                return <DualStreamPipeline color={m.themeColor} />;
-            case 'fuzzy-curves':
-                return <FuzzyLogicCurves color={m.themeColor} />;
-            case 'venn-diagram':
-                return <AIHierarchyVenn color={m.themeColor} />;
-            case 'waveform':
-                return <AudioWaveform color={m.themeColor} />;
-            case 'network-graph':
-                return <NetworkGraph color={m.themeColor} />;
-            case 'confidence-meter':
-                return <ConfidenceMeter color={m.themeColor} />;
-            case 'depth-grid':
-                return <DepthGrid color={m.themeColor} />;
-            default:
-                return null;
-        }
-    };
 
     const back = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -214,6 +193,23 @@ const Detail: React.FC<{ item: PortfolioItem; onBack: () => void }> = ({ item, o
                 </div>
             </header>
 
+            {results && results.length > 0 && (
+                <section aria-label="Results" className="border-y border-ink">
+                    <dl className="max-w-[1120px] mx-auto px-5 md:px-8 py-8 flex flex-wrap gap-x-14 gap-y-6">
+                        {results.map((r) => (
+                            <div key={r.label} className="max-w-[26ch]">
+                                <dt className="font-serif text-[40px] leading-none tracking-tight">
+                                    {r.value}
+                                </dt>
+                                <dd className="text-[13px] leading-snug text-ink-2 mt-2">
+                                    {r.label}
+                                </dd>
+                            </div>
+                        ))}
+                    </dl>
+                </section>
+            )}
+
             <main id="main">
                 <section id="problem" className="py-24 border-t border-ink">
                     <div className="max-w-[1120px] mx-auto px-5 md:px-8 grid md:grid-cols-12 gap-x-8 gap-y-8">
@@ -230,21 +226,23 @@ const Detail: React.FC<{ item: PortfolioItem; onBack: () => void }> = ({ item, o
                 </section>
 
                 <section id="innovation" className="py-24 bg-paper-2 border-y border-rule">
-                    <div className="max-w-[1120px] mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-x-14 gap-y-12 items-start">
-                        <div>
-                            <Eyebrow>02 / The approach</Eyebrow>
-                            <h2 className="font-serif text-4xl md:text-5xl leading-[1.05] tracking-tight mb-6">
-                                How it works.
-                            </h2>
-                            <p className="text-[18px] leading-[1.7] text-ink-2">
-                                {narrative.innovation}
-                            </p>
-                            {technical && (
-                                <>
-                                    <div className="font-mono text-xs text-ink-2 mt-10 mb-3">
-                                        STACK
-                                    </div>
-                                    <div className="flex flex-wrap gap-2.5">
+                    <div className="max-w-[1120px] mx-auto px-5 md:px-8">
+                        <div className="grid md:grid-cols-12 gap-x-8 gap-y-8 mb-12">
+                            <div className="md:col-span-4">
+                                <Eyebrow>02 / The approach</Eyebrow>
+                                <h2 className="font-serif text-4xl md:text-5xl leading-[1.05] tracking-tight">
+                                    How it works.
+                                </h2>
+                            </div>
+                            <div className="md:col-span-7 md:col-start-6">
+                                <p className="text-[18px] leading-[1.7] text-ink-2">
+                                    {narrative.innovation}
+                                </p>
+                                {technical && (
+                                    <div
+                                        className="flex flex-wrap gap-2.5 mt-6"
+                                        aria-label="Tech stack"
+                                    >
                                         {stack.map((t, i) => (
                                             <Sticker
                                                 key={t}
@@ -255,35 +253,52 @@ const Detail: React.FC<{ item: PortfolioItem; onBack: () => void }> = ({ item, o
                                             </Sticker>
                                         ))}
                                     </div>
-                                    <button
-                                        onClick={() => setShowCode((v) => !v)}
-                                        aria-pressed={showCode}
-                                        className="mt-8 inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
-                                    >
-                                        {showCode ? 'Show the diagram' : 'Show the code'}
-                                    </button>
-                                </>
-                            )}
+                                )}
+                            </div>
                         </div>
-                        <div className="w-full">
-                            {showCode && technical?.codeSnippet ? (
+
+                        {technical?.codeSnippet && (
+                            <div className="flex items-center gap-4 mb-4">
+                                <span className="font-mono text-xs text-ink-2">VIEW</span>
                                 <div
-                                    className="bg-machine text-machine-ink rounded-[4px] overflow-hidden font-mono text-xs md:text-[13px]"
-                                    data-dark
+                                    role="group"
+                                    aria-label="Diagram or code"
+                                    className="flex border border-ink rounded-[3px] p-0.5 font-mono text-xs"
                                 >
-                                    <div className="px-5 py-3 border-b border-[#2A2A2A] text-machine-dim">
-                                        model_architecture.py
-                                    </div>
-                                    <pre className="p-5 overflow-x-auto leading-[1.7]" tabIndex={0}>
-                                        <code>{technical.codeSnippet}</code>
-                                    </pre>
+                                    {(
+                                        [
+                                            [false, 'Interactive diagram'],
+                                            [true, 'Code'],
+                                        ] as const
+                                    ).map(([v, label]) => (
+                                        <button
+                                            key={label}
+                                            onClick={() => setShowCode(v)}
+                                            aria-pressed={showCode === v}
+                                            className={`min-h-9 px-3 rounded-[2px] transition-colors ${showCode === v ? 'bg-ink text-paper' : 'text-ink-2 hover:text-ink'}`}
+                                        >
+                                            {label}
+                                        </button>
+                                    ))}
                                 </div>
-                            ) : (
-                                <div className="border border-ink rounded-[4px] bg-paper p-4 flex justify-center">
-                                    {renderDiagram()}
+                            </div>
+                        )}
+
+                        {showCode && technical?.codeSnippet ? (
+                            <div
+                                className="bg-machine text-machine-ink rounded-[4px] overflow-hidden font-mono text-xs md:text-[13px]"
+                                data-dark
+                            >
+                                <div className="px-5 py-3 border-b border-[#2A2A2A] text-machine-dim">
+                                    {technical.codeFile ?? 'snippet'}
                                 </div>
-                            )}
-                        </div>
+                                <pre className="p-5 overflow-x-auto leading-[1.7]" tabIndex={0}>
+                                    <code>{technical.codeSnippet}</code>
+                                </pre>
+                            </div>
+                        ) : (
+                            <ItemDiagram id={item.id} />
+                        )}
                     </div>
                 </section>
 
@@ -341,6 +356,47 @@ const Detail: React.FC<{ item: PortfolioItem; onBack: () => void }> = ({ item, o
                     </div>
                 </section>
             </main>
+
+            {siblings.length > 1 && (
+                <nav aria-label={`More ${setName}`} className="border-t border-ink">
+                    <div className="max-w-[1120px] mx-auto px-5 md:px-8">
+                        <div className="font-mono text-xs text-ink-2 pt-6">
+                            {String(at + 1).padStart(2, '0')} /{' '}
+                            {String(siblings.length).padStart(2, '0')} {setName}
+                        </div>
+                        <div className="grid sm:grid-cols-2">
+                            {[
+                                {
+                                    to: prev,
+                                    dir: '← Previous',
+                                    align: 'text-left sm:pr-8 sm:border-r border-rule',
+                                },
+                                {
+                                    to: next,
+                                    dir: 'Next →',
+                                    align: 'text-left sm:text-right sm:pl-8',
+                                },
+                            ].map(({ to, dir, align }) => (
+                                <a
+                                    key={dir}
+                                    href={`#project=${to.id}`}
+                                    className={`group block py-8 border-b border-rule sm:border-b-0 ${align}`}
+                                >
+                                    <div className="font-mono text-xs text-ink-2 mb-2">{dir}</div>
+                                    <div className="font-serif text-2xl md:text-3xl leading-tight tracking-tight">
+                                        <span className="group-hover:mark-hi">
+                                            {to.metadata.title}
+                                        </span>
+                                    </div>
+                                    <div className="text-[15px] text-ink-2 mt-2 max-w-[44ch] sm:inline-block">
+                                        {to.metadata.subtitle}
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </nav>
+            )}
 
             <footer data-dark className="bg-ink text-paper py-16">
                 <div className="max-w-[1120px] mx-auto px-5 md:px-8 flex flex-col md:flex-row md:items-end justify-between gap-8">

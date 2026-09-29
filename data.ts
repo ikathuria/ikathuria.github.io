@@ -29,7 +29,11 @@ export interface PortfolioItem {
   technical?: {
     techStack: string[];
     codeSnippet: string;
+    /** Filename shown on the code panel. */
+    codeFile?: string;
   };
+  /** Headline numbers taken from the item's own narrative. Only true, sourced values. */
+  results?: Array<{ value: string; label: string }>;
   authors: Array<{ name: string; role: string }>;
 }
 
@@ -56,6 +60,7 @@ export const papers: PortfolioItem[] = [
     },
     technical: {
       techStack: ["Python", "Keras", "Librosa", "NLTK"],
+      codeFile: "extract_features.py",
       codeSnippet: `def extract_features(data, sample_rate):
     # ZCR
     result = np.array([])
@@ -101,6 +106,7 @@ export const papers: PortfolioItem[] = [
     },
     technical: {
       techStack: ["Scikit-Learn", "Fuzzy Logic", "OpenWeatherMap API", "Flask"],
+      codeFile: "fuzzy_rules.py",
       codeSnippet: `from skfuzzy import control as ctrl
 
 # Antecedents & Consequent
@@ -116,6 +122,9 @@ temperature['hot'] = fuzz.trapmf(temperature.universe, [20, 30, 50, 50])
 rule1 = ctrl.Rule(temperature['cold'] & time_of_day['morning'], recommendation['warm_comfort'])
 rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation['refreshing'])`
     },
+    results: [
+      { value: "0.917", label: "R² of the recommendation model" }
+    ],
     authors: [
       { name: "Ishani Kathuria", role: "Amity University" },
       { name: "Madhulika Bhatia", role: "Amity University" },
@@ -145,6 +154,7 @@ rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation[
     },
     technical: {
       techStack: ["Systematic Review", "Meta-Analysis", "Prisma Guidelines"],
+      codeFile: "key_findings.txt",
       codeSnippet: `Key Findings:
 1. CNNs (Convolutional Neural Networks):
    - Best for: Medical Imaging (X-Ray, MRI)
@@ -157,6 +167,10 @@ rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation[
 3. GANs (Generative Adversarial Networks):
    - Emerging role in Drug Discovery (Molecule generation)`
     },
+    results: [
+      { value: "24", label: "papers systematically reviewed" },
+      { value: ">95%", label: "accuracy for CNNs on diabetic retinopathy detection" }
+    ],
     authors: [
       { name: "Ishani Kathuria", role: "Amity University" },
       { name: "Madhulika Bhatia", role: "Amity University" },
@@ -186,6 +200,7 @@ rule2 = ctrl.Rule(temperature['hot'] & time_of_day['afternoon'], recommendation[
     },
     technical: {
       techStack: ["Azure ML Studio", "Neural Network Regression", "Pearson Correlation"],
+      codeFile: "azure_experiment.py",
       codeSnippet: `Experiment Setup (Azure ML):
 
 dataset = Dataset.get_by_name(workspace, name='PM25_Data')
@@ -204,6 +219,9 @@ nn_regressor = NeuralNetworkRegression(
     max_learning_iterations=1000
 )`
     },
+    results: [
+      { value: "0.508", label: "lowest RMSE, neural network with count-based features" }
+    ],
     authors: [
       { name: "Kamad Saxena", role: "Amity University" },
       { name: "Ishani Kathuria", role: "Amity University" },
@@ -236,6 +254,7 @@ export const projects: PortfolioItem[] = [
     },
     technical: {
       techStack: ["Neo4j", "LangChain", "Llama 3", "Python"],
+      codeFile: "qalf_routing.py",
       codeSnippet: `def qalf_routing(query, context):
     # 4D Complexity & Intent Analysis
     complexity = analyze_complexity(query) # 0.0 to 1.0
@@ -279,6 +298,7 @@ export const projects: PortfolioItem[] = [
     },
     technical: {
       techStack: ["React", "TypeScript", "LangChain", "Gemini/GPT-4"],
+      codeFile: "redTeamLoop.ts",
       codeSnippet: `const redTeamLoop = async (target: LLM, attack: string) => {
   // 1. Attack Execution
   const response = await target.generate(attack);
@@ -301,6 +321,9 @@ export const projects: PortfolioItem[] = [
   return redTeamLoop(target, refinedAttack);
 }`
     },
+    results: [
+      { value: "3", label: "LLMs stress-tested: Gemini 1.5 Pro, GPT-4, Llama 3" }
+    ],
     authors: [
       { name: "Ishani Kathuria", role: "Project Lead" }
     ]
@@ -328,6 +351,7 @@ export const projects: PortfolioItem[] = [
     },
     technical: {
       techStack: ["Transformers.js", "React", "Recharts", "Web Audio API"],
+      codeFile: "detector.ts",
       codeSnippet: `import { pipeline } from '@xenova/transformers';
 
 // Initialize Client-side Pipeline
@@ -350,6 +374,10 @@ async function processAudioStream(chunk: Float32Array) {
     });
 }`
     },
+    results: [
+      { value: "Sub-second", label: "detection latency" },
+      { value: "0", label: "audio uploads to a server" }
+    ],
     authors: [
       { name: "Ishani Kathuria", role: "Project Lead" }
     ]
@@ -376,6 +404,7 @@ async function processAudioStream(chunk: Float32Array) {
     },
     technical: {
       techStack: ["TensorFlow", "DistilRoBERTa", "HuggingFace", "React"],
+      codeFile: "dual_model.py",
       codeSnippet: `import tensorflow as tf
 from transformers import TFDistilBertModel
 
@@ -397,6 +426,11 @@ def build_dual_model():
     
     return tf.keras.Model(inputs=[text_input, audio_input], outputs=output)`
     },
+    results: [
+      { value: "+30%", label: "engagement in pilot tests" },
+      { value: ">90%", label: "speech-emotion accuracy" },
+      { value: "73%", label: "text-emotion accuracy" }
+    ],
     authors: [
       { name: "Ishani Kathuria", role: "Project Lead" }
     ]

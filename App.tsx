@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, lazy, Suspense } from 'react';
 import { User, Bot, Copy, Check } from 'lucide-react';
 import { papers, projects, hackathons, resume } from './data';
 import { IMPACT_STATS } from './content';
@@ -366,16 +366,31 @@ const MachineMode = ({ onToggle }: { onToggle: () => void }) => {
 };
 
 const App: React.FC = () => {
-    const [activeItemId, setActiveItemId] = useState<string | null>(null);
-    const [showDashboard, setShowDashboard] = useState(false);
+    // Initialise from the URL so deep links and refreshes keep their page
+    // (the hash-sync effect below would otherwise strip the hash on first render).
+    const [activeItemId, setActiveItemId] = useState<string | null>(() => {
+        const id = window.location.hash.match(/^#project=(.+)$/)?.[1];
+        return id && [...papers, ...projects].some(p => p.id === id) ? id : null;
+    });
+    const [showDashboard, setShowDashboard] = useState(() => window.location.hash === '#dashboard');
     const [machineMode, setMachineMode] = useState(false);
 
     const allItems = [...papers, ...projects];
 
+    // Remember where the visitor was on the home page so Back returns there.
+    // Captured at the moment of leaving: once the detail view renders, the page
+    // is shorter and the browser clamps scrollY.
+    const homeScroll = useRef(0);
+    const viewRef = useRef({ activeItemId, showDashboard });
+    viewRef.current = { activeItemId, showDashboard };
+    const saveScroll = () => {
+        if (!viewRef.current.activeItemId && !viewRef.current.showDashboard) homeScroll.current = window.scrollY;
+    };
+
     // Expose the portfolio to in-browser AI agents via WebMCP (progressive
     // enhancement — no-op in browsers/agents without support). The setters are
     // stable, so the tool layer registers once for the app's lifetime.
-    useWebMCP((id: string) => { setShowDashboard(false); setActiveItemId(id); });
+    useWebMCP((id: string) => { saveScroll(); setShowDashboard(false); setActiveItemId(id); });
 
     useEffect(() => {
         const currentHash = window.location.hash;
@@ -390,6 +405,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const handleHashChange = () => {
+            saveScroll();
             const hash = window.location.hash;
             if (hash === '#dashboard') { setShowDashboard(true); setActiveItemId(null); }
             else if (hash.startsWith('#project=')) {
@@ -402,7 +418,11 @@ const App: React.FC = () => {
         return () => window.removeEventListener('hashchange', handleHashChange);
     }, []);
 
-    useEffect(() => { window.scrollTo(0, 0); }, [activeItemId, showDashboard]);
+    // New page: start at the top. Back on the home page: return to where we were.
+    useLayoutEffect(() => {
+        const onHome = !activeItemId && !showDashboard;
+        window.scrollTo({ top: onHome ? homeScroll.current : 0, behavior: 'instant' });
+    }, [activeItemId, showDashboard]);
 
     const activeItem = allItems.find(p => p.id === activeItemId);
 
@@ -416,10 +436,10 @@ const App: React.FC = () => {
     if (!activeItem && machineMode) return <MachineMode onToggle={() => setMachineMode(false)} />;
 
     if (!activeItem) {
-        return <Home machineMode={machineMode} onToggleMode={() => setMachineMode(m => !m)} onOpenDashboard={() => setShowDashboard(true)} />;
+        return <Home machineMode={machineMode} onToggleMode={() => setMachineMode(m => !m)} onOpenDashboard={() => { saveScroll(); setShowDashboard(true); }} />;
     }
 
-    return <Detail key={activeItem.id} item={activeItem} onBack={() => setActiveItemId(null)} />;
+    return <Detail key={activeItem.id} item={activeItem} siblings={activeItem.type === 'project' ? projects : papers} onBack={() => setActiveItemId(null)} />;
 };
 
 export default App;
