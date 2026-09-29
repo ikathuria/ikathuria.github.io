@@ -32,6 +32,8 @@ export interface PortfolioItem {
     /** Filename shown on the code panel. */
     codeFile?: string;
   };
+  /** Real screenshot of the live product, shown on the home page. */
+  image?: { src: string; alt: string };
   /** Headline numbers taken from the item's own narrative. Only true, sourced values. */
   results?: Array<{ value: string; label: string }>;
   authors: Array<{ name: string; role: string }>;
@@ -324,6 +326,10 @@ export const projects: PortfolioItem[] = [
     results: [
       { value: "3", label: "LLMs stress-tested: Gemini 1.5 Pro, GPT-4, Llama 3" }
     ],
+    image: {
+      src: "/img/autoredteam.jpg",
+      alt: "AutoRedTeam's Mission Control dashboard mid-simulation: a red-team attacker and a blue-team target trade messages while an arbiter scores each round."
+    },
     authors: [
       { name: "Ishani Kathuria", role: "Project Lead" }
     ]
@@ -378,6 +384,10 @@ async function processAudioStream(chunk: Float32Array) {
       { value: "Sub-second", label: "detection latency" },
       { value: "0", label: "audio uploads to a server" }
     ],
+    image: {
+      src: "/img/deepfakeguard.jpg",
+      alt: "DeepGuard analysing a cloned voice: a probability curve, a 30% authenticity ring, and a per-frame verdict log."
+    },
     authors: [
       { name: "Ishani Kathuria", role: "Project Lead" }
     ]
@@ -445,6 +455,7 @@ export interface Hackathon {
   location?: string;
   role: 'builder' | 'organizer';
   award?: string;
+  image?: { src: string; alt: string };
   tagline: string;
   techStack?: string[];
   team?: string[];
@@ -469,6 +480,10 @@ export const hackathons: Hackathon[] = [
     award: 'Winner · name.com Domain Roulette',
     tagline: "A freemium SaaS that spins up a polished single-screen digital business card — templates, shareable links, QR codes, and AI-designed art — in under 60 seconds.",
     techStack: ["Next.js", "Supabase", "Claude", "Stripe"],
+    image: {
+      src: "/img/yourbusinesscards.jpg",
+      alt: "The yourbusiness.cards landing page: the headline 'A business card people actually scan.', with Make yours free and Browse templates buttons."
+    },
     themeColor: "#10B981", // Emerald
     links: {
       github: "https://github.com/ikathuria/yourbusiness.cards",

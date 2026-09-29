@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
     ArrowUpRight,
@@ -415,7 +415,7 @@ const Hero = () => {
                             strokeLinejoin="round"
                         />
                     </svg>
-                    <span className="font-mono text-xs bg-agent text-white px-1.5 py-0.5 rounded-[2px] -ml-0.5 mt-3">
+                    <span className="font-mono text-xs bg-agent text-ink px-1.5 py-0.5 rounded-[2px] -ml-0.5 mt-3">
                         agent
                     </span>
                 </motion.div>
@@ -475,6 +475,62 @@ const About = () => (
     </section>
 );
 
+const cx = (...a: Array<string | false | undefined>) => a.filter(Boolean).join(' ');
+const shortUrl = (u: string) => u.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const AbstractImpactScene = lazy(() =>
+    import('./QuantumScene').then((m) => ({ default: m.AbstractImpactScene }))
+);
+
+// ─── PROJECTS: framed screenshots ─────────────────────────────────────────────
+
+const FRAME_TINTS = ['#C4A3F5', '#6EE7A0', '#FF9B8A', '#A5B4FC'];
+
+const ShotFrame = ({
+    href,
+    label,
+    url,
+    tint,
+    image,
+    illustrationId,
+}: {
+    href: string;
+    label: string;
+    url: string;
+    tint: string;
+    image?: { src: string; alt: string };
+    illustrationId: string;
+}) => (
+    <a href={href} aria-label={label} tabIndex={-1} className="group/frame block relative">
+        <div
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-3 translate-y-3 rounded-[6px] border-[1.5px] border-ink"
+            style={{ background: tint }}
+        />
+        <div className="relative rounded-[6px] border-[1.5px] border-ink bg-paper overflow-hidden transition-transform duration-150 group-hover/frame:-translate-x-0.5 group-hover/frame:-translate-y-0.5">
+            <div className="h-8 px-3 flex items-center border-b-[1.5px] border-ink bg-paper-2 font-mono text-xs text-ink-2 truncate">
+                {url}
+            </div>
+            {image ? (
+                <img
+                    src={image.src}
+                    alt={image.alt}
+                    width={1280}
+                    height={800}
+                    loading="lazy"
+                    className="block w-full h-auto aspect-[16/10] object-cover object-top"
+                />
+            ) : (
+                <div className="aspect-[16/10] bg-paper-2" aria-hidden="true">
+                    <Suspense fallback={null}>
+                        <AbstractImpactScene id={illustrationId} />
+                    </Suspense>
+                </div>
+            )}
+        </div>
+    </a>
+);
+
 const Projects = () => (
     <section id="work" className="pb-24">
         <div className="max-w-[1120px] mx-auto px-5 md:px-8">
@@ -489,20 +545,24 @@ const Projects = () => (
                 {projects.map((p, i) => {
                     const year = p.metadata.date.split(' ').pop();
                     const stack = p.technical?.techStack.slice(0, 3) ?? [];
+                    const flip = i % 2 === 1;
+                    const site = p.metadata.demoUrl ?? p.metadata.githubUrl ?? '';
                     return (
                         <article
                             key={p.id}
-                            className="group grid md:grid-cols-12 gap-x-8 gap-y-4 py-8 border-b border-rule"
+                            className="group grid md:grid-cols-12 gap-x-14 gap-y-10 py-14 border-b border-rule items-center"
                         >
-                            <div className="md:col-span-1 font-mono text-xs text-ink-2 pt-2">
-                                {String(i + 1).padStart(2, '0')}
-                            </div>
-                            <div className="md:col-span-7">
+                            <div
+                                className={cx('md:col-span-5', flip ? 'md:order-2' : 'md:order-1')}
+                            >
+                                <div className="font-mono text-xs text-ink-2 mb-3">
+                                    {String(i + 1).padStart(2, '0')} · {year}
+                                </div>
                                 <a
                                     href={`#project=${p.id}`}
                                     className="inline-flex items-baseline gap-2"
                                 >
-                                    <h3 className="font-serif text-[28px] md:text-[34px] leading-[1.1] tracking-tight group-hover:mark-hi">
+                                    <h3 className="font-serif text-[30px] md:text-[38px] leading-[1.08] tracking-tight group-hover:mark-hi">
                                         {p.metadata.title}
                                     </h3>
                                     <ArrowUpRight
@@ -511,22 +571,17 @@ const Projects = () => (
                                         aria-hidden="true"
                                     />
                                 </a>
-                                <p className="text-ink mt-2 text-[15px] font-medium">
+                                <p className="text-ink mt-3 text-[15px] font-medium">
                                     {p.metadata.subtitle}
                                 </p>
-                                <p className="text-ink-2 mt-2 text-[15px] leading-relaxed max-w-[62ch]">
+                                <p className="text-ink-2 mt-3 text-[15px] leading-relaxed max-w-[52ch]">
                                     {p.narrative.innovation}
                                 </p>
-                            </div>
-                            <div
-                                className="md:col-span-4 bg-machine text-machine-ink font-mono text-xs leading-[1.9] p-4 rounded-[3px] self-start"
-                                aria-hidden="true"
-                            >
-                                <div>{'{'}</div>
-                                <div className="pl-3">
-                                    "year": <span className="text-[#F1EFE8]">{year}</span>,
-                                </div>
-                                <div className="pl-3">
+                                <div
+                                    className="inline-block mt-5 bg-machine text-machine-ink font-mono text-xs leading-[1.9] px-3.5 py-2 rounded-[3px]"
+                                    aria-hidden="true"
+                                >
+                                    {'{ '}"year": <span className="text-[#F1EFE8]">{year}</span>,
                                     "stack": [
                                     {stack.map((t, j) => (
                                         <span key={t}>
@@ -534,15 +589,32 @@ const Projects = () => (
                                             {j < stack.length - 1 ? ', ' : ''}
                                         </span>
                                     ))}
-                                    ],
+                                    ]{' }'}
                                 </div>
-                                <div className="pl-3">
-                                    "repo":{' '}
-                                    <span className="text-[#F1EFE8]">
-                                        {p.metadata.githubUrl ? 'public' : 'private'}
-                                    </span>
+                                <div className="flex flex-wrap gap-x-5 mt-2 -mb-2">
+                                    <TextLink href={`#project=${p.id}`}>Case study ↗</TextLink>
+                                    {p.metadata.demoUrl && (
+                                        <TextLink href={p.metadata.demoUrl}>Live demo ↗</TextLink>
+                                    )}
+                                    {p.metadata.githubUrl && (
+                                        <TextLink href={p.metadata.githubUrl}>Code ↗</TextLink>
+                                    )}
                                 </div>
-                                <div>{'}'}</div>
+                            </div>
+                            <div
+                                className={cx(
+                                    'md:col-span-7 pr-3 pb-3',
+                                    flip ? 'md:order-1' : 'md:order-2'
+                                )}
+                            >
+                                <ShotFrame
+                                    href={`#project=${p.id}`}
+                                    label={`Open the ${p.metadata.title} case study`}
+                                    url={shortUrl(site)}
+                                    tint={FRAME_TINTS[i % FRAME_TINTS.length]}
+                                    image={p.image}
+                                    illustrationId={p.id}
+                                />
                             </div>
                         </article>
                     );
@@ -551,6 +623,134 @@ const Projects = () => (
         </div>
     </section>
 );
+
+// ─── HACKATHONS: color tiles ──────────────────────────────────────────────────
+
+const TILE_COLORS = ['#6EE7A0', '#C4A3F5', '#FF9B8A', '#B8F04A', '#A5B4FC', '#FFD84D'];
+
+const HackTile = ({
+    h,
+    i,
+    big,
+    wide,
+}: {
+    h: (typeof hackathons)[number];
+    i: number;
+    big: boolean;
+    wide: boolean;
+}) => {
+    const links: [string, string | undefined][] = [
+        ['Code', h.links.github],
+        ['Demo', h.links.demo],
+        ['Video', h.links.video],
+        ['Post', h.links.linkedin],
+        ['Devpost', h.links.devpost],
+    ];
+    const linkClass =
+        'inline-flex items-center gap-1.5 min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/40 hover:decoration-ink';
+
+    const head = (
+        <div className="flex items-start justify-between gap-3">
+            <div className="font-mono text-xs leading-relaxed">
+                <div>{h.date}</div>
+                {h.location && <div>{h.location}</div>}
+            </div>
+            {h.award && (
+                <Sticker color="yellow" rotation={3}>
+                    Winner
+                </Sticker>
+            )}
+            {h.role === 'organizer' && (
+                <Sticker color="indigo" rotation={2}>
+                    Organizer
+                </Sticker>
+            )}
+        </div>
+    );
+    const title = (
+        <>
+            <h3
+                className={cx(
+                    'font-serif tracking-tight leading-[1.05] mt-6 [overflow-wrap:anywhere]',
+                    big ? 'text-[38px] sm:text-[46px]' : 'text-[30px]'
+                )}
+            >
+                {h.project.replace(/\./g, '\u200b.')}
+            </h3>
+            <div className="font-mono text-xs leading-relaxed mt-2">
+                {h.hackathon}
+                {h.award ? ` · ${h.award}` : ''}
+                {h.team && h.team.length > 0 ? ` · with ${h.team.join(', ')}` : ''}
+            </div>
+        </>
+    );
+    const body = (
+        <>
+            <p className="text-[15px] leading-relaxed">{h.tagline}</p>
+            {h.techStack && <div className="font-mono text-xs mt-3">{h.techStack.join(' · ')}</div>}
+            <div className="flex flex-wrap gap-x-5 mt-auto pt-3 -mb-2">
+                {links
+                    .filter(([, href]) => href)
+                    .map(([label, href]) => (
+                        <a
+                            key={label}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={linkClass}
+                        >
+                            {label === 'Devpost' ? <DevpostIcon /> : null}
+                            {label}
+                            <ArrowUpRight size={12} aria-hidden="true" />
+                        </a>
+                    ))}
+            </div>
+        </>
+    );
+
+    return (
+        <article
+            className={cx(
+                'flex min-w-0 rounded-[6px] border-[1.5px] border-ink p-6 text-ink shadow-[0_4px_0_#1C1A17]',
+                big && 'md:col-span-2',
+                wide && 'md:col-span-2 lg:col-span-3'
+            )}
+            style={{ background: TILE_COLORS[i % TILE_COLORS.length] }}
+        >
+            {big && h.image ? (
+                <div className="flex flex-col md:flex-row md:gap-8 flex-1 min-w-0">
+                    <img
+                        src={h.image.src}
+                        alt={h.image.alt}
+                        width={1000}
+                        height={833}
+                        loading="lazy"
+                        className="block w-full md:w-[46%] md:shrink-0 self-start aspect-[6/5] object-cover object-top rounded-[4px] border-[1.5px] border-ink mb-6 md:mb-0"
+                    />
+                    <div className="flex flex-col flex-1 min-w-0">
+                        {head}
+                        {title}
+                        <div className="flex flex-col flex-1 mt-4">{body}</div>
+                    </div>
+                </div>
+            ) : wide ? (
+                <div className="flex flex-col lg:flex-row lg:gap-14 flex-1 min-w-0">
+                    <div className="lg:w-5/12">
+                        {head}
+                        {title}
+                    </div>
+                    <div className="flex flex-col flex-1 mt-4 lg:mt-1 lg:w-7/12">{body}</div>
+                </div>
+            ) : (
+                <div className="flex flex-col flex-1 min-w-0">
+                    {head}
+                    {title}
+                    <div className="flex flex-col flex-1 mt-4">{body}</div>
+                </div>
+            )}
+        </article>
+    );
+};
 
 const Hackathons = () => (
     <section id="hackathons" className="py-24 bg-paper-2 border-y border-rule">
@@ -562,76 +762,16 @@ const Hackathons = () => (
                 blurb="Rapid prototypes from AI hackathons across the country — plus one I founded and ran at Purdue Northwest."
                 tool={`hackathons.list() → ${hackathons.length}`}
             />
-            <div className="border-t border-ink">
-                {hackathons.map((h) => {
-                    const links: [string, string | undefined, React.ReactNode?][] = [
-                        ['Code', h.links.github],
-                        ['Demo', h.links.demo],
-                        ['Video', h.links.video],
-                        ['Post', h.links.linkedin],
-                        ['Devpost', h.links.devpost],
-                    ];
-                    return (
-                        <article
-                            key={h.id}
-                            className="grid md:grid-cols-[132px_1fr] gap-x-8 gap-y-2 py-6 border-b border-rule"
-                        >
-                            <div className="font-mono text-xs text-ink-2 leading-relaxed pt-1.5">
-                                <div>{h.date}</div>
-                                {h.location && <div>{h.location}</div>}
-                            </div>
-                            <div>
-                                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                                    <h3 className="font-serif text-2xl leading-tight tracking-tight">
-                                        {h.project}
-                                    </h3>
-                                    {h.award && (
-                                        <Sticker color="yellow" rotation={-2}>
-                                            Winner
-                                        </Sticker>
-                                    )}
-                                    {h.role === 'organizer' && (
-                                        <Sticker color="indigo" rotation={2}>
-                                            Organizer
-                                        </Sticker>
-                                    )}
-                                </div>
-                                <div className="font-mono text-xs text-ink-2 mt-1.5">
-                                    {h.hackathon}
-                                    {h.award ? ` · ${h.award}` : ''}
-                                    {h.team && h.team.length > 0
-                                        ? ` · with ${h.team.join(', ')}`
-                                        : ''}
-                                </div>
-                                <p className="text-ink-2 text-[15px] leading-relaxed mt-2 max-w-[68ch]">
-                                    {h.tagline}
-                                </p>
-                                {h.techStack && (
-                                    <div className="font-mono text-xs text-ink mt-2">
-                                        {h.techStack.join(' · ')}
-                                    </div>
-                                )}
-                                <div className="flex flex-wrap gap-x-5 -mb-2">
-                                    {links
-                                        .filter(([, href]) => href)
-                                        .map(([label, href]) => (
-                                            <a
-                                                key={label}
-                                                href={href}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
-                                            >
-                                                {label === 'Devpost' ? <DevpostIcon /> : null}
-                                                {label}
-                                                <ArrowUpRight size={12} aria-hidden="true" />
-                                            </a>
-                                        ))}
-                                </div>
-                            </div>
-                        </article>
-                    );
-                })}
+            <div className="grid gap-6 grid-cols-[minmax(0,1fr)] md:grid-cols-2 lg:grid-cols-3">
+                {hackathons.map((h, i) => (
+                    <HackTile
+                        key={h.id}
+                        h={h}
+                        i={i}
+                        big={i === 0}
+                        wide={i === hackathons.length - 1}
+                    />
+                ))}
             </div>
         </div>
     </section>
