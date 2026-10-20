@@ -228,6 +228,8 @@ Follow §§3 to 10. Sections in order: Hero → Ledger → About → Projects �
 ### Dashboard (`#dashboard`)
 Ruled rows, not cards. Status = marker shape + label. Summary row is computed from live data. Empty/error states follow §2.
 
+**Skill map** (Dashboard → *Skill map*). Projects, papers and hackathons from `data.ts` connected by shared skills. It follows the diagram rules in §7: one control (skill chips), SVG on `paper`, active path 2.4px ink, active item filled `hi`, a dark log panel narrating the selection. Skill nodes use the sticker palette by category with `ink` text; item kind is a marker shape (● paper, ■ project, ◆ hackathon), never color alone. A skill becomes a node only when two or more items share it. Raw tags map to skills in `skills.ts`; extra public detail (repo maps, more tags, repos not on the home page) comes from `public/project-graph.json`, written by the `project-deepdive` publish step. Only public-safe fields go there: never weak spots or unverified numbers.
+
 ### `/ir` (career-fair landing page)
 The path `/ir` is printed on QR codes and programmed into NFC tags. **It must never move or be renamed.**
 - Standalone static file `public/ir/index.html`: no framework, inline CSS, async fonts, HTML ≤ ~5KB gzipped, so it paints instantly on congested cellular.
@@ -266,6 +268,7 @@ The path `/ir` is printed on QR codes and programmed into NFC tags. **It must ne
 | Illustrations | `components/QuantumScene.tsx` |
 | Stickers | `components/Sticker.tsx` |
 | Dashboard | `components/Dashboard.tsx` |
+| Skill map, skill vocabulary, map enrichment | `components/ProjectMap.tsx`, `skills.ts`, `public/project-graph.json` |
 | Machine view, routing, history, scroll restore | `App.tsx` |
 | Content: items, results, images, code snippets | `data.ts`, `content.ts` |
 | Screenshots | `public/img/` |
@@ -274,6 +277,7 @@ The path `/ir` is printed on QR codes and programmed into NFC tags. **It must ne
 
 ### Adding a project or paper
 1. Add it to `data.ts` (`projects` or `papers`) with narrative, `technical.codeSnippet` + `codeFile`, and `results` **only if** the numbers are real.
+   Map any new `techStack` tag to a skill in `skills.ts`, or it won't connect on the skill map.
 2. Add its diagram to `components/ProjectDiagrams.tsx` and its case in `ItemDiagram`.
 3. Add an illustration in `QuantumScene.tsx` (fallback for the frame).
 4. If it has a live demo: capture a populated 16:10 screenshot into `public/img/`, and add `image: { src, alt }`.

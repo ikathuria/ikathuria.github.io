@@ -19,6 +19,7 @@ import {
     ChevronDown,
 } from 'lucide-react';
 import repoDescriptions from '../public/repo-descriptions.json';
+import ProjectMap from './ProjectMap';
 
 // --- TYPES ---
 
@@ -143,7 +144,15 @@ const StatusMark = ({ status }: { status: RepoStatus }) => (
     </span>
 );
 
-const ProgressBar = ({ value, label, className = '' }: { value: number; label: string; className?: string }) => (
+const ProgressBar = ({
+    value,
+    label,
+    className = '',
+}: {
+    value: number;
+    label: string;
+    className?: string;
+}) => (
     <div
         className={`h-2 bg-paper-2 border border-ink ${className}`}
         role="progressbar"
@@ -495,6 +504,7 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
     const [search, setSearch] = useState('');
     const [activePlan, setActivePlan] = useState<{ repo: Repo; plan: PlanData } | null>(null);
     const [refreshing, setRefreshing] = useState(false);
+    const [view, setView] = useState<'repos' | 'map'>('repos');
 
     const fetchAll = async (isRefresh = false) => {
         try {
@@ -671,151 +681,182 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
             </section>
 
             <main className="max-w-[1120px] mx-auto px-5 md:px-8 pt-10 pb-24">
-                <div className="flex flex-col gap-3 mb-8">
-                    <div className="flex flex-wrap gap-3 items-center">
-                        <label className="relative">
-                            <span className="sr-only">Search repos</span>
-                            <Search
-                                size={14}
-                                aria-hidden="true"
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
-                            />
-                            <input
-                                type="text"
-                                placeholder="search repos"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className={`${controlClass} pl-9 w-52`}
-                            />
-                        </label>
-                        {uniqueLangs.length > 0 && (
-                            <div className="relative">
-                                <select
-                                    aria-label="Language"
-                                    value={langFilter}
-                                    onChange={(e) => setLangFilter(e.target.value)}
-                                    className={`${controlClass} appearance-none pr-9 cursor-pointer`}
-                                >
-                                    <option value="">All languages</option>
-                                    {uniqueLangs.map((l) => (
-                                        <option key={l} value={l}>
-                                            {l}
-                                        </option>
-                                    ))}
-                                </select>
-                                <ChevronDown
-                                    size={14}
-                                    aria-hidden="true"
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
-                                />
-                            </div>
-                        )}
-                        {uniqueTopics.length > 0 && (
-                            <div className="relative">
-                                <select
-                                    aria-label="Topic"
-                                    value={topicFilter}
-                                    onChange={(e) => setTopicFilter(e.target.value)}
-                                    className={`${controlClass} appearance-none pr-9 cursor-pointer`}
-                                >
-                                    <option value="">All topics</option>
-                                    {uniqueTopics.map((t) => (
-                                        <option key={t} value={t}>
-                                            {t}
-                                        </option>
-                                    ))}
-                                </select>
-                                <ChevronDown
-                                    size={14}
-                                    aria-hidden="true"
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
-                                />
-                            </div>
-                        )}
-                        {(langFilter || topicFilter) && (
-                            <button
-                                onClick={() => {
-                                    setLangFilter('');
-                                    setTopicFilter('');
-                                }}
-                                className="inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
-                            >
-                                clear filters
-                            </button>
-                        )}
-                    </div>
-                    <div role="group" aria-label="Status" className="flex gap-2 flex-wrap">
-                        {filterTabs.map((f) => (
-                            <button
-                                key={f.key}
-                                onClick={() => setFilter(f.key)}
-                                aria-pressed={filter === f.key}
-                                className={`min-h-11 px-3.5 font-mono text-[13px] border border-ink rounded-[3px] transition-colors ${filter === f.key ? 'bg-ink text-paper' : 'bg-paper text-ink hover:bg-hi'}`}
-                            >
-                                {f.label}{' '}
-                                <span
-                                    className={filter === f.key ? 'text-machine-ink' : 'text-ink-2'}
-                                >
-                                    {counts[f.key]}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
+                <div role="group" aria-label="View" className="flex gap-2 mb-8">
+                    {(
+                        [
+                            ['repos', 'Repos'],
+                            ['map', 'Skill map'],
+                        ] as const
+                    ).map(([key, label]) => (
+                        <button
+                            key={key}
+                            onClick={() => setView(key)}
+                            aria-pressed={view === key}
+                            className={`min-h-11 px-3.5 font-mono text-[13px] border border-ink rounded-[3px] transition-colors ${view === key ? 'bg-ink text-paper' : 'bg-paper text-ink hover:bg-hi'}`}
+                        >
+                            {label}
+                        </button>
+                    ))}
                 </div>
 
-                <div className="border-t border-ink">
-                    {loading && Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)}
+                {view === 'map' && <ProjectMap />}
 
-                    {error && (
-                        <div className="py-16">
-                            <p className="font-serif text-2xl mb-2">Couldn't reach GitHub.</p>
-                            <p className="text-ink-2 text-[15px] mb-4">
-                                {error}. The public API allows a limited number of requests per
-                                hour, so try again in a bit.
-                            </p>
-                            <button
-                                onClick={() => fetchAll()}
-                                className="min-h-11 px-4 font-mono text-[13px] border border-ink rounded-[3px] bg-ink text-paper hover:bg-hi hover:text-ink transition-colors"
-                            >
-                                Try again
-                            </button>
+                {view === 'repos' && (
+                    <>
+                        <div className="flex flex-col gap-3 mb-8">
+                            <div className="flex flex-wrap gap-3 items-center">
+                                <label className="relative">
+                                    <span className="sr-only">Search repos</span>
+                                    <Search
+                                        size={14}
+                                        aria-hidden="true"
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="search repos"
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        className={`${controlClass} pl-9 w-52`}
+                                    />
+                                </label>
+                                {uniqueLangs.length > 0 && (
+                                    <div className="relative">
+                                        <select
+                                            aria-label="Language"
+                                            value={langFilter}
+                                            onChange={(e) => setLangFilter(e.target.value)}
+                                            className={`${controlClass} appearance-none pr-9 cursor-pointer`}
+                                        >
+                                            <option value="">All languages</option>
+                                            {uniqueLangs.map((l) => (
+                                                <option key={l} value={l}>
+                                                    {l}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown
+                                            size={14}
+                                            aria-hidden="true"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
+                                        />
+                                    </div>
+                                )}
+                                {uniqueTopics.length > 0 && (
+                                    <div className="relative">
+                                        <select
+                                            aria-label="Topic"
+                                            value={topicFilter}
+                                            onChange={(e) => setTopicFilter(e.target.value)}
+                                            className={`${controlClass} appearance-none pr-9 cursor-pointer`}
+                                        >
+                                            <option value="">All topics</option>
+                                            {uniqueTopics.map((t) => (
+                                                <option key={t} value={t}>
+                                                    {t}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown
+                                            size={14}
+                                            aria-hidden="true"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-2 pointer-events-none"
+                                        />
+                                    </div>
+                                )}
+                                {(langFilter || topicFilter) && (
+                                    <button
+                                        onClick={() => {
+                                            setLangFilter('');
+                                            setTopicFilter('');
+                                        }}
+                                        className="inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
+                                    >
+                                        clear filters
+                                    </button>
+                                )}
+                            </div>
+                            <div role="group" aria-label="Status" className="flex gap-2 flex-wrap">
+                                {filterTabs.map((f) => (
+                                    <button
+                                        key={f.key}
+                                        onClick={() => setFilter(f.key)}
+                                        aria-pressed={filter === f.key}
+                                        className={`min-h-11 px-3.5 font-mono text-[13px] border border-ink rounded-[3px] transition-colors ${filter === f.key ? 'bg-ink text-paper' : 'bg-paper text-ink hover:bg-hi'}`}
+                                    >
+                                        {f.label}{' '}
+                                        <span
+                                            className={
+                                                filter === f.key ? 'text-machine-ink' : 'text-ink-2'
+                                            }
+                                        >
+                                            {counts[f.key]}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    )}
 
-                    {!loading && !error && filtered.length === 0 && (
-                        <div className="py-16">
-                            <p className="font-serif text-2xl mb-2">
-                                No repos match those filters.
-                            </p>
-                            <button
-                                onClick={() => {
-                                    setFilter('all');
-                                    setLangFilter('');
-                                    setTopicFilter('');
-                                    setSearch('');
-                                }}
-                                className="inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
-                            >
-                                Clear everything
-                            </button>
+                        <div className="border-t border-ink">
+                            {loading &&
+                                Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)}
+
+                            {error && (
+                                <div className="py-16">
+                                    <p className="font-serif text-2xl mb-2">
+                                        Couldn't reach GitHub.
+                                    </p>
+                                    <p className="text-ink-2 text-[15px] mb-4">
+                                        {error}. The public API allows a limited number of requests
+                                        per hour, so try again in a bit.
+                                    </p>
+                                    <button
+                                        onClick={() => fetchAll()}
+                                        className="min-h-11 px-4 font-mono text-[13px] border border-ink rounded-[3px] bg-ink text-paper hover:bg-hi hover:text-ink transition-colors"
+                                    >
+                                        Try again
+                                    </button>
+                                </div>
+                            )}
+
+                            {!loading && !error && filtered.length === 0 && (
+                                <div className="py-16">
+                                    <p className="font-serif text-2xl mb-2">
+                                        No repos match those filters.
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setFilter('all');
+                                            setLangFilter('');
+                                            setTopicFilter('');
+                                            setSearch('');
+                                        }}
+                                        className="inline-flex items-center min-h-11 font-mono text-[13px] underline underline-offset-4 decoration-ink/30 hover:decoration-ink"
+                                    >
+                                        Clear everything
+                                    </button>
+                                </div>
+                            )}
+
+                            {!loading &&
+                                !error &&
+                                filtered.map((repo) => (
+                                    <RepoRow
+                                        key={repo.id}
+                                        repo={repo}
+                                        description={
+                                            (repoDescriptions as Record<string, string>)[
+                                                repo.name
+                                            ] ??
+                                            repo.description ??
+                                            null
+                                        }
+                                        onShowPlan={(r, p) => setActivePlan({ repo: r, plan: p })}
+                                    />
+                                ))}
                         </div>
-                    )}
-
-                    {!loading &&
-                        !error &&
-                        filtered.map((repo) => (
-                            <RepoRow
-                                key={repo.id}
-                                repo={repo}
-                                description={
-                                    (repoDescriptions as Record<string, string>)[repo.name] ??
-                                    repo.description ??
-                                    null
-                                }
-                                onShowPlan={(r, p) => setActivePlan({ repo: r, plan: p })}
-                            />
-                        ))}
-                </div>
+                    </>
+                )}
             </main>
 
             <AnimatePresence>
