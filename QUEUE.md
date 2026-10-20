@@ -6,7 +6,9 @@ Tasks Claude can do unattended. Add items with the `queue` skill (or by hand, us
 
 1. Read this repo's `CLAUDE.md` and `HANDOFF.md` if present. Their rules apply.
 2. Take the **first** item below with `Status: ready` and `Where: cloud` (or `local` if you are
-   running on the GPU machine). If none, stop without changes.
+   running on the GPU machine) whose slug has no existing remote branch
+   (`git branch -r --list 'origin/claude/auto-*-<item-slug>'` is empty; an earlier run is awaiting
+   review). The slug is the title in lowercase with spaces as hyphens. If none, stop without changes.
 3. Set its status to `running (<date>)`, then create a branch `claude/auto-<yyyy-mm-dd>-<item-slug>`
    from the default branch.
 4. Do only that item. Stay inside its Files and Out of scope. Don't ask questions: take the
