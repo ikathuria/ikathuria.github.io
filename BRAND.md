@@ -228,6 +228,8 @@ Follow §§3 to 10. Sections in order: Hero → Ledger → About → Projects �
 ### Dashboard (`#dashboard`)
 Ruled rows, not cards. Status = marker shape + label. Summary row is computed from live data. Empty/error states follow §2.
 
+**GitHub topics** feed the topic filter, so keep them curated: at most 5 per repo (up to 2 for what it is: `llm`, `rag`, `ai-agents`, `ai-safety`, `computer-vision`, `nlp`, `deep-learning`, `machine-learning`, `recommender-system`; up to 3 for key stack: `nextjs`, `react`, `react-native`, `fastapi`, `supabase`, `neo4j`, `langchain`, `pytorch`, `tensorflow`, `huggingface`, `claude`, `gemini`, `openai`), plus `hackathon` or `portfolio`. No language topics (the Language filter covers them). The filter lists a topic only when two or more repos share it.
+
 **Skill map** (Dashboard → *Skill map*). Projects, papers and hackathons from `data.ts` connected by shared skills. It follows the diagram rules in §7: one control (skill chips), SVG on `paper`, active path 2.4px ink, active item filled `hi`, a dark log panel narrating the selection. Skill nodes use the sticker palette by category with `ink` text; item kind is a marker shape (● paper, ■ project, ◆ hackathon), never color alone. A skill becomes a node only when two or more items share it. Raw tags map to skills in `skills.ts`; extra public detail (repo maps, more tags, repos not on the home page) comes from `public/project-graph.json`, written by the `project-deepdive` publish step. Only public-safe fields go there: never weak spots or unverified numbers.
 
 ### `/ir` (career-fair landing page)
