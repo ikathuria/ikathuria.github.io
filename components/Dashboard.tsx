@@ -564,7 +564,14 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
     const uniqueLangs = Array.from(
         new Set(repos.map((r) => r.language).filter(Boolean) as string[])
     ).sort();
-    const uniqueTopics = Array.from(new Set(repos.flatMap((r) => r.topics ?? []))).sort();
+    // Like the skill map: a topic is a filter only when two or more repos share it.
+    const topicCounts = new Map<string, number>();
+    repos.forEach((r) =>
+        (r.topics ?? []).forEach((t) => topicCounts.set(t, (topicCounts.get(t) ?? 0) + 1))
+    );
+    const uniqueTopics = Array.from(topicCounts.keys())
+        .filter((t) => topicCounts.get(t)! >= 2)
+        .sort();
 
     const filtered = repos.filter((repo) => {
         const status = getStatus(repo);
@@ -753,12 +760,7 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                                             <option value="">All topics</option>
                                             {uniqueTopics.map((t) => (
                                                 <option key={t} value={t}>
-                                                    {t} (
-                                                    {
-                                                        repos.filter((r) => r.topics?.includes(t))
-                                                            .length
-                                                    }
-                                                    )
+                                                    {`${t} (${topicCounts.get(t)})`}
                                                 </option>
                                             ))}
                                         </select>
