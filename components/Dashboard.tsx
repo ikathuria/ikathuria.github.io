@@ -753,7 +753,12 @@ const Dashboard = ({ onBack }: { onBack: () => void }) => {
                                             <option value="">All topics</option>
                                             {uniqueTopics.map((t) => (
                                                 <option key={t} value={t}>
-                                                    {t}
+                                                    {t} (
+                                                    {
+                                                        repos.filter((r) => r.topics?.includes(t))
+                                                            .length
+                                                    }
+                                                    )
                                                 </option>
                                             ))}
                                         </select>
