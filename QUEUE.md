@@ -34,7 +34,7 @@ Tasks Claude can do unattended. Add items with the `queue` skill (or by hand, us
 
 ```
 ### <title>
-Status: running (2026-10-21) | queued | needs-me | running (<date>) | review (#PR) | blocked: <why> | done (#PR)
+Status: review (#1) | queued | needs-me | running (<date>) | review (#PR) | blocked: <why> | done (#PR)
 Where: cloud | local     Size: S | M
 Goal: <one sentence outcome>
 Files: <paths to start from>
