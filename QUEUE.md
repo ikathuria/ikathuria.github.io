@@ -46,7 +46,7 @@ Notes: <context a fresh agent needs>
 ## Items
 
 ### Fix npm audit findings in build tooling
-Status: ready
+Status: review (#8)
 Where: cloud     Size: S
 Goal: Clear the npm audit findings (12 on 2026-10-20: 10 high, 1 moderate, 1 low, all dev/build dependencies) without changing the site.
 Files: `package.json`, `package-lock.json`
